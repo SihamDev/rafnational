@@ -1,0 +1,9 @@
+[
+  {
+    "phase": 1,
+    "sheet": "Sheet1",
+    "parseErrors": [
+      "[row 48] Missing first_name in sheet \"sheet1\""
+    ]
+  }
+]

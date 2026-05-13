@@ -1,0 +1,170 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ───────────── RAF National Brand Tokens ───────────── */
+:root {
+  /* Navy palette */
+  --raf-navy-950: #0a1424;
+  --raf-navy-900: #0e1a33;
+  --raf-navy-800: #14223a;
+  --raf-navy-700: #1b2d4d;
+  --raf-navy-600: #243a62;
+  --raf-navy-400: #3d5a8a;
+  --raf-navy-200: #7a9cc4;
+  --raf-navy-100: #b8cfe0;
+
+  /* Brand orange */
+  --raf-orange: #f5a623;
+  --raf-orange-light: #fbbf5e;
+  --raf-orange-dark: #d4861a;
+
+  /* Status */
+  --raf-success: #22c55e;
+  --raf-pending: #f59e0b;
+  --raf-danger: #ef4444;
+
+  /* shadcn overrides – RAF National theme */
+  --background: oklch(1 0 0);
+  --foreground: var(--raf-navy-900);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--raf-navy-900);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--raf-navy-900);
+  --primary: var(--raf-navy-900);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: var(--raf-navy-900);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: var(--raf-navy-900);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: var(--raf-orange);
+  --radius: 0.625rem;
+
+  --sidebar: var(--raf-navy-900);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: var(--raf-orange);
+  --sidebar-primary-foreground: var(--raf-navy-900);
+  --sidebar-accent: var(--raf-navy-700);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: var(--raf-navy-700);
+  --sidebar-ring: var(--raf-orange);
+
+  /* CRM shell (premium light admin over funnel palette) */
+  --crm-shell: #f4f3ec;
+  --crm-card: #ffffff;
+  --crm-text: #102016;
+  --crm-muted: #5c6f63;
+  --crm-forest-deep: #1b4632;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-el-messiri), 'El Messiri', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-el-messiri), 'El Messiri', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-el-messiri), 'El Messiri', ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand colours accessible as Tailwind utilities */
+  --color-navy-950: var(--raf-navy-950);
+  --color-navy-900: var(--raf-navy-900);
+  --color-navy-800: var(--raf-navy-800);
+  --color-navy-700: var(--raf-navy-700);
+  --color-navy-600: var(--raf-navy-600);
+  --color-navy-400: var(--raf-navy-400);
+  --color-navy-200: var(--raf-navy-200);
+  --color-navy-100: var(--raf-navy-100);
+  --color-brand: var(--raf-orange);
+  --color-brand-light: var(--raf-orange-light);
+  --color-brand-dark: var(--raf-orange-dark);
+
+  /* Semantic */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+
+  --color-crm-text: var(--crm-text);
+  --color-crm-muted: var(--crm-muted);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* CRM admin shell */
+.bg-crm-shell {
+  background: radial-gradient(1200px circle at 20% -10%, rgb(247 239 217 / 0.75), transparent 62%),
+    radial-gradient(800px circle at 90% 0%, rgb(229 239 229 / 0.75), transparent 55%),
+    linear-gradient(180deg, var(--crm-shell), #eae7db 55%, var(--crm-shell));
+}
+
+.crm-content {
+  border-inline-start: 1px solid rgb(255 255 255 / 0.35);
+}
+
+.crm-hero-ring {
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 0.6),
+    0 18px 40px -38px rgb(42 112 71 / 0.35);
+}
+
+.crm-stat-chip {
+  position: relative;
+}
+
+.crm-stat-chip::after {
+  content: '';
+  position: absolute;
+  inset: auto 10% -10%;
+  height: 40%;
+  background: radial-gradient(circle at top, rgb(247 239 217 / 0.45), transparent 70%);
+}
+
+.crm-dialog-shell {
+  background: linear-gradient(180deg, #fffefb, #fdfbf6);
+}
+
+/* ───────────── Shared layout helpers ───────────── */
+.raf-app {
+  @apply min-h-screen;
+}

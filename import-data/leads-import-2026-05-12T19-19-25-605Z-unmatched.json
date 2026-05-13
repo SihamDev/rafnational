@@ -1,0 +1,197 @@
+[
+  {
+    "phase": 2,
+    "qualification": "qualified",
+    "sheet": "Qualified",
+    "unmatched": [
+      {
+        "excelRow": 27,
+        "reason": "[row 27] Missing first_name in sheet \"qualified\"",
+        "sheet": "Qualified"
+      },
+      {
+        "excelRow": 985,
+        "sheet": "Qualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 569568783,
+        "email": "wajdi328866@hotmil.com",
+        "name": "وجدي صفحي"
+      },
+      {
+        "excelRow": 1361,
+        "sheet": "Qualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 561080208,
+        "email": "Sh-0303@hotmail.com",
+        "name": "شهاب سالم"
+      },
+      {
+        "excelRow": 1367,
+        "sheet": "Qualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 553769966,
+        "email": "umaaa0553@gmail.com",
+        "name": "عمر الهلالي"
+      },
+      {
+        "excelRow": 1488,
+        "sheet": "Qualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 501112961,
+        "email": "balfaifi0@gmail.com",
+        "name": "بندر الفيفي"
+      }
+    ]
+  },
+  {
+    "phase": 2,
+    "qualification": "unqualified",
+    "sheet": "Unqualified",
+    "unmatched": [
+      {
+        "excelRow": 1249,
+        "sheet": "Unqualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 592880786,
+        "email": "aldreehimali@gmail.com",
+        "name": "Ali Aldreehim"
+      },
+      {
+        "excelRow": 1390,
+        "sheet": "Unqualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 551111404,
+        "email": "s0551111404@hotmail.com",
+        "name": "Saud Bin Saad"
+      },
+      {
+        "excelRow": 2683,
+        "sheet": "Unqualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 505913595,
+        "email": "sjo-m@hotmail.com",
+        "name": "عمر اليزيدي"
+      },
+      {
+        "excelRow": 2706,
+        "sheet": "Unqualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 501453423,
+        "email": "karmoush.2014@gmail.com",
+        "name": "احمد قرموش"
+      },
+      {
+        "excelRow": 2707,
+        "sheet": "Unqualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 501453423,
+        "email": "karmoush.2014@gmail.com",
+        "name": "احمد قرموش"
+      },
+      {
+        "excelRow": 2810,
+        "sheet": "Unqualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 555596484,
+        "email": "sal_283@hotmail.com",
+        "name": "... الفيغي"
+      },
+      {
+        "excelRow": 2886,
+        "sheet": "Unqualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 534463699,
+        "email": "bandorkohal@gmail.com",
+        "name": "بندر قحل"
+      },
+      {
+        "excelRow": 2934,
+        "sheet": "Unqualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 547674111,
+        "email": "babw2954@gmail.com",
+        "name": "خالد السعدي"
+      },
+      {
+        "excelRow": 2938,
+        "sheet": "Unqualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 554856507,
+        "email": "ayshtalwasly@gmail.com",
+        "name": "سالم الواصلي"
+      },
+      {
+        "excelRow": 3092,
+        "sheet": "Unqualified",
+        "reason": "no_phone_email_name_match",
+        "phone": 582289991,
+        "email": "mkh9355@gmail.com",
+        "name": "محمد بن خالد ⭐️"
+      },
+      {
+        "leadId": "32c4b05e-39a2-43e5-b27c-7ad17d9ad788",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "5b1d02a2-505f-48f8-b18b-83c196fcf75d",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "fe0be5cb-a8ca-40ea-b610-a79216ed62c2",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "11af1635-7b59-448b-8d79-27686ecf74b8",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "4def0486-ecf4-44ba-a072-ed29ef7c0d92",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "aba7f010-9872-48b6-a592-04f5fa828c38",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "949913fe-2294-4960-84f1-1656df69f638",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "0c337481-5aec-43a1-9336-084dad763ee5",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "a6c873ae-fbc9-4c85-8ee3-df50118c0907",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "67036eab-4efd-4c3c-940f-1abc717f71f2",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "d8679d8b-fab1-4796-bcc3-f666d3493860",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "5da96ca8-a8ec-44a8-9cee-777447857421",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "84b77642-8418-4fcf-8320-e0f4c53e259e",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "c2164bc3-9460-4aa2-88cd-c91e20be6da8",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "7a12cc2d-b7bc-4c4f-8c1e-6088f9003a2c",
+        "reason": "TypeError: fetch failed"
+      },
+      {
+        "leadId": "1367edc0-ae9a-4a57-87ae-44fabe2b4a23",
+        "reason": "TypeError: fetch failed"
+      }
+    ]
+  }
+]
