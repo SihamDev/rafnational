@@ -9,6 +9,17 @@ const securityHeaders: { key: string; value: string }[] = [
 ]
 
 const nextConfig: NextConfig = {
+  // Serve landing page at `/` — runs before page routing, no middleware needed
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: '/', destination: '/raf-national-landing.html' },
+      ],
+      afterFiles: [],
+      fallback: [],
+    }
+  },
+
   // Allow @react-pdf/renderer which uses Node APIs
   serverExternalPackages: ['@react-pdf/renderer'],
 

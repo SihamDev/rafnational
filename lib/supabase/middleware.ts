@@ -45,17 +45,5 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin', request.url))
   }
 
-  // Root: unauthenticated → same URL `/` serves static landing (no iframe — avoids blank shell + CDN issues)
-  if (pathname === '/') {
-    if (user) return NextResponse.redirect(new URL('/admin', request.url))
-    const url = request.nextUrl.clone()
-    url.pathname = '/raf-national-landing.html'
-    const rewriteRes = NextResponse.rewrite(url)
-    supabaseResponse.cookies.getAll().forEach(({ name, value }) => {
-      rewriteRes.cookies.set(name, value)
-    })
-    return rewriteRes
-  }
-
   return supabaseResponse
 }
