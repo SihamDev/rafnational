@@ -23,19 +23,24 @@ export default function PieChart({ data, centerLabel = 'عميل', overrideTotal
     r = 80,
     innerR = 45
 
+  // f() serialises a coordinate to a fixed-width string so SSR and client
+  // always produce the exact same path attribute — floating-point toString()
+  // can vary between Node and browser for the same computed value.
+  const f = (v: number) => v.toFixed(3)
+
   let startAngle = -Math.PI / 2
   const slices = data.map((d, i) => {
     const angle = (d.value / total) * 2 * Math.PI
-    const x1 = cx + r * Math.cos(startAngle)
-    const y1 = cy + r * Math.sin(startAngle)
-    const x2 = cx + r * Math.cos(startAngle + angle)
-    const y2 = cy + r * Math.sin(startAngle + angle)
+    const x1  = cx + r      * Math.cos(startAngle)
+    const y1  = cy + r      * Math.sin(startAngle)
+    const x2  = cx + r      * Math.cos(startAngle + angle)
+    const y2  = cy + r      * Math.sin(startAngle + angle)
     const xi1 = cx + innerR * Math.cos(startAngle)
     const yi1 = cy + innerR * Math.sin(startAngle)
     const xi2 = cx + innerR * Math.cos(startAngle + angle)
     const yi2 = cy + innerR * Math.sin(startAngle + angle)
     const large = angle > Math.PI ? 1 : 0
-    const path = `M ${xi1} ${yi1} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} L ${xi2} ${yi2} A ${innerR} ${innerR} 0 ${large} 0 ${xi1} ${yi1} Z`
+    const path = `M ${f(xi1)} ${f(yi1)} L ${f(x1)} ${f(y1)} A ${r} ${r} 0 ${large} 1 ${f(x2)} ${f(y2)} L ${f(xi2)} ${f(yi2)} A ${innerR} ${innerR} 0 ${large} 0 ${f(xi1)} ${f(yi1)} Z`
     const midAngle = startAngle + angle / 2
     startAngle += angle
     return {
@@ -55,7 +60,7 @@ export default function PieChart({ data, centerLabel = 'عميل', overrideTotal
           <path key={i} d={s.path} fill={s.color} stroke="white" strokeWidth="1.5" />
         ))}
         <text x={cx} y={cy - 4} textAnchor="middle" fontSize="18" fontWeight="bold" fill="#0f2847">
-          {displayTotal.toLocaleString('ar-SA')}
+          {new Intl.NumberFormat('ar-SA').format(displayTotal)}
         </text>
         <text x={cx} y={cy + 14} textAnchor="middle" fontSize="10" fill="#9ca3af">
           {centerLabel}

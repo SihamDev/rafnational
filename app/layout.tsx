@@ -8,6 +8,8 @@ const elMessiri = El_Messiri({
   subsets: ['arabic', 'latin'],
   weight: ['400', '500', '600', '700'],
   display: 'swap',
+  adjustFontFallback: true,
+  fallback: ['system-ui', 'Segoe UI', 'Tahoma', 'sans-serif'],
 })
 
 export const metadata: Metadata = {

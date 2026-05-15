@@ -1,5 +1,13 @@
 import type { NextConfig } from 'next'
 
+const securityHeaders: { key: string; value: string }[] = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'X-XSS-Protection', value: '1; mode=block' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Vary', value: 'Accept-Encoding' },
+]
+
 const nextConfig: NextConfig = {
   // Allow @react-pdf/renderer which uses Node APIs
   serverExternalPackages: ['@react-pdf/renderer'],
@@ -14,28 +22,20 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // Security headers
+  // Security headers + (prod only) immutable static cache — avoids Turbopack dev cache warnings
   async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-XSS-Protection', value: '1; mode=block' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          // Allow browsers to cache static assets aggressively
-          { key: 'Vary', value: 'Accept-Encoding' },
-        ],
-      },
-      {
-        // Next.js static chunks — immutable (hash-named files)
-        source: '/_next/static/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
+    const base: { source: string; headers: { key: string; value: string }[] }[] = [
+      { source: '/(.*)', headers: [...securityHeaders] },
     ]
+
+    if (process.env.NODE_ENV === 'production') {
+      base.push({
+        source: '/_next/static/(.*)',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      })
+    }
+
+    return base
   },
 }
 

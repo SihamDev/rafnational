@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
 
     const b = parsed.data
 
-    let emailClean: string | null =
+    const emailClean: string | null =
       typeof b.email === 'string' && b.email.includes('@')
         ? b.email.trim().toLowerCase()
         : null

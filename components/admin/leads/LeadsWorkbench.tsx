@@ -59,6 +59,63 @@ const textareaCls =
 const filterSelectCls =
   'h-9 rounded-lg border border-input bg-background px-2 text-sm outline-none focus:border-ring rtl:text-right'
 
+/**
+ * `ar-SA` without options can use Hijri on the server (Node) and Gregorian in the browser — breaks hydration.
+ * Pin Gregorian + timezone so SSR and client match.
+ */
+const LEAD_INTL_LOCALE = 'ar-SA'
+const LEAD_INTL_TZ = 'Asia/Riyadh'
+
+function formatLeadDateOnly(iso: string | Date): string {
+  const d = typeof iso === 'string' ? new Date(iso) : iso
+  return new Intl.DateTimeFormat(LEAD_INTL_LOCALE, {
+    calendar: 'gregory',
+    timeZone: LEAD_INTL_TZ,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  }).format(d)
+}
+
+function formatLeadDateTime(iso: string | Date): string {
+  const d = typeof iso === 'string' ? new Date(iso) : iso
+  return new Intl.DateTimeFormat(LEAD_INTL_LOCALE, {
+    calendar: 'gregory',
+    timeZone: LEAD_INTL_TZ,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(d)
+}
+
+function SortColumnIcon({
+  col,
+  activeSort,
+  dir,
+  mounted,
+}: {
+  col: string
+  activeSort: string
+  dir: 'asc' | 'desc'
+  mounted: boolean
+}) {
+  // Render an invisible placeholder during SSR so server and client HTML always
+  // start identical — the real icon appears after the first client effect.
+  if (!mounted)
+    return <span className="ms-1 inline-block w-[11px] shrink-0" aria-hidden />
+  if (activeSort !== col)
+    return <span className="ms-1 inline-block opacity-30"><ArrowUpDown size={11} /></span>
+  return dir === 'asc' ? (
+    <span className="text-brand ms-1 inline-block"><ArrowUp size={11} /></span>
+  ) : (
+    <span className="text-brand ms-1 inline-block"><ArrowDown size={11} /></span>
+  )
+}
+
 /* ── Badge helpers ── */
 function badgeQual(q: QualificationStatus) {
   const cls =
@@ -209,6 +266,10 @@ export default function LeadsWorkbench({
   const router = useRouter()
   const [pending, start] = useTransition()
 
+  /* ── Client-only flag — prevents SSR/hydration mismatch on sort icons ── */
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+
   /* ── Detail dialog ── */
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState<LeadRow | null>(null)
@@ -251,14 +312,27 @@ export default function LeadsWorkbench({
     const supabase = createClient()
     const channel = supabase
       .channel('leads-realtime')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'leads' }, () => {
-        toast('عميل جديد وصل للتو', {
-          description: 'تم استقبال طلب جديد من الفورم',
-          action: { label: 'تحديث', onClick: () => router.refresh() },
-          duration: 8000,
-        })
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'leads' },
+        (payload) => {
+          const name = [
+            (payload.new as Record<string, unknown>)?.first_name,
+            (payload.new as Record<string, unknown>)?.family_name,
+          ].filter(Boolean).join(' ') || 'عميل جديد'
+
+          toast('عميل جديد وصل للتو 🔔', {
+            description: `${name} — تم استقبال طلب جديد من الفورم`,
+            action: { label: 'تحديث', onClick: () => router.refresh() },
+            duration: 10000,
+          })
+        },
+      )
+      .subscribe((status, err) => {
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          console.error('[Realtime] leads channel error:', status, err)
+        }
       })
-      .subscribe()
 
     return () => { supabase.removeChannel(channel) }
   }, [router])
@@ -267,13 +341,6 @@ export default function LeadsWorkbench({
   function sortHref(col: string) {
     const newDir = sort === col ? (dir === 'asc' ? 'desc' : 'asc') : 'desc'
     return buildHref({ q: query, qualification: qualificationFilter, sales: salesFilter, sort: col, dir: newDir, page: '1' })
-  }
-
-  function SortIcon({ col }: { col: string }) {
-    if (sort !== col) return <ArrowUpDown size={11} className="opacity-30 ms-1 inline-block" />
-    return dir === 'asc'
-      ? <ArrowUp size={11} className="text-brand ms-1 inline-block" />
-      : <ArrowDown size={11} className="text-brand ms-1 inline-block" />
   }
 
   /* ── Open lead detail ── */
@@ -438,23 +505,23 @@ export default function LeadsWorkbench({
               <tr>
                 <th className="px-5 py-3">
                   <Link href={sortHref('first_name')} className="flex items-center gap-0.5 hover:text-gray-600">
-                    العميل <SortIcon col="first_name" />
+                    العميل <SortColumnIcon col="first_name" activeSort={sort} dir={dir} mounted={mounted} />
                   </Link>
                 </th>
                 <th className="px-5 py-3">الجوال</th>
                 <th className="px-5 py-3">
                   <Link href={sortHref('city')} className="flex items-center gap-0.5 hover:text-gray-600">
-                    المدينة <SortIcon col="city" />
+                    المدينة <SortColumnIcon col="city" activeSort={sort} dir={dir} mounted={mounted} />
                   </Link>
                 </th>
                 <th className="px-5 py-3">
                   <Link href={sortHref('created_at')} className="flex items-center gap-0.5 hover:text-gray-600">
-                    التاريخ <SortIcon col="created_at" />
+                    التاريخ <SortColumnIcon col="created_at" activeSort={sort} dir={dir} mounted={mounted} />
                   </Link>
                 </th>
                 <th className="px-5 py-3">
                   <Link href={sortHref('qualification_status')} className="flex items-center gap-0.5 hover:text-gray-600">
-                    الحالة <SortIcon col="qualification_status" />
+                    الحالة <SortColumnIcon col="qualification_status" activeSort={sort} dir={dir} mounted={mounted} />
                   </Link>
                 </th>
                 {staffRole === 'admin' && (
@@ -525,7 +592,7 @@ export default function LeadsWorkbench({
                       {lead.city ?? '—'}
                     </td>
                     <td className="px-5 py-3.5 font-mono text-[11px] text-gray-400 whitespace-nowrap">
-                      {date ? new Date(date).toLocaleDateString('ar-SA') : '—'}
+                      {date ? formatLeadDateOnly(date) : '—'}
                     </td>
                     <td className="px-5 py-3.5 whitespace-nowrap">
                       <span className={badgeQual(lead.qualification_status)}>
@@ -781,7 +848,7 @@ export default function LeadsWorkbench({
                   <D label="الدعم السكني"        value={active?.housing_support_raw} />
                   <D label="مصدر الزيارة"        value={active?.visit_source_raw} />
                   <D label="الحملة"              value={active?.campaign_raw} />
-                  <D label="تاريخ الإرسال"       value={active?.funnel_submitted_at ? new Date(active.funnel_submitted_at).toLocaleString('ar-SA') : undefined} />
+                  <D label="تاريخ الإرسال"       value={active?.funnel_submitted_at ? formatLeadDateTime(active.funnel_submitted_at) : undefined} />
                 </dl>
               </section>
 

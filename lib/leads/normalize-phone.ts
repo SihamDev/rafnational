@@ -2,7 +2,7 @@
 
 export function normalizeLeadPhoneJs(p: string | null | undefined): string | null {
   if (p == null) return null
-  let t = String(p).trim()
+  const t = String(p).trim()
   if (!t || t === '-' || t === 'x') return null
 
   let s: string
