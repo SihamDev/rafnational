@@ -1,17 +1,6 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  // Serve the landing page HTML at `/` — runs after middleware, before filesystem
-  async rewrites() {
-    return {
-      beforeFiles: [
-        { source: '/', destination: '/raf-national-landing.html' },
-      ],
-      afterFiles: [],
-      fallback: [],
-    }
-  },
-
   // Allow @react-pdf/renderer which uses Node APIs
   serverExternalPackages: ['@react-pdf/renderer'],
 
