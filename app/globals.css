@@ -67,9 +67,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-el-messiri), 'El Messiri', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-el-messiri), 'El Messiri', ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-el-messiri), 'El Messiri', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Tajawal', 'Cairo', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Tajawal', 'Cairo', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
 
   /* Brand colours accessible as Tailwind utilities */
   --color-navy-950: var(--raf-navy-950);

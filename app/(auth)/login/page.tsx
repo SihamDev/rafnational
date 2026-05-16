@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff, Mail, Lock, ArrowLeft, ChevronLeft, ShieldCheck, BadgeCheck } from 'lucide-react'
 import { toast } from 'sonner'
+import Link from 'next/link'
 
 import { signIn, forgotPassword } from '@/lib/actions/auth'
 import { loginSchema, forgotPasswordSchema } from '@/lib/validations/auth'

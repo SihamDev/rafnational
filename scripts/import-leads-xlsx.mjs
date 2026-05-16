@@ -462,7 +462,7 @@ async function phaseMerge(book, sheetHint, qualification) {
       continue
     }
 
-    const { lead } = matchLead(parsedRaw, maps)
+    const { lead, method } = matchLead(parsedRaw, maps)
     if (!lead) {
       unmatched.push({
         excelRow:  excelRowIdx,

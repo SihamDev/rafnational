@@ -7,18 +7,30 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: {
       extend: {
-        fontFamily: { sans: ['Cairo', 'system-ui', 'sans-serif'] },
+        fontFamily: { sans: ['Tajawal', 'system-ui', 'sans-serif'] },
         colors: {
-          ink: '#2B2B2B', muted: '#6B7280',
-          gold: '#F5C848', honey: '#F8D873', honeyPale: '#FFF8DC',
-          grass: '#22B84A', grassDark: '#1AA13F',
+          ink: '#2B2B2B',
+          muted: '#6B7280',
+          gold: '#F4C430',
+          honey: '#F8D873',
+          honeyPale: '#FFF6D6',
+          grass: '#22B84A',
+          grassDark: '#1AA13F',
+        },
+        boxShadow: {
+          soft: '0 10px 30px -12px rgba(20, 20, 20, 0.10), 0 2px 6px -2px rgba(20, 20, 20, 0.05)',
+          softLg: '0 30px 60px -25px rgba(20, 20, 20, 0.18), 0 6px 14px -6px rgba(20, 20, 20, 0.06)',
+        },
+        borderRadius: {
+          '2xl': '18px',
+          '3xl': '24px',
         }
       }
     }
@@ -26,13 +38,16 @@
 </script>
 
 <style>
-  *, body, html, button, input, select, textarea, label {
-    font-family: 'Cairo', system-ui, sans-serif;
-  }
-  body { background: #fff; color: #2B2B2B; -webkit-font-smoothing: antialiased; }
-  ::selection { background: #F5C848; color: #111; }
+  html, body { font-family: 'Tajawal', system-ui, sans-serif; color: #2B2B2B; background: #FFFFFF; }
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  ::selection { background: #F4C430; color: #111; }
 
-  /* Hero */
+  /* hide arrows on number inputs */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  /* Hero: warm gradient + soft dotted texture */
   .hero-bg {
     background:
       radial-gradient(1200px 500px at 80% -10%, #FFE9A8 0%, rgba(255,233,168,0) 60%),
@@ -43,709 +58,862 @@
     background-image: radial-gradient(rgba(60,40,0,0.10) 1px, transparent 1px);
     background-size: 24px 24px;
     -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.65), rgba(0,0,0,0));
-    mask-image: linear-gradient(180deg, rgba(0,0,0,0.65), rgba(0,0,0,0));
+            mask-image: linear-gradient(180deg, rgba(0,0,0,0.65), rgba(0,0,0,0));
   }
-  .gold-rule { height:1px; background:linear-gradient(90deg, rgba(244,196,48,0) 0%, rgba(244,196,48,.55) 50%, rgba(244,196,48,0) 100%); }
-  .eyebrow { display:inline-flex; align-items:center; gap:.5rem; padding:.35rem .8rem; border-radius:999px; background:#FFF6D6; color:#6b4a00; font-size:12px; font-weight:700; letter-spacing:.02em; border:1px solid rgba(244,196,48,0.35); }
+
+  /* Decorative gold rule used between sections */
+  .gold-rule {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(244,196,48,0) 0%, rgba(244,196,48,.55) 50%, rgba(244,196,48,0) 100%);
+  }
+  .gold-diamond {
+    width: 8px; height: 8px; transform: rotate(45deg);
+    background: #F4C430; box-shadow: 0 0 0 4px rgba(244,196,48,0.15);
+    border-radius: 1px;
+  }
+
+  /* Subtle card lift on hover */
   .card-lift { transition: transform .25s ease, box-shadow .25s ease; }
   .card-lift:hover { transform: translateY(-2px); }
+
+  /* Animated entrance */
   .fadeIn { animation: fade .4s ease-out both; }
-  @keyframes fade { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-  .ink-highlight { background:linear-gradient(180deg, transparent 60%, rgba(244,196,48,0.45) 60%, rgba(244,196,48,0.45) 92%, transparent 92%); padding:0 .15em; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* ── Form styles ── */
-  #raf-form-container { direction:rtl; text-align:right; background:transparent; padding:0; max-width:100%; }
-
-  .progress-container { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; direction:ltr; }
-  .progress-text { font-weight:900; font-size:13px; color:#333; width:38px; }
-  .progress-track { flex-grow:1; background-color:#e9ecef; height:8px; border-radius:20px; margin-left:10px; overflow:hidden; }
-  .progress-fill { height:100%; background:#F5C848; width:25%; border-radius:20px; transition:width .5s ease; }
-
-  .step-title { font-size:18px; font-weight:800; color:#111; margin-bottom:20px; }
-  label { display:block; margin-bottom:8px; font-weight:700; font-size:14px; color:#333; }
-  .input-group { margin-bottom:20px; position:relative; }
-
-  .form-control {
-    width:100%; padding:14px 16px; border:1.5px solid #e5e7eb; border-radius:12px;
-    font-size:15px; font-weight:600; color:#333; background-color:#f9fafb;
-    transition:all .3s; outline:none; text-align:right; appearance:none;
-    box-sizing:border-box;
-  }
-  select.form-control {
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat:no-repeat; background-position:left 15px center; background-size:16px; cursor:pointer;
-  }
-  .phone-wrapper { position:relative; direction:ltr; width:100%; }
-  .phone-prefix { position:absolute; top:50%; left:14px; transform:translateY(-50%); color:#22c55e; font-weight:800; font-size:15px; z-index:10; pointer-events:none; }
-  #phone { padding-left:65px !important; text-align:left; direction:ltr; }
-
-  .form-control:focus { background-color:#fff; border-color:#F5C848; box-shadow:0 0 0 4px rgba(245,200,72,.2); }
-  .form-control.valid { border-color:#22c55e; background-color:#fff; }
-  #phone.valid { border-color:#22c55e; }
-  .form-control.error { border-color:#ef4444 !important; background-color:#fff5f5 !important; animation:shake .3s; }
-  @keyframes shake { 0%{transform:translateX(0)} 25%{transform:translateX(-5px)} 50%{transform:translateX(5px)} 100%{transform:translateX(0)} }
-
-  #otherCityInput { display:none; margin-top:12px; }
-
-  .btn-yellow {
-    background-color:#F5C848; color:#000; border:none; padding:15px;
-    border-radius:12px; cursor:pointer; font-size:16px; font-weight:800;
-    width:100%; margin-top:8px; display:flex; justify-content:center; align-items:center;
-    gap:8px; transition:background .3s; font-family:'Cairo',sans-serif;
-  }
-  .btn-yellow:hover { background-color:#e0b63e; }
-  .btn-yellow:disabled { opacity:.7; cursor:not-allowed; }
-  .btn-back {
-    background:#fff; border:2px solid #e5e7eb; color:#555;
-    margin-top:12px; width:100%; cursor:pointer; font-size:15px;
-    font-weight:700; padding:13px; border-radius:12px; font-family:'Cairo',sans-serif;
+  /* Big display headline with subtle highlighter behind a keyword */
+  .ink-highlight {
+    background: linear-gradient(180deg, transparent 60%, rgba(244,196,48,0.45) 60%, rgba(244,196,48,0.45) 92%, transparent 92%);
+    padding: 0 .15em;
   }
 
-  /* Final screens */
-  .final-screen { text-align:center; padding:20px 0; display:none; flex-direction:column; align-items:center; }
-  .final-screen.active { display:flex; animation:fadeIn .4s; }
-  .success-icon { width:70px; height:70px; background:#fff8e1; border-radius:50%; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; }
-  .success-icon svg { width:35px; fill:#F5C848; }
-  .duplicate-icon { width:70px; height:70px; background:#fee2e2; border-radius:50%; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; }
-  .duplicate-icon svg { width:35px; fill:#ef4444; }
-  .btn-whatsapp { background-color:#25D366; color:white; border:none; padding:15px; border-radius:12px; cursor:pointer; font-size:15px; font-weight:700; width:100%; margin-top:16px; display:flex; justify-content:center; align-items:center; text-decoration:none; font-family:'Cairo',sans-serif; }
+  /* Section eyebrow chip */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .35rem .8rem; border-radius: 999px;
+    background: #FFF6D6; color: #6b4a00;
+    font-size: 12px; font-weight: 700; letter-spacing: .02em;
+    border: 1px solid rgba(244,196,48,0.35);
+  }
 
-  .step { display:none; }
-  .step.active { display:block; animation:fadeIn .4s; }
+  /* Form field focus glow */
+  .field:focus { box-shadow: 0 0 0 4px rgba(244,196,48,0.18); border-color: #F4C430; }
 
-  /* Stars */
-  .star { color:#F5C848; font-size:14px; }
+  /* prevent ios input zoom */
+  input, select, textarea { font-size: 16px; }
 
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; }
+  /* Marquee for trust logos on small screens — keep simple, no animation needed */
 </style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 </head>
 <body>
+<div id="root"></div>
 
-<!-- ══ HEADER ══ -->
-<header class="bg-white border-b border-black/[0.06]">
-  <div class="max-w-[1100px] mx-auto px-5 py-5 flex flex-col items-center justify-center">
-    <svg width="52" height="52" viewBox="0 0 64 64" aria-hidden="true">
-      <g fill="none" stroke="#111" stroke-width="3.2" stroke-linejoin="round">
-        <path d="M32 6 L56 23 L47 52 L17 52 L8 23 Z"/>
-        <path d="M32 17 L48 28 L42 46 L22 46 L16 28 Z" transform="rotate(8 32 32)"/>
+<script type="text/babel">
+const { useState, useEffect, useRef, useMemo } = React;
+
+/* ---------- Original placeholder brand mark (geometric, not the reference) ---------- */
+function BrandMark({ size = 56, light = false }) {
+  // Original geometric emblem: pentagon ring + offset inner ring + gold center
+  const ink = light ? '#fff' : '#111';
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
+      <g fill="none" stroke={ink} strokeWidth="3.2" strokeLinejoin="round">
+        {/* outer pentagon */}
+        <path d="M32 6 L56 23 L47 52 L17 52 L8 23 Z" />
+        {/* offset inner pentagon */}
+        <path d="M32 17 L48 28 L42 46 L22 46 L16 28 Z" transform="rotate(8 32 32)" />
       </g>
-      <circle cx="32" cy="33" r="4" fill="#F5C848"/>
+      <circle cx="32" cy="33" r="4" fill="#F4C430" />
     </svg>
-    <div class="text-center mt-2 leading-tight">
-      <div class="text-[20px] font-extrabold text-ink tracking-tight">شركة راف الوطنية</div>
-      <div class="text-[12px] text-muted mt-0.5">للتطوير والاستثمار العقاري</div>
-    </div>
-  </div>
-</header>
+  );
+}
 
-<!-- ══ HERO ══ -->
-<section class="relative hero-bg overflow-hidden">
-  <div class="absolute inset-0 hero-dots pointer-events-none"></div>
-  <div class="relative max-w-[1100px] mx-auto px-5 py-10 md:py-14">
-    <div class="grid md:grid-cols-12 gap-5">
-
-      <!-- Right card: headline -->
-      <div class="md:col-span-7 bg-white rounded-3xl shadow-[0_30px_60px_-25px_rgba(20,20,20,0.18)] p-6 md:p-10 relative overflow-hidden card-lift">
-        <div class="absolute -top-10 -left-10 w-32 h-32 rounded-full bg-honey/40"></div>
-        <div class="relative">
-          <div class="eyebrow mb-4">
-            <span class="w-1.5 h-1.5 rounded-full bg-grass inline-block"></span>
-            تمويل عقاري مرخّص — حلول مدروسة
-          </div>
-          <h1 class="text-[26px] md:text-[42px] font-black leading-[1.2] text-ink tracking-tight">
-            لا تخلي نقص السيولة يوقف طموحاتك<span class="text-gold">…</span><br>
-            حوّل تمويلك العقاري إلى <span class="ink-highlight">كاش عالي</span> يتجاوز
-            <span class="whitespace-nowrap"> المليون ريال</span>
-          </h1>
-          <ul class="mt-5 space-y-3">
-            <li class="flex items-center gap-3 text-[15px] text-ink">
-              <span class="shrink-0 w-6 h-6 rounded-full bg-grass/10 text-grass flex items-center justify-center">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              سيولة نقدية تبدأ على حسب الأهلية
-            </li>
-            <li class="flex items-center gap-3 text-[15px] text-ink">
-              <span class="shrink-0 w-6 h-6 rounded-full bg-grass/10 text-grass flex items-center justify-center">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              إجراءات خلال 24 ساعة من فريقك
-            </li>
-            <li class="flex items-center gap-3 text-[15px] text-ink">
-              <span class="shrink-0 w-6 h-6 rounded-full bg-grass/10 text-grass flex items-center justify-center">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4 10-10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              حلول واضحة وخطوات مضمونة
-            </li>
-          </ul>
-          <div class="mt-6">
-            <button onclick="scrollToForm()" class="inline-flex items-center justify-center gap-2 bg-grass hover:bg-grassDark transition-colors text-white font-bold rounded-2xl px-6 py-3.5 shadow-[0_10px_30px_-12px_rgba(20,20,20,0.10)] w-full sm:w-auto">
-              سجل الآن وأبشر بالسعد
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-          <p class="mt-3 text-[12px] text-muted">* التسجيل لا يعني الموافقة، ويخضع الطلب لمعايير الأهلية.</p>
+/* ---------- Header ---------- */
+function Header() {
+  return (
+    <header className="bg-white relative">
+      <div className="max-w-[1100px] mx-auto px-5 py-6 flex flex-col items-center justify-center">
+        <BrandMark size={52} />
+        <div className="text-center mt-2.5 leading-tight">
+          <div className="text-[20px] md:text-[22px] font-extrabold text-ink tracking-tight">شركة راف الوطنية</div>
+          <div className="text-[12px] md:text-[13px] text-muted mt-1">للتطوير والاستثمار العقاري</div>
         </div>
       </div>
+      <div className="gold-rule" />
+    </header>
+  );
+}
 
-      <!-- Left card: stats -->
-      <div class="md:col-span-5 bg-white rounded-3xl shadow-[0_30px_60px_-25px_rgba(20,20,20,0.18)] p-6 md:p-8 card-lift">
-        <h2 class="text-[19px] font-extrabold text-ink leading-tight">ابدأ التقييم خلال دقيقة</h2>
-        <p class="text-[14px] text-muted mt-1">نعرف وضعك ونرشح لك أفضل خيار.</p>
-        <div class="grid grid-cols-3 gap-2 mt-5">
-          <div class="text-center bg-neutral-50 border border-black/[0.04] rounded-2xl py-4">
-            <div class="text-[18px] font-extrabold text-ink">100%</div>
-            <div class="text-[12px] text-muted mt-0.5">خصوصية</div>
+/* ---------- Reusable buttons ---------- */
+function GreenCTA({ children, className = '', onClick, full }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center justify-center gap-2 bg-grass hover:bg-grassDark transition-colors text-white font-bold rounded-2xl px-6 py-3.5 shadow-soft active:scale-[0.99] ${full ? 'w-full' : ''} ${className}`}
+    >
+      <span>{children}</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M14 6l-6 6 6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </button>
+  );
+}
+function BlackCTA({ children, className = '', onClick, full }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center justify-center gap-2 bg-black hover:bg-neutral-800 transition-colors text-white font-bold rounded-2xl px-6 py-3.5 ${full ? 'w-full' : ''} ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+/* ---------- Hero ---------- */
+function Hero({ onCTAClick }) {
+  return (
+    <section className="relative hero-bg overflow-hidden">
+      {/* decorative dots overlay */}
+      <div className="absolute inset-0 hero-dots pointer-events-none" />
+      {/* decorative blurred orbs */}
+      <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-white/20 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -left-24 w-80 h-80 rounded-full bg-amber-300/30 blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-[1100px] mx-auto px-5 py-12 md:py-16">
+        <div className="grid md:grid-cols-12 gap-5 md:gap-6">
+          {/* Right large card (first in RTL) */}
+          <div className="md:col-span-7 bg-white rounded-3xl shadow-softLg p-6 md:p-10 relative overflow-hidden card-lift">
+            {/* subtle gold corner accent */}
+            <div className="absolute -top-10 -left-10 w-32 h-32 rounded-full bg-honey/40" />
+            <div className="relative">
+            <div className="eyebrow mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-grass inline-block" />
+              تمويل عقاري مرخّص — حلول مدروسة
+            </div>
+            <h1 className="text-[28px] md:text-[44px] font-black leading-[1.2] text-ink tracking-tight">
+              لا تخلي نقص السيولة يوقف طموحاتك<span className="text-gold">…</span><br/>
+              حوّل تمويلك العقاري إلى <span className="ink-highlight">كاش عالي</span> يتجاوز
+              <span className="whitespace-nowrap"> المليون ريال</span>
+            </h1>
+
+            <ul className="mt-6 space-y-3">
+              {[
+                'سيولة نقدية تبدأ على حسب الأهلية',
+                'إجراءات خلال 24 ساعة من فريقك',
+                'حلول واضحة وخطوات مضمونة',
+              ].map((t,i)=>(
+                <li key={i} className="flex items-center gap-3 text-[15px] md:text-[16px] text-ink">
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-grass/10 text-grass flex items-center justify-center">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4 10-10" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </span>
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-7 flex flex-col sm:flex-row gap-3">
+              <GreenCTA onClick={onCTAClick} className="sm:flex-1">سجل الآن وأبشر بالسعد</GreenCTA>
+              <BlackCTA className="sm:flex-none">متابعة طلب سابق</BlackCTA>
+            </div>
+            <p className="mt-4 text-[12px] text-muted leading-relaxed">
+              * التسجيل لا يعني الموافقة، ويخضع الطلب لمعايير الأهلية المعتمدة لدى الجهات التمويلية المرخصة.
+            </p>
+            </div>
           </div>
-          <div class="text-center bg-neutral-50 border border-black/[0.04] rounded-2xl py-4">
-            <div class="text-[18px] font-extrabold text-ink">٤</div>
-            <div class="text-[12px] text-muted mt-0.5">خطوات بسيطة</div>
-          </div>
-          <div class="text-center bg-neutral-50 border border-black/[0.04] rounded-2xl py-4">
-            <div class="text-[18px] font-extrabold text-ink">24h</div>
-            <div class="text-[12px] text-muted mt-0.5">وقت الرد</div>
+
+          {/* Left smaller card */}
+          <div className="md:col-span-5 bg-white rounded-3xl shadow-softLg p-6 md:p-8 card-lift">
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-11 h-11 rounded-2xl bg-honey/60 flex items-center justify-center">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2" stroke="#7a5a00" strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="12" r="4" fill="#F4C430"/></svg>
+              </div>
+              <div>
+                <h2 className="text-[20px] md:text-[22px] font-extrabold text-ink leading-tight">ابدأ التقييم خلال دقيقة</h2>
+                <p className="text-[14px] text-muted mt-1">نعرف وضعك ونرشح لك أفضل خيار.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 md:gap-3 mt-6">
+              {[
+                { big: '100%', small: 'خصوصية' },
+                { big: '٣', small: 'خطوات بسيطة' },
+                { big: '24h', small: 'وقت الرد' },
+              ].map((s,i)=>(
+                <div key={i} className="text-center bg-neutral-50 border border-black/[0.04] rounded-2xl py-4">
+                  <div className="text-[18px] md:text-[20px] font-extrabold text-ink">{s.big}</div>
+                  <div className="text-[12px] text-muted mt-0.5">{s.small}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6">
+              <GreenCTA full onClick={onCTAClick}>سجل الآن وأبشر بالسعد</GreenCTA>
+            </div>
+            <p className="mt-3 text-[11px] text-muted text-center leading-relaxed">
+              بياناتك محمية ولن تُستخدم إلا لتقييم طلب التمويل.
+            </p>
           </div>
         </div>
-        <div class="mt-5">
-          <button onclick="scrollToForm()" class="inline-flex items-center justify-center gap-2 bg-grass hover:bg-grassDark transition-colors text-white font-bold rounded-2xl px-6 py-3.5 w-full">
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Intro accordion ---------- */
+function IntroAccordion() {
+  const [open, setOpen] = useState(true);
+  return (
+    <section className="bg-white relative">
+      <div className="max-w-[920px] mx-auto px-5 py-12 md:py-16">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <span className="gold-rule flex-1 max-w-[120px]" />
+          <span className="gold-diamond" />
+          <span className="gold-rule flex-1 max-w-[120px]" />
+        </div>
+        <div className="bg-white rounded-3xl border border-black/[0.06] shadow-soft p-6 md:p-8 card-lift">
+          <button
+            onClick={() => setOpen(o => !o)}
+            className="w-full flex items-center justify-between gap-4 text-right"
+          >
+            <span className="text-[19px] md:text-[22px] font-extrabold text-ink tracking-tight">
+              وايش الفكرة باختصار؟ <span aria-hidden>💡</span>
+            </span>
+            <span className={`shrink-0 w-10 h-10 rounded-full bg-honey/40 flex items-center justify-center transition-transform ${open ? 'rotate-180' : ''}`}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#2B2B2B" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </span>
+          </button>
+
+          {open && (
+            <div className="fadeIn mt-5 grid md:grid-cols-5 gap-4 items-stretch">
+              <div className="md:col-span-3 bg-honeyPale border border-gold/30 rounded-2xl px-5 py-5 text-ink font-bold flex items-center gap-3">
+                <div className="shrink-0 w-10 h-10 rounded-xl bg-gold/90 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 7v6l4 2" stroke="#2B2B2B" strokeWidth="2.2" strokeLinecap="round"/><circle cx="12" cy="12" r="9" stroke="#2B2B2B" strokeWidth="2"/></svg>
+                </div>
+                <span className="text-[15px] md:text-[16px] leading-snug">النيابة قد تتم خلال مدة سريعة وقد تصل إلى 9 أيام</span>
+              </div>
+              <p className="md:col-span-2 text-[14px] md:text-[15px] text-muted leading-relaxed self-center">
+                حسب الحالة وبعد تقييم الأهلية واختيار الإجراءات التمويلية المناسبة لوضعك.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Steps ---------- */
+function Steps({ onCTAClick }) {
+  const items = [
+    { n: '١', t: 'الاستلام الأولي', d: 'بعد التسجيل، نراجع طلبك خلال 24 ساعة ونحدد المسار المناسب.', icon: 'inbox' },
+    { n: '٢', t: 'تجهيز الاتفاقيات والعقود', d: 'نوضح لك الخيارات والإجراءات اللازمة بشكل واضح.', icon: 'doc' },
+    { n: '٣', t: 'تنفيذ الإجراءات التمويلية', d: 'نرتب المعاملة ونبلغك بالمراحل حتى إتمام الوصول.', icon: 'check' },
+  ];
+  const icons = {
+    inbox: <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 13l3-7h10l3 7M4 13v5a2 2 0 002 2h12a2 2 0 002-2v-5M4 13h5l1 2h4l1-2h5" stroke="#2B2B2B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+    doc: <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z" stroke="#2B2B2B" strokeWidth="1.8" strokeLinejoin="round"/><path d="M14 3v5h5M8 13h8M8 17h5" stroke="#2B2B2B" strokeWidth="1.8" strokeLinecap="round"/></svg>,
+    check: <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2B2B2B" strokeWidth="1.8"/><path d="M8 12.5l3 3 5-6" stroke="#2B2B2B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  };
+  return (
+    <section className="bg-[#FAFAF7] relative">
+      <div className="max-w-[1100px] mx-auto px-5 py-14 md:py-20">
+        <div className="text-center">
+          <div className="eyebrow">كيف تسير العملية</div>
+          <h2 className="mt-3 text-[26px] md:text-[36px] font-black text-ink tracking-tight">
+            نرتّب لك الطريق<span className="text-gold">…</span> خطوة بخطوة
+          </h2>
+          <p className="text-muted mt-2 text-[14px] md:text-[16px] max-w-xl mx-auto">
+            ثلاث خطوات واضحة، بدون مفاجآت وبدون وعود غير واقعية.
+          </p>
+        </div>
+
+        <div className="relative grid md:grid-cols-3 gap-4 md:gap-6 mt-10">
+          {/* connecting dashed line on desktop */}
+          <div className="hidden md:block absolute right-[16%] left-[16%] top-[42px] h-px border-t-2 border-dashed border-gold/40" aria-hidden />
+          {items.map((s, i) => (
+            <div key={i} className="relative bg-white rounded-3xl border border-black/[0.05] shadow-soft p-6 md:p-7 card-lift">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="relative w-12 h-12 rounded-2xl bg-gold flex items-center justify-center text-ink font-black text-[18px] shadow-soft">
+                  {s.n}
+                </div>
+                <div className="w-11 h-11 rounded-xl bg-honeyPale flex items-center justify-center">
+                  {icons[s.icon]}
+                </div>
+              </div>
+              <h3 className="text-[18px] md:text-[20px] font-extrabold text-ink tracking-tight mt-1">{s.t}</h3>
+              <p className="text-[14px] md:text-[15px] text-muted leading-relaxed mt-2">{s.d}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10">
+          <button
+            onClick={onCTAClick}
+            className="w-full bg-grass hover:bg-grassDark transition-colors text-white font-extrabold rounded-2xl py-4 md:py-5 text-[16px] md:text-[18px] shadow-soft active:scale-[0.995]"
+          >
             سجل الآن وأبشر بالسعد
           </button>
         </div>
-        <p class="mt-3 text-[11px] text-muted text-center">بياناتك محمية ولن تُستخدم إلا لتقييم طلب التمويل.</p>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
+  );
+}
 
-<!-- ══ HOW IT WORKS ══ -->
-<section class="bg-[#FAFAF7]">
-  <div class="max-w-[1100px] mx-auto px-5 py-14">
-    <div class="text-center">
-      <div class="eyebrow">كيف تسير العملية</div>
-      <h2 class="mt-3 text-[24px] md:text-[34px] font-black text-ink tracking-tight">
-        نرتّب لك الطريق<span class="text-gold">…</span> خطوة بخطوة
-      </h2>
-    </div>
-    <div class="relative grid md:grid-cols-3 gap-4 mt-10">
-      <div class="hidden md:block absolute right-[16%] left-[16%] top-[42px] h-px border-t-2 border-dashed border-gold/40" aria-hidden="true"></div>
-      <div class="bg-white rounded-3xl border border-black/[0.05] shadow-[0_10px_30px_-12px_rgba(20,20,20,0.10)] p-6 card-lift">
-        <div class="w-12 h-12 rounded-2xl bg-gold flex items-center justify-center text-ink font-black text-[18px] mb-3">١</div>
-        <h3 class="text-[17px] font-extrabold text-ink">الاستلام الأولي</h3>
-        <p class="text-[14px] text-muted leading-relaxed mt-2">بعد التسجيل، نراجع طلبك خلال 24 ساعة ونحدد المسار المناسب.</p>
+/* ---------- Multi-step form ---------- */
+const SAUDI_CITIES = ['الرياض','جدة','مكة المكرمة','المدينة المنورة','الدمام','الخبر','الطائف','تبوك','أبها','حائل','بريدة','نجران','جازان'];
+const FINANCE_TYPES = ['تمويل عقاري شخصي','تمويل سكني مدعوم','إعادة تمويل عقاري','رهن عقاري','شراء أرض'];
+
+function FormPanel({ onSubmitted }) {
+  const [step, setStep] = useState(1);
+  const total = 5;
+  const [data, setData] = useState({
+    firstName:'', lastName:'',
+    phone:'', city:'',
+    finance:'',
+    obligation:'', salary:'',
+    consent: true,
+  });
+  const [errors, setErrors] = useState({});
+  const [warnOpen, setWarnOpen] = useState(false);
+
+  const progress = (step / total) * 100;
+
+  function set(k, v) { setData(d => ({...d, [k]: v})); }
+
+  function validate() {
+    const e = {};
+    if (step === 1) {
+      if (!data.firstName.trim()) e.firstName = 'مطلوب';
+      if (!data.lastName.trim()) e.lastName = 'مطلوب';
+    } else if (step === 2) {
+      if (!/^(05)\d{8}$/.test(data.phone.trim())) e.phone = 'رقم جوال غير صحيح (مثال: 05XXXXXXXX)';
+      if (!data.city) e.city = 'اختر المدينة';
+    } else if (step === 3) {
+      if (!data.finance) e.finance = 'اختر نوع التمويل';
+    } else if (step === 4) {
+      if (!data.salary || Number(data.salary) < 1000) e.salary = 'أدخل دخلًا شهريًا صحيحًا';
+    }
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
+
+  function next() {
+    if (!validate()) return;
+    if (step < total) setStep(step + 1);
+  }
+  function back() {
+    setErrors({});
+    if (step > 1) setStep(step - 1);
+  }
+  function submit() {
+    if (!data.consent) {
+      setErrors({ consent: 'يجب الموافقة قبل الإرسال' });
+      return;
+    }
+    onSubmitted();
+  }
+
+  const titles = {
+    1: 'بيانات الاسم',
+    2: 'بيانات التواصل',
+    3: 'نوع التمويل المطلوب',
+    4: 'الالتزام والدخل',
+    5: 'مراجعة وإرسال',
+  };
+
+  return (
+    <div className="bg-white rounded-3xl p-5 md:p-7 shadow-softLg border-2 border-gold/60">
+      {/* progress */}
+      <div className="flex items-center justify-between mb-1 text-[12px] text-muted">
+        <span>الخطوة {step} من {total}</span>
+        <span>{Math.round(progress)}%</span>
       </div>
-      <div class="bg-white rounded-3xl border border-black/[0.05] shadow-[0_10px_30px_-12px_rgba(20,20,20,0.10)] p-6 card-lift">
-        <div class="w-12 h-12 rounded-2xl bg-gold flex items-center justify-center text-ink font-black text-[18px] mb-3">٢</div>
-        <h3 class="text-[17px] font-extrabold text-ink">تجهيز الاتفاقيات</h3>
-        <p class="text-[14px] text-muted leading-relaxed mt-2">نوضح لك الخيارات والإجراءات اللازمة بشكل واضح.</p>
+      <div className="w-full h-2 rounded-full bg-neutral-100 overflow-hidden">
+        <div className="h-full bg-gradient-to-l from-gold to-honey rounded-full transition-all" style={{ width: `${progress}%` }} />
       </div>
-      <div class="bg-white rounded-3xl border border-black/[0.05] shadow-[0_10px_30px_-12px_rgba(20,20,20,0.10)] p-6 card-lift">
-        <div class="w-12 h-12 rounded-2xl bg-gold flex items-center justify-center text-ink font-black text-[18px] mb-3">٣</div>
-        <h3 class="text-[17px] font-extrabold text-ink">تنفيذ الإجراءات</h3>
-        <p class="text-[14px] text-muted leading-relaxed mt-2">نرتب المعاملة ونبلغك بالمراحل حتى إتمام الوصول.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ══ FORM SECTION ══ -->
-<section id="form-section" class="bg-white">
-  <div class="max-w-[1100px] mx-auto px-5 py-14">
-    <div class="text-center mb-10">
-      <div class="eyebrow">تقييم أولي سريع</div>
-      <h2 class="mt-3 text-[24px] md:text-[34px] font-black text-ink tracking-tight">ابدأ التقييم الآن<span class="text-gold">.</span></h2>
-      <p class="text-muted mt-2 text-[14px] max-w-xl mx-auto">عبّي بياناتك بأربع خطوات بسيطة وراح يتواصل معك الفريق خلال 24 ساعة.</p>
-    </div>
+      <h3 className="text-right text-[20px] md:text-[22px] font-extrabold text-ink mt-5">{titles[step]}</h3>
 
-    <div class="grid md:grid-cols-12 gap-5">
+      <div className="mt-5 space-y-4 fadeIn" key={step}>
+        {step === 1 && (
+          <>
+            <Field label="الاسم الأول" error={errors.firstName}>
+              <input value={data.firstName} onChange={e=>set('firstName', e.target.value)} placeholder="مثال: محمد" className={inputCls(errors.firstName)} />
+            </Field>
+            <Field label="اسم العائلة" error={errors.lastName}>
+              <input value={data.lastName} onChange={e=>set('lastName', e.target.value)} placeholder="مثال: العتيبي" className={inputCls(errors.lastName)} />
+            </Field>
+          </>
+        )}
 
-      <!-- FORM -->
-      <div class="md:col-span-7">
-        <div class="bg-white rounded-3xl p-5 md:p-7 shadow-[0_30px_60px_-25px_rgba(20,20,20,0.18)] border-2 border-gold/60">
-          <div id="raf-form-container">
+        {step === 2 && (
+          <>
+            <Field label="رقم الجوال" error={errors.phone}>
+              <input dir="ltr" inputMode="numeric" value={data.phone} onChange={e=>set('phone', e.target.value.replace(/[^\d]/g,''))} placeholder="05XXXXXXXX" className={inputCls(errors.phone) + ' text-left'} maxLength={10}/>
+            </Field>
+            <Field label="المدينة" error={errors.city}>
+              <select value={data.city} onChange={e=>set('city', e.target.value)} className={inputCls(errors.city)}>
+                <option value="">اختر مدينتك</option>
+                {SAUDI_CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </Field>
+          </>
+        )}
 
-            <div class="progress-container" id="progressWrapper">
-              <div class="progress-text" id="progressText">25%</div>
-              <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
+        {step === 3 && (
+          <Field label="نوع التمويل" error={errors.finance}>
+            <div className="grid sm:grid-cols-2 gap-2.5">
+              {FINANCE_TYPES.map(f => (
+                <label key={f} className={`cursor-pointer rounded-2xl border p-3.5 text-[14px] flex items-center gap-2.5 transition-all ${data.finance===f ? 'border-gold bg-honeyPale' : 'border-black/[0.08] bg-white hover:border-black/20'}`}>
+                  <input type="radio" name="fin" checked={data.finance===f} onChange={()=>set('finance', f)} className="accent-gold" />
+                  <span className="text-ink">{f}</span>
+                </label>
+              ))}
             </div>
+          </Field>
+        )}
 
-            <form id="multiStepForm" onsubmit="event.preventDefault();">
+        {step === 4 && (
+          <>
+            <Field label="الدخل الشهري (ريال)" error={errors.salary}>
+              <input dir="ltr" inputMode="numeric" value={data.salary} onChange={e=>set('salary', e.target.value.replace(/[^\d]/g,''))} placeholder="مثال: 15000" className={inputCls(errors.salary) + ' text-left'} />
+            </Field>
+            <Field label="الالتزامات الشهرية الحالية (ريال) — اختياري">
+              <input dir="ltr" inputMode="numeric" value={data.obligation} onChange={e=>set('obligation', e.target.value.replace(/[^\d]/g,''))} placeholder="مثال: 3000" className={inputCls('') + ' text-left'} />
+            </Field>
+          </>
+        )}
 
-              <!-- STEP 1: Name -->
-              <div class="step active" id="step1">
-                <h3 class="step-title">بيانات الاسم</h3>
-                <div class="input-group">
-                  <label>الاسم الأول</label>
-                  <input type="text" id="firstName" class="form-control" placeholder="مثال: محمد" oninput="removeError(this)">
-                </div>
-                <div class="input-group">
-                  <label>اسم العائلة</label>
-                  <input type="text" id="lastName" class="form-control" placeholder="مثال: العتيبي" oninput="removeError(this)">
-                </div>
-                <button type="button" class="btn-yellow" onclick="nextStep(2)">التالي ←</button>
-              </div>
+        {step === 5 && (
+          <div className="space-y-3">
+            <ReviewRow label="الاسم" value={`${data.firstName} ${data.lastName}`} />
+            <ReviewRow label="الجوال" value={data.phone} dir="ltr" />
+            <ReviewRow label="المدينة" value={data.city} />
+            <ReviewRow label="نوع التمويل" value={data.finance} />
+            <ReviewRow label="الدخل الشهري" value={data.salary ? `${Number(data.salary).toLocaleString('ar-SA')} ريال` : '—'} />
+            <ReviewRow label="الالتزامات" value={data.obligation ? `${Number(data.obligation).toLocaleString('ar-SA')} ريال` : '—'} />
 
-              <!-- STEP 2: Contact -->
-              <div class="step" id="step2">
-                <h3 class="step-title">بيانات التواصل</h3>
-                <div class="input-group">
-                  <label>رقم الجوال</label>
-                  <div class="phone-wrapper">
-                    <span class="phone-prefix">+966</span>
-                    <input type="tel" id="phone" class="form-control" placeholder="5xxxxxxxx" maxlength="9" oninput="removeError(this)">
-                  </div>
-                  <div style="text-align:left; font-size:11px; color:#888; margin-top:5px;">أدخل الرقم بدون 05</div>
-                </div>
-                <div class="input-group">
-                  <label>البريد الإلكتروني</label>
-                  <input type="email" id="email" class="form-control" placeholder="name@example.com" oninput="removeError(this)">
-                </div>
-                <div class="input-group">
-                  <label>المدينة</label>
-                  <select id="city" class="form-control" onchange="checkCity(this)">
-                    <option value="" disabled selected hidden>اختر المدينة</option>
-                    <option>الرياض</option><option>جدة</option><option>الدمام</option>
-                    <option>مكة المكرمة</option><option>المدينة المنورة</option><option>الخبر</option>
-                    <option>الظهران</option><option>الطائف</option><option>أبها</option>
-                    <option>تبوك</option><option>حائل</option><option>جازان</option>
-                    <option>نجران</option><option value="أخرى">أخرى</option>
-                  </select>
-                  <input type="text" id="otherCityInput" class="form-control" placeholder="اكتب مدينتك..." oninput="removeError(this)">
-                </div>
-                <button type="button" class="btn-yellow" onclick="nextStep(3)">التالي ←</button>
-                <button type="button" class="btn-back" onclick="prevStep(1)">رجوع</button>
-              </div>
-
-              <!-- STEP 3: Eligibility -->
-              <div class="step" id="step3">
-                <h3 class="step-title">الأهلية</h3>
-                <div class="input-group">
-                  <label>هل عندك تمويل عقاري قائم؟</label>
-                  <select id="hasMortgage" class="form-control" onchange="removeError(this)">
-                    <option value="" disabled selected hidden>اختر الإجابة</option>
-                    <option>لا</option><option>نعم</option>
-                  </select>
-                </div>
-                <div class="input-group">
-                  <label>إجمالي الراتب</label>
-                  <select id="salary" class="form-control" onchange="removeError(this)">
-                    <option value="" disabled selected hidden>اختر الراتب</option>
-                    <option value="5000-7000">5,000 - 7,000</option>
-                    <option value="8000-10000">8,000 - 10,000</option>
-                    <option value="11000-15000">11,000 - 15,000</option>
-                    <option value="15000-20000">15,000 - 20,000</option>
-                    <option value="20000-30000">20,000 - 30,000</option>
-                    <option value="أكثر من 30,000">أكثر من 30,000</option>
-                  </select>
-                </div>
-                <div class="input-group">
-                  <label>هل أنت مستحق لدعم سكني؟</label>
-                  <select id="sakaniSupport" class="form-control" onchange="removeError(this)">
-                    <option value="" disabled selected hidden>اختر الإجابة</option>
-                    <option>نعم مستحق لدعم سكني</option>
-                    <option>لا، غير مستحق لدعم سكني</option>
-                  </select>
-                </div>
-                <div class="input-group">
-                  <label>راتبك الحالي على أي بنك</label>
-                  <select id="bank" class="form-control" onchange="removeError(this)">
-                    <option value="" disabled selected hidden>اختر البنك</option>
-                    <option>الراجحي</option><option>الأهلي</option><option>بنك الرياض</option>
-                    <option>الإنماء</option><option>بنك البلاد</option><option>العربي</option>
-                    <option>أخرى</option>
-                  </select>
-                </div>
-                <button type="button" class="btn-yellow" onclick="nextStep(4)">التالي ←</button>
-                <button type="button" class="btn-back" onclick="prevStep(2)">رجوع</button>
-              </div>
-
-              <!-- STEP 4: Request details -->
-              <div class="step" id="step4">
-                <h3 class="step-title">تفاصيل الطلب</h3>
-                <div class="input-group">
-                  <label>جهة العمل</label>
-                  <input type="text" id="sector" class="form-control" placeholder="اكتب جهة عملك هنا..." oninput="removeError(this)">
-                </div>
-                <div class="input-group">
-                  <label>المبلغ المطلوب</label>
-                  <select id="loanAmount" class="form-control" onchange="removeError(this)">
-                    <option value="" disabled selected hidden>اختر المبلغ</option>
-                    <option value="200k-500k">من 200,000 إلى 500,000</option>
-                    <option value="500k-1m">من 500,000 إلى 1,000,000</option>
-                    <option value="1m+">أكثر من 1,000,000</option>
-                  </select>
-                </div>
-                <div class="input-group">
-                  <label>هل لديك إيقاف خدمات حاليًا؟</label>
-                  <select id="stopServices" class="form-control" onchange="removeError(this)">
-                    <option value="" disabled selected hidden>اختر الإجابة</option>
-                    <option>لا</option><option>نعم</option>
-                  </select>
-                </div>
-                <div class="input-group">
-                  <label>مدى احتياجك للتمويل</label>
-                  <select id="urgency" class="form-control" onchange="removeError(this)">
-                    <option value="" disabled selected hidden>اختر الإجابة</option>
-                    <option>بشكل عاجل</option>
-                    <option>في أقرب وقت</option>
-                    <option>أفكر بالأمر</option>
-                  </select>
-                </div>
-                <button type="button" class="btn-yellow" id="submitBtn" onclick="submitForm()">إرسال الطلب</button>
-                <button type="button" class="btn-back" onclick="prevStep(3)">رجوع</button>
-              </div>
-
-              <!-- STEP 5: Results -->
-              <div class="step" id="step5">
-                <div id="success-message" class="final-screen">
-                  <div class="success-icon">
-                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                  </div>
-                  <h2 class="text-[22px] font-black text-ink">مبروك.. تم إرسال طلبك بنجاح</h2>
-                  <p style="color:#555; margin-bottom:20px; line-height:1.8; font-size:14px; font-weight:600;">
-                    أكملت أول خطوة للحصول على عقار وكاش بكل ثقة.<br>
-                    فريقنا حيتواصل معك خلال 24 ساعة لشرح الخطوات القادمة.
-                  </p>
-                  <a href="#" class="btn-whatsapp" id="success-btn" target="_blank">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-left:8px"><path d="M20 3.6A11 11 0 003.2 17.5L2 22l4.6-1.2A11 11 0 1020 3.6z"/></svg>
-                    متابعة على واتساب
-                  </a>
-                </div>
-
-                <div id="duplicate-message" class="final-screen">
-                  <div class="duplicate-icon">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                  </div>
-                  <h2 class="text-[22px] font-black text-ink">طلبك مسجل لدينا مسبقاً</h2>
-                  <p style="color:#555; margin-bottom:20px; line-height:1.8; font-size:14px; font-weight:600;">
-                    لقد استلمنا بياناتك بالفعل وهي قيد المعالجة الآن.<br>
-                    سنقوم بالتواصل معك قريباً.
-                  </p>
-                  <a href="#" class="btn-whatsapp" id="duplicate-btn" target="_blank">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-left:8px"><path d="M20 3.6A11 11 0 003.2 17.5L2 22l4.6-1.2A11 11 0 1020 3.6z"/></svg>
-                    متابعة طلب سابق على واتساب
-                  </a>
-                </div>
-              </div>
-
-            </form>
-
-            <!-- Disclaimer -->
-            <div id="formDisclaimer" class="mt-4 text-[11px] text-muted text-center leading-relaxed">
-              بياناتك سرية ومحمية، ولن تُشارك مع أي طرف ثالث إلا بما يخص دراسة الطلب لدى الجهات المرخصة.
-            </div>
-
+            <label className="flex items-start gap-2.5 mt-2 text-[13px] text-ink cursor-pointer">
+              <input type="checkbox" checked={data.consent} onChange={e=>set('consent', e.target.checked)} className="mt-1 accent-grass" />
+              <span>أوافق على معالجة بياناتي لأغراض دراسة طلب التمويل، وعلى سياسة الخصوصية والشروط والأحكام.</span>
+            </label>
+            {errors.consent && <p className="text-[12px] text-red-600">{errors.consent}</p>}
           </div>
-        </div>
+        )}
       </div>
 
-      <!-- Side explanation -->
-      <div class="md:col-span-5">
-        <div class="bg-white rounded-3xl border border-black/[0.06] shadow-[0_10px_30px_-12px_rgba(20,20,20,0.10)] p-6 md:p-8 card-lift">
-          <h3 class="text-[19px] font-extrabold text-ink leading-tight tracking-tight">خلنا نعرف وضعك ونقولك وش الأفضل لك</h3>
-          <p class="text-[14px] text-muted leading-relaxed mt-3">فريق راف يستلم طلبك ويراجع حالتك بشكل دقيق، ثم يرشّح لك مسار التمويل المناسب.</p>
-          <div class="grid grid-cols-3 gap-2 mt-5">
-            <div class="bg-honeyPale/70 border border-gold/30 rounded-2xl py-3 px-2 text-center">
-              <div class="text-[12px] font-bold text-ink mt-1">استشارة</div>
-            </div>
-            <div class="bg-honeyPale/70 border border-gold/30 rounded-2xl py-3 px-2 text-center">
-              <div class="text-[12px] font-bold text-ink mt-1">خلال 24 ساعة</div>
-            </div>
-            <div class="bg-honeyPale/70 border border-gold/30 rounded-2xl py-3 px-2 text-center">
-              <div class="text-[12px] font-bold text-ink mt-1">خيارات متعددة</div>
-            </div>
-          </div>
-          <div class="mt-5 rounded-2xl bg-neutral-50 border border-black/[0.05] px-4 py-3.5 text-[13px] text-muted leading-relaxed">
-            <strong class="text-ink font-bold">ملاحظة:</strong> البيانات تساعدنا نتحقق من أهليتك قبل تحديد المعاملة الصحيحة.
-          </div>
-          <div class="mt-5 grid grid-cols-3 gap-3">
-            <div class="text-center bg-white border border-black/[0.06] rounded-2xl py-3">
-              <div class="text-[14px] font-extrabold text-ink">٢١٠٠+</div>
-              <div class="text-[11px] text-muted mt-0.5">عميل تم تقييمه</div>
-            </div>
-            <div class="text-center bg-white border border-black/[0.06] rounded-2xl py-3">
-              <div class="text-[14px] font-extrabold text-ink">٩٨٪</div>
-              <div class="text-[11px] text-muted mt-0.5">رضا العملاء</div>
-            </div>
-            <div class="text-center bg-white border border-black/[0.06] rounded-2xl py-3">
-              <div class="text-[14px] font-extrabold text-ink">24/7</div>
-              <div class="text-[11px] text-muted mt-0.5">دعم العملاء</div>
-            </div>
-          </div>
-        </div>
+      {/* Buttons */}
+      <div className="mt-6 flex flex-col-reverse sm:flex-row gap-3">
+        {step > 1 && (
+          <button onClick={back} className="rounded-2xl border border-black/10 bg-white px-5 py-3.5 font-bold text-ink hover:bg-neutral-50">
+            رجوع
+          </button>
+        )}
+        {step < total ? (
+          <button onClick={next} className="flex-1 rounded-2xl bg-gold hover:brightness-95 transition px-6 py-3.5 font-extrabold text-ink shadow-soft">
+            التالي ←
+          </button>
+        ) : (
+          <button onClick={submit} className="flex-1 rounded-2xl bg-grass hover:bg-grassDark transition px-6 py-3.5 font-extrabold text-white shadow-soft">
+            إرسال الطلب
+          </button>
+        )}
       </div>
 
-    </div>
-  </div>
-</section>
-
-<!-- ══ TESTIMONIALS ══ -->
-<section class="bg-[#FAFAF7]">
-  <div class="max-w-[1100px] mx-auto px-5 py-14">
-    <div class="text-center">
-      <div class="eyebrow">شهادات حقيقية</div>
-      <h2 class="mt-3 text-[24px] md:text-[34px] font-black text-ink">آراء عملائنا</h2>
-    </div>
-    <div class="mt-10 columns-1 md:columns-3 gap-5 [column-fill:balance]">
-      <div class="break-inside-avoid mb-5 bg-white rounded-3xl border border-black/[0.05] shadow-[0_10px_30px_-12px_rgba(20,20,20,0.10)] p-6 card-lift">
-        <div class="flex gap-0.5 mb-3"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-        <p class="text-[14px] text-ink leading-[1.85]">الإجراءات كانت منظمة وتحس إن الفريق فاهم احتياجي من أول مكالمة</p>
-        <div class="mt-4 pt-4 border-t border-black/[0.05] flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gold/60 flex items-center justify-center font-extrabold text-[14px]">أ</div>
-          <div><div class="text-[13px] font-bold">أحمد ع.</div><div class="text-[12px] text-muted">الرياض</div></div>
-        </div>
-      </div>
-      <div class="break-inside-avoid mb-5 bg-white rounded-3xl border border-black/[0.05] shadow-[0_10px_30px_-12px_rgba(20,20,20,0.10)] p-6 card-lift">
-        <div class="flex gap-0.5 mb-3"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-        <p class="text-[14px] text-ink leading-[1.85]">التقييم كان سريع وواضح والخطوات قالوا لي وش المناسب قبل أي التزام</p>
-        <div class="mt-4 pt-4 border-t border-black/[0.05] flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gold/60 flex items-center justify-center font-extrabold text-[14px]">س</div>
-          <div><div class="text-[13px] font-bold">سعد م.</div><div class="text-[12px] text-muted">جدة</div></div>
-        </div>
-      </div>
-      <div class="break-inside-avoid mb-5 bg-white rounded-3xl border border-black/[0.05] shadow-[0_10px_30px_-12px_rgba(20,20,20,0.10)] p-6 card-lift">
-        <div class="flex gap-0.5 mb-3"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-        <p class="text-[14px] text-ink leading-[1.85]">تواصلوا معي بنفس اليوم وشرحوا لي السيناريو المناسب لحالتي بشكل واضح</p>
-        <div class="mt-4 pt-4 border-t border-black/[0.05] flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gold/60 flex items-center justify-center font-extrabold text-[14px]">ف</div>
-          <div><div class="text-[13px] font-bold">فهد ال.</div><div class="text-[12px] text-muted">الدمام</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ FINAL CTA ══ -->
-<section class="bg-white">
-  <div class="max-w-[1100px] mx-auto px-5 py-14">
-    <div class="relative bg-gradient-to-bl from-grass to-[#16953A] rounded-[28px] px-6 md:px-12 py-12 text-center shadow-[0_30px_60px_-25px_rgba(20,20,20,0.18)] overflow-hidden">
-      <h3 class="text-white text-[24px] md:text-[38px] font-black leading-tight tracking-tight">
-        خطوة وحدة تفصلك عن السيولة المناسبة
-      </h3>
-      <p class="text-white/85 mt-3 text-[14px] md:text-[16px] max-w-xl mx-auto leading-relaxed">
-        سجّل الآن — التقييم خلال 24 ساعة، ومجاني تمامًا، ويُجرى بسرية كاملة.
+      <p className="mt-4 text-[12px] text-muted leading-relaxed">
+        بياناتك سرية ومحمية، ولن تُشارك مع أي طرف ثالث إلا بما يخص دراسة الطلب لدى الجهات المرخصة.
       </p>
-      <button onclick="scrollToForm()" class="mt-7 inline-flex items-center justify-center gap-2 bg-white text-grass hover:bg-honey hover:text-ink transition font-extrabold rounded-2xl px-8 py-4 text-[16px] md:text-[17px] shadow-[0_30px_60px_-25px_rgba(20,20,20,0.18)]">
+
+      {/* Red warning accordion */}
+      <button
+        onClick={()=>setWarnOpen(o=>!o)}
+        className="mt-5 w-full flex items-center justify-between gap-3 rounded-2xl bg-red-50 border border-red-200 px-4 py-3 text-right"
+      >
+        <span className="flex items-center gap-2 font-bold text-red-700 text-[14px]">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01M10.3 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          تنويه مهم قبل الإرسال
+        </span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className={`transition-transform ${warnOpen?'rotate-180':''}`}><path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      </button>
+      {warnOpen && (
+        <div className="fadeIn mt-2 rounded-2xl bg-red-50/60 border border-red-100 p-4 text-[13px] text-red-800 leading-relaxed">
+          الطلب لا يُعدّ التزامًا تمويليًا، ويعتمد القرار النهائي على التحقق من الأهلية لدى الجهات الممولة المرخصة. يرجى تعبئة البيانات بدقة لتفادي تأخر المعالجة.
+        </div>
+      )}
+    </div>
+  );
+}
+function inputCls(err) {
+  return `w-full rounded-2xl border bg-white px-4 py-3.5 text-[15px] text-ink placeholder:text-neutral-400 outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/30 ${err ? 'border-red-400' : 'border-black/10'}`;
+}
+function Field({ label, error, children }) {
+  return (
+    <div>
+      <label className="block text-[14px] font-bold text-ink mb-1.5 text-right">{label}</label>
+      {children}
+      {error && <p className="text-[12px] text-red-600 mt-1">{error}</p>}
+    </div>
+  );
+}
+function ReviewRow({ label, value, dir }) {
+  return (
+    <div className="flex items-center justify-between gap-3 bg-neutral-50 rounded-2xl px-4 py-3">
+      <span className="text-[13px] text-muted">{label}</span>
+      <span className="text-[14px] font-bold text-ink" dir={dir}>{value || '—'}</span>
+    </div>
+  );
+}
+
+/* ---------- Form Section + Explanation ---------- */
+function FormSection({ formRef, onSubmitted, submitted }) {
+  return (
+    <section ref={formRef} id="form" className="bg-white scroll-mt-6 relative">
+      <div className="max-w-[1100px] mx-auto px-5 py-14 md:py-20">
+        <div className="text-center mb-10">
+          <div className="eyebrow">تقييم أولي سريع</div>
+          <h2 className="mt-3 text-[26px] md:text-[36px] font-black text-ink tracking-tight">
+            ابدأ التقييم الآن<span className="text-gold">.</span>
+          </h2>
+          <p className="text-muted mt-2 text-[14px] md:text-[16px] max-w-xl mx-auto">
+            عبّي بياناتك بخمس خطوات بسيطة وراح يتواصل معك الفريق خلال 24 ساعة.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-12 gap-5 md:gap-6">
+          {/* Left column (form) — appears right in RTL */}
+          <div className="md:col-span-7 order-1">
+            {submitted ? <SuccessCard /> : <FormPanel onSubmitted={onSubmitted} />}
+          </div>
+
+          {/* Right column (explanation) — appears left in RTL */}
+          <div className="md:col-span-5 order-2">
+            <div className="bg-white rounded-3xl border border-black/[0.06] shadow-soft p-6 md:p-8 card-lift">
+              <h3 className="text-[20px] md:text-[22px] font-extrabold text-ink leading-tight tracking-tight">
+                خلنا نعرف وضعك ونقولك وش الأفضل لك
+              </h3>
+              <p className="text-[14px] md:text-[15px] text-muted leading-relaxed mt-3">
+                فريق راف يستلم طلبك ويراجع حالتك بشكل دقيق، ثم يرشّح لك مسار التمويل المناسب من بين الخيارات المتاحة لدينا بالتعاون مع الجهات الممولة المرخصة.
+              </p>
+
+              <div className="grid grid-cols-3 gap-2 md:gap-3 mt-5">
+                <Pill icon="chat" title="استشارة" />
+                <Pill icon="clock" title="خلال 24 ساعة" />
+                <Pill icon="percent" title="خيارات حتى 100%" />
+              </div>
+
+              <div className="mt-5 rounded-2xl bg-neutral-50 border border-black/[0.05] px-4 py-3.5 text-[13px] text-muted leading-relaxed">
+                <strong className="text-ink font-bold">ملاحظة:</strong> البيانات تساعدنا نتحقق من أهليتك قبل تحديد المعاملة الصحيحة.
+              </div>
+
+              <div className="mt-5 grid grid-cols-3 gap-3">
+                <Mini big="٢١٠٠+" small="عميل تم تقييمه" />
+                <Mini big="٩٨٪" small="رضا العملاء" />
+                <Mini big="24/7" small="دعم العملاء" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+function Pill({ icon, title }) {
+  const icons = {
+    chat: <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 12a8 8 0 11-3.3-6.5L21 4l-1 4 .3.3A8 8 0 0121 12z" stroke="#2B2B2B" strokeWidth="1.8" strokeLinejoin="round"/></svg>,
+    clock: <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2B2B2B" strokeWidth="1.8"/><path d="M12 7v5l3 2" stroke="#2B2B2B" strokeWidth="1.8" strokeLinecap="round"/></svg>,
+    percent: <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 19L19 5" stroke="#2B2B2B" strokeWidth="1.8" strokeLinecap="round"/><circle cx="7" cy="7" r="2.5" stroke="#2B2B2B" strokeWidth="1.8"/><circle cx="17" cy="17" r="2.5" stroke="#2B2B2B" strokeWidth="1.8"/></svg>,
+  };
+  return (
+    <div className="bg-honeyPale/70 border border-gold/30 rounded-2xl py-3 px-2 text-center">
+      <div className="flex justify-center">{icons[icon]}</div>
+      <div className="text-[12px] font-bold text-ink mt-1.5">{title}</div>
+    </div>
+  );
+}
+function Mini({ big, small }) {
+  return (
+    <div className="text-center bg-white border border-black/[0.06] rounded-2xl py-3">
+      <div className="text-[15px] font-extrabold text-ink">{big}</div>
+      <div className="text-[11px] text-muted mt-0.5">{small}</div>
+    </div>
+  );
+}
+
+/* ---------- Success ---------- */
+function SuccessCard() {
+  return (
+    <div className="fadeIn bg-white rounded-3xl p-6 md:p-9 shadow-softLg border-2 border-grass/40 text-center">
+      <div className="mx-auto w-16 h-16 rounded-full bg-grass/15 flex items-center justify-center">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4 10-10" stroke="#22B84A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      </div>
+      <h3 className="mt-5 text-[22px] md:text-[26px] font-black text-ink">تم استلام طلبك بنجاح</h3>
+      <p className="mt-2 text-[14px] md:text-[15px] text-muted leading-relaxed">
+        سيتواصل معك الفريق قريبًا. تأكد من أن رقم جوالك مفعّل لاستلام الاتصال.
+      </p>
+
+      <a
+        href="https://wa.me/9665XXXXXXXX"
+        target="_blank" rel="noopener"
+        className="mt-6 inline-flex items-center justify-center gap-2 bg-[#25D366] hover:brightness-95 transition text-white font-bold rounded-2xl px-6 py-3.5 shadow-soft"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3.6A11 11 0 003.2 17.5L2 22l4.6-1.2A11 11 0 1020 3.6zM12 20a8 8 0 01-4.1-1.1l-.3-.2-2.7.7.7-2.6-.2-.3A8 8 0 1112 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.6 6.6 0 01-3.3-2.9c-.2-.4.2-.4.6-1.2.1-.1 0-.3 0-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.4a.8.8 0 00-.6.3 2.4 2.4 0 00-.8 1.8c0 1.1.8 2.1.9 2.3.1.1 1.6 2.5 4 3.5.5.2 1 .3 1.3.3.4 0 1.2-.5 1.4-.9.2-.5.2-.9.1-1 0-.1-.2-.2-.4-.3z"/></svg>
+        تواصل عبر واتساب
+      </a>
+
+      <p className="mt-4 text-[12px] text-muted">رقم مرجعي مؤقت: <span className="font-bold text-ink" dir="ltr">RAF-{Math.floor(100000+Math.random()*899999)}</span></p>
+    </div>
+  );
+}
+
+/* ---------- Commitment Banner ---------- */
+function Commitment() {
+  return (
+    <section className="bg-white">
+      <div className="max-w-[1100px] mx-auto px-5 py-2">
+        <div className="relative bg-gradient-to-l from-honeyPale via-honey/40 to-honeyPale border border-gold/30 rounded-3xl px-6 md:px-10 py-7 md:py-9 text-center shadow-soft overflow-hidden">
+          <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-gold/15 blur-2xl" />
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-gold/15 blur-2xl" />
+          <div className="relative flex flex-col items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-white shadow-soft flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z" stroke="#2B2B2B" strokeWidth="1.8" strokeLinejoin="round"/><path d="M8.5 12.5l2.5 2.5L16 10" stroke="#F4C430" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </div>
+            <p className="text-[16px] md:text-[20px] font-extrabold text-ink leading-relaxed tracking-tight max-w-2xl">
+              نلتزم في راف بتقديم حلول مدروسة للحالات المؤهلة وفق معايير واضحة.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Testimonials ---------- */
+const TESTIMONIALS = [
+  { q: 'الإجراءات كانت منظمة وتحس إن الفريق فاهم احتياجي من أول مكالمة', n: 'أحمد ع.', c: 'الرياض' },
+  { q: 'التقييم كان سريع وواضح، والخطوات اليوم قالوا لي وش المناسب قبل أي التزام', n: 'سعد م.', c: 'جدة' },
+  { q: 'تواصلوا معي بنفس اليوم وشرحوا لي السيناريو المناسب لحالتي بشكل واضح ومرتب', n: 'فهد ال.', c: 'الدمام' },
+  { q: 'أخذت تقييم مرتب لحالتي وفهمت الخيارات المتاحة بشكل ممتاز', n: 'منى س.', c: 'مكة المكرمة' },
+  { q: 'أعطوني وضوح بالخطوات والمتطلبات وما فيه وعود غير واقعية', n: 'خالد ر.', c: 'الخبر' },
+  { q: 'شرح مبسط واحترافي والرد خلال 24 ساعة فعلاً', n: 'نواف ع.', c: 'الطائف' },
+  { q: 'أسلوبهم احترافي وشرحوا لي التفاصيل بلغة بسيطة', n: 'هند ف.', c: 'المدينة المنورة' },
+  { q: 'قدّموا لي تصور واضح للمسار والتوقيت المتوقع حسب الأهلية', n: 'بدر ق.', c: 'تبوك' },
+  { q: 'تعامل محترم وتنظيم عالي والتواصل كان سريع', n: 'ريم خ.', c: 'أبها' },
+  { q: 'فريق متعاون ومرن ونفذوا المتابعة بشكل واضح', n: 'سلطان د.', c: 'بريدة' },
+];
+
+function Stars() {
+  return (
+    <div className="flex gap-0.5">
+      {Array.from({length:5}).map((_,i)=>(
+        <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#F4C430"><path d="M12 2l3 6.9 7.5.6-5.7 4.9 1.8 7.3L12 17.8 5.4 21.7l1.8-7.3L1.5 9.5 9 8.9z"/></svg>
+      ))}
+    </div>
+  );
+}
+function Testimonials() {
+  return (
+    <section className="bg-[#FAFAF7] relative">
+      <div className="max-w-[1100px] mx-auto px-5 py-14 md:py-20">
+        <div className="text-center">
+          <div className="eyebrow">شهادات حقيقية</div>
+          <h2 className="mt-3 text-[26px] md:text-[36px] font-black text-ink tracking-tight">
+            آراء عملائنا
+          </h2>
+          <p className="text-muted mt-2 text-[14px] md:text-[16px] max-w-xl mx-auto">
+            تجارب من حالات تم تقييمها ومعالجتها مؤخرًا من فريق راف.
+          </p>
+        </div>
+
+        <div className="mt-10 columns-1 md:columns-3 gap-5 [column-fill:_balance]">
+          {TESTIMONIALS.map((t, i) => (
+            <div key={i} className="break-inside-avoid mb-5 bg-white rounded-3xl border border-black/[0.05] shadow-soft p-6 relative card-lift">
+              <div className="absolute top-4 left-5 text-gold/30 leading-none select-none" style={{fontFamily:'Georgia, serif', fontSize:'56px'}}>“</div>
+              <Stars />
+              <p className="mt-3 text-[14.5px] md:text-[15.5px] text-ink leading-[1.85]">
+                {t.q}
+              </p>
+              <div className="mt-5 pt-4 border-t border-black/[0.05] flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-honey to-gold flex items-center justify-center text-ink font-extrabold text-[14px] shadow-soft">
+                  {t.n.charAt(0)}
+                </div>
+                <div>
+                  <div className="text-[13px] font-bold text-ink">{t.n}</div>
+                  <div className="text-[12px] text-muted">{t.c}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Final CTA ---------- */
+function FinalCTA({ onCTAClick }) {
+  return (
+    <section className="bg-white">
+      <div className="max-w-[1100px] mx-auto px-5 py-14 md:py-16">
+        <div className="relative bg-gradient-to-bl from-grass to-[#16953A] rounded-[28px] px-6 md:px-12 py-12 md:py-16 text-center shadow-softLg overflow-hidden">
+          <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full border-2 border-white/15" />
+          <div className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full border-2 border-white/10" />
+          <div className="absolute top-8 left-10 w-3 h-3 rounded-full bg-honey/80" />
+          <div className="absolute bottom-12 right-12 w-2 h-2 rounded-full bg-white/40" />
+
+          <div className="relative">
+            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-[12px] font-bold px-3 py-1.5 rounded-full mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-honey inline-block" />
+              تقييم مجاني وبدون أي التزام
+            </div>
+            <h3 className="text-white text-[26px] md:text-[40px] font-black leading-tight tracking-tight">
+              خطوة وحدة تفصلك<br className="md:hidden"/> عن السيولة المناسبة
+            </h3>
+            <p className="text-white/85 mt-3 text-[14px] md:text-[17px] max-w-xl mx-auto leading-relaxed">
+              سجّل الآن — التقييم خلال 24 ساعة، ومجاني تمامًا، ويُجرى بسرية كاملة.
+            </p>
+            <button
+              onClick={onCTAClick}
+              className="mt-7 inline-flex items-center justify-center gap-2 bg-white text-grass hover:bg-honey hover:text-ink transition font-extrabold rounded-2xl px-8 py-4 text-[16px] md:text-[18px] shadow-softLg active:scale-[0.99]"
+            >
+              سجل الآن وأبشر بالسعد
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 6l-6 6 6 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Trust logos (original generic placeholders, not real org logos) ---------- */
+function TrustLogos() {
+  const items = [
+    { t: 'سمة الائتمانية', s: 'Credit Bureau', icon: 'shield' },
+    { t: 'السوق العقاري', s: 'Real Estate Market', icon: 'building' },
+    { t: 'وزارة العدل', s: 'Ministry of Justice', icon: 'scale' },
+    { t: 'البنك المركزي', s: 'Central Bank', icon: 'bank' },
+  ];
+  const iconMap = {
+    shield: <path d="M12 3l8 3v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-3z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="none"/>,
+    building: <path d="M4 21V8l8-5 8 5v13M9 21v-6h6v6M9 11h.01M15 11h.01" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" fill="none"/>,
+    scale: <g stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v18M5 6h14M5 6l-3 6a4 4 0 006 0L5 6zM19 6l-3 6a4 4 0 006 0L19 6zM7 21h10"/></g>,
+    bank: <g stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinejoin="round" strokeLinecap="round"><path d="M3 10L12 4l9 6M5 10v8M19 10v8M9 10v8M15 10v8M3 21h18"/></g>,
+  };
+  return (
+    <section className="bg-white">
+      <div className="max-w-[1100px] mx-auto px-5 py-14 md:py-16">
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <span className="gold-rule flex-1 max-w-[100px]" />
+          <span className="gold-diamond" />
+          <span className="gold-rule flex-1 max-w-[100px]" />
+        </div>
+        <p className="text-center text-[13px] md:text-[14px] text-muted mb-8 font-medium">جهات مرجعية ورسمية نتعامل معها</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+          {items.map((it,i)=>(
+            <div key={i} className="bg-neutral-50/70 border border-black/[0.05] rounded-2xl py-6 px-4 text-center transition-all hover:bg-white hover:border-gold/40 hover:shadow-soft card-lift">
+              <div className="mx-auto w-11 h-11 rounded-xl bg-ink text-gold flex items-center justify-center mb-3">
+                <svg width="22" height="22" viewBox="0 0 24 24">{iconMap[it.icon]}</svg>
+              </div>
+              <div className="text-[14px] font-bold text-ink leading-tight">{it.t}</div>
+              <div className="text-[11px] text-muted mt-1 tracking-wide">{it.s}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Footer ---------- */
+function Footer() {
+  return (
+    <footer className="bg-black text-white">
+      <div className="max-w-[1100px] mx-auto px-5 py-12 md:py-14">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-10">
+          <div>
+            <div className="flex items-center gap-3">
+              <div className="bg-white rounded-xl p-2"><BrandMark size={32} /></div>
+              <div>
+                <div className="font-extrabold text-[17px]">شركة راف الوطنية</div>
+                <div className="text-[12px] text-white/60">للتطوير والاستثمار العقاري</div>
+              </div>
+            </div>
+            <h4 className="mt-6 font-extrabold text-[15px]">خلنا نعرف وضعك ونقولك وش الأفضل لك</h4>
+            <p className="text-[13px] text-white/70 mt-2 leading-relaxed">
+              المملكة العربية السعودية — الرياض، طريق الملك فهد، حي الورود.<br/>
+              سجل تجاري: ١٠١٠XXXXXX — ضريبة القيمة المضافة: ٣٠٠XXXXXXXXXXXX
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-extrabold text-[15px]">تواصل</h4>
+            <ul className="mt-3 space-y-2 text-[14px]">
+              <li><a href="#" className="text-white/85 hover:text-gold transition">واتساب خدمة العملاء</a></li>
+              <li><a href="#" className="text-white/85 hover:text-gold transition">سياسة الخصوصية</a></li>
+              <li><a href="#" className="text-white/85 hover:text-gold transition">الشروط والأحكام</a></li>
+            </ul>
+            <div className="mt-5 flex items-center gap-3">
+              <a href="#" aria-label="x" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 3h3l-7.5 8.6L22 21h-6.8l-5.3-6.3L3.5 21H.5l8-9.1L0 3h6.9l4.8 5.8L18 3z"/></svg></a>
+              <a href="#" aria-label="ig" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+              <a href="#" aria-label="li" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h4v4H4zM4 10h4v10H4zM10 10h4v1.6c.7-1 2-1.9 3.7-1.9 3.4 0 4.3 2 4.3 4.8V20h-4v-4.6c0-1.4-.5-2.3-1.8-2.3-1.2 0-1.9.8-2.2 1.6-.1.3-.1.7-.1 1.1V20h-4V10z"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 pt-6 border-t border-white/10 text-center text-[12px] text-white/60">
+          © 2025 جميع الحقوق محفوظة لشركة راف الوطنية للتطوير والاستثمار العقاري
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ---------- Sticky mobile CTA ---------- */
+function StickyMobileCTA({ onCTAClick, hidden }) {
+  if (hidden) return null;
+  return (
+    <div className="md:hidden fixed inset-x-0 bottom-0 z-40 px-4 pb-3 pt-2 bg-gradient-to-t from-white via-white/95 to-white/0">
+      <button
+        onClick={onCTAClick}
+        className="w-full bg-grass hover:bg-grassDark transition text-white font-extrabold rounded-2xl py-3.5 shadow-softLg"
+      >
         سجل الآن وأبشر بالسعد
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 6l-6 6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
-  </div>
-</section>
+  );
+}
 
-<!-- ══ FOOTER ══ -->
-<footer class="bg-black text-white">
-  <div class="max-w-[1100px] mx-auto px-5 py-12">
-    <div class="grid md:grid-cols-2 gap-8">
-      <div>
-        <div class="font-extrabold text-[17px]">شركة راف الوطنية</div>
-        <div class="text-[12px] text-white/60">للتطوير والاستثمار العقاري</div>
-        <p class="text-[13px] text-white/70 mt-3 leading-relaxed">
-          المملكة العربية السعودية — الرياض، طريق الملك فهد، حي الورود.
-        </p>
-      </div>
-      <div>
-        <h4 class="font-extrabold text-[15px]">تواصل</h4>
-        <ul class="mt-3 space-y-2 text-[14px]">
-          <li><a href="#" class="text-white/85 hover:text-gold transition">واتساب خدمة العملاء</a></li>
-          <li><a href="#" class="text-white/85 hover:text-gold transition">سياسة الخصوصية</a></li>
-          <li><a href="#" class="text-white/85 hover:text-gold transition">الشروط والأحكام</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="mt-10 pt-6 border-t border-white/10 text-center text-[12px] text-white/60">
-      © 2025 جميع الحقوق محفوظة لشركة راف الوطنية للتطوير والاستثمار العقاري
-    </div>
-  </div>
-</footer>
-
-<!-- ══ STICKY CTA (mobile) ══ -->
-<div id="stickyCta" class="md:hidden fixed inset-x-0 bottom-0 z-40 px-4 pb-3 pt-2 bg-gradient-to-t from-white via-white/95 to-white/0">
-  <button onclick="scrollToForm()" class="w-full bg-grass hover:bg-grassDark transition text-white font-extrabold rounded-2xl py-3.5 shadow-[0_30px_60px_-25px_rgba(20,20,20,0.18)]">
-    سجل الآن وأبشر بالسعد
-  </button>
-</div>
-
-<script>
-  const WEBHOOK_URL    = 'https://automation.fusionleap.net/webhook/clickfunnles';
-  const WHATSAPP_NUMBER = '966920031241';
-  const API_URL        = window.__RAF_API_URL__ ||
-    (window.location && /^https?:$/i.test(window.location.protocol)
-      ? window.location.origin + '/api/leads/submit'
-      : 'http://localhost:3030/api/leads/submit');
-  const API_SECRET     = window.__RAF_FUNNEL_SECRET__ || 'raf_national_funnel_secret_change_this_in_production';
+/* ---------- App ---------- */
+function App() {
+  const [submitted, setSubmitted] = useState(false);
+  const formRef = useRef(null);
 
   function scrollToForm() {
-    const el = document.getElementById('form-section');
-    if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 16;
+    if (!formRef.current) return;
+    const top = formRef.current.getBoundingClientRect().top + window.scrollY - 16;
     window.scrollTo({ top, behavior: 'smooth' });
   }
 
-  function getQueryParam(param) {
-    return new URLSearchParams(window.location.search).get(param) || '';
-  }
+  return (
+    <div className="min-h-screen pb-24 md:pb-0">
+      <Header />
+      <Hero onCTAClick={scrollToForm} />
+      <IntroAccordion />
+      <Steps onCTAClick={scrollToForm} />
+      <FormSection formRef={formRef} onSubmitted={()=>setSubmitted(true)} submitted={submitted} />
+      <Commitment />
+      <Testimonials />
+      <FinalCTA onCTAClick={scrollToForm} />
+      <TrustLogos />
+      <Footer />
+      <StickyMobileCTA onCTAClick={scrollToForm} hidden={submitted} />
+    </div>
+  );
+}
 
-  function removeError(input) {
-    if (input.value.trim() !== '') {
-      input.classList.remove('error');
-      input.classList.add('valid');
-    }
-  }
-
-  function checkCity(select) {
-    const other = document.getElementById('otherCityInput');
-    other.style.display = select.value === 'أخرى' ? 'block' : 'none';
-    if (select.value !== 'أخرى') other.value = '';
-    removeError(select);
-  }
-
-  function setError(input)  { input.classList.add('error');  input.classList.remove('valid'); }
-  function setValid(input)  { input.classList.remove('error'); input.classList.add('valid'); }
-
-  function validateStep(stepId) {
-    const inputs = document.getElementById(stepId).querySelectorAll('input, select');
-    let ok = true;
-    inputs.forEach(input => {
-      if (input.style.display === 'none') return;
-      const val = input.value.trim();
-      const isDefaultSelect = input.tagName === 'SELECT' && (val === '' || input.selectedIndex === 0);
-      if (val === '' || isDefaultSelect) { setError(input); ok = false; }
-      else setValid(input);
-      if (input.type === 'email' && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) { setError(input); ok = false; }
-    });
-    if (stepId === 'step2') {
-      const ph = document.getElementById('phone');
-      if (!/^5\d{8}$/.test(ph.value)) { setError(ph); ok = false; }
-    }
-    return ok;
-  }
-
-  function nextStep(target) {
-    if (!validateStep('step' + (target - 1))) return;
-    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-    document.getElementById('step' + target).classList.add('active');
-    updateProgress(target);
-  }
-
-  function prevStep(target) {
-    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-    document.getElementById('step' + target).classList.add('active');
-    updateProgress(target);
-  }
-
-  function updateProgress(step) {
-    const pct = (step / 4) * 100;
-    document.getElementById('progressBar').style.width  = pct + '%';
-    document.getElementById('progressText').innerText   = Math.round(pct) + '%';
-    if (step === 4 || step === 5) {/* keep bar visible until submit */}
-  }
-
-  function showFinalStep(isDuplicate) {
-    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-    document.getElementById('step5').classList.add('active');
-    document.getElementById('progressWrapper').style.display = 'none';
-    document.getElementById('formDisclaimer').style.display  = 'none';
-    document.getElementById('stickyCta').style.display       = 'none';
-    if (isDuplicate) {
-      document.getElementById('duplicate-message').classList.add('active');
-    } else {
-      document.getElementById('success-message').classList.add('active');
-    }
-  }
-
-  async function submitForm() {
-    if (!validateStep('step4')) return;
-
-    const btn = document.getElementById('submitBtn');
-    btn.innerHTML = 'جارٍ الإرسال...';
-    btn.disabled  = true;
-
-    const cityEl    = document.getElementById('city');
-    const finalCity = cityEl.value === 'أخرى'
-      ? document.getElementById('otherCityInput').value
-      : cityEl.value;
-
-    const phone   = document.getElementById('phone').value.trim();
-    const fullPhone = '+966' + phone;
-
-    const data = {
-      firstName:    document.getElementById('firstName').value.trim(),
-      lastName:     document.getElementById('lastName').value.trim(),
-      phone,
-      fullPhone,
-      email:        document.getElementById('email').value.trim(),
-      city:         finalCity,
-      hasMortgage:  document.getElementById('hasMortgage').value,
-      salary:       document.getElementById('salary').value,
-      sakaniSupport:document.getElementById('sakaniSupport').value,
-      bank:         document.getElementById('bank').value,
-      sector:       document.getElementById('sector').value.trim(),
-      loanAmount:   document.getElementById('loanAmount').value,
-      stopServices: document.getElementById('stopServices').value,
-      urgency:      document.getElementById('urgency').value,
-      utm_source:   getQueryParam('utm_source'),
-      utm_medium:   getQueryParam('utm_medium'),
-      utm_campaign: getQueryParam('utm_campaign'),
-      date:         new Date().toISOString(),
-    };
-
-    /* ── Supabase CRM payload ── */
-    const crmPayload = {
-      first_name:            data.firstName,
-      family_name:           data.lastName,
-      phone_number:          data.fullPhone,
-      email:                 data.email || null,
-      city:                  finalCity,
-      has_existing_mortgage: data.hasMortgage === 'نعم' ? true : data.hasMortgage === 'لا' ? false : null,
-      salary_range_raw:      data.salary || null,
-      housing_support_raw:   data.sakaniSupport || null,
-      bank_name:             data.bank || null,
-      employer_raw:          data.sector || null,
-      requested_amount_raw:  data.loanAmount || null,
-      has_service_hold:      data.stopServices === 'نعم' ? true : data.stopServices === 'لا' ? false : null,
-      financing_need_raw:    data.urgency || null,
-      visit_source_raw:      data.utm_source || 'landing_page',
-      campaign_raw:          [data.utm_source, data.utm_medium, data.utm_campaign].filter(Boolean).join(' | ') || 'raf_national_landing',
-    };
-
-    let isDuplicate = false;
-
-    /* ── Send to n8n webhook AND Supabase CRM in parallel ── */
-    try {
-      const [webhookRes, crmRes] = await Promise.allSettled([
-        fetch(WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        }).then(r => r.json().catch(() => ({}))),
-
-        fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Funnel-Secret': API_SECRET,
-          },
-          body: JSON.stringify(crmPayload),
-        }).then(r => r.json().catch(() => ({}))),
-      ]);
-
-      const webhookBody = webhookRes.status === 'fulfilled' ? webhookRes.value : {};
-      const crmBody     = crmRes.status     === 'fulfilled' ? crmRes.value     : {};
-
-      isDuplicate = (webhookBody.status === 'duplicate') || (crmBody.status === 'duplicate');
-    } catch (err) {
-      console.error('Submit error:', err);
-    }
-
-    /* ── Build WhatsApp links ── */
-    const successMsg = `مرحباً، تفاصيل طلبي الجديد:\nالاسم: ${data.firstName} ${data.lastName}\nالجوال: 0${data.phone}\nالمدينة: ${finalCity}\nالراتب: ${data.salary}\nالدعم السكني: ${data.sakaniSupport}\nالبنك: ${data.bank}\nالعمل: ${data.sector}\nتمويل قائم: ${data.hasMortgage}\nالمبلغ: ${data.loanAmount}\nإيقاف خدمات: ${data.stopServices}\nالجدية: ${data.urgency}`;
-    const dupMsg     = `مرحباً، ظهر لي أن طلبي مسجل مسبقاً، أرغب بمتابعة حالة الطلب.\nالاسم: ${data.firstName} ${data.lastName}\nالجوال: 0${data.phone}`;
-
-    document.getElementById('success-btn').href   = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(successMsg)}`;
-    document.getElementById('duplicate-btn').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(dupMsg)}`;
-
-    showFinalStep(isDuplicate);
-  }
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
 </body>
 </html>

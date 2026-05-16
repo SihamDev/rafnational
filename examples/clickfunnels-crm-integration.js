@@ -20,7 +20,7 @@ var RAF_CRM_APP_URL = 'https://YOUR-PRODUCTION-DOMAIN.com' // مثلاً الن�
  */
 var RAF_FUNNEL_SUBMIT_SECRET = 'ضع_نفس_سر_FUNNEL_SUBMIT_SECRET_هنا'
 
-/** Post JSON to CRM; resolves on HTTP error body too (referenced from JSDoc examples below). */
+/** Post JSON to CRM; resolves on HTTP error body too */
 function postLeadToSupabaseCRM(payload) {
   var url = RAF_CRM_APP_URL.replace(/\/$/, '') + '/api/leads/submit'
   return fetch(url, {
@@ -66,6 +66,3 @@ function postLeadToSupabaseCRM(payload) {
  *     // ثم اعرض success / duplicate حسب dup
  *   });
  */
-
-// Reference so ESLint / tooling treats the helper as used (embedders call it from their page code).
-void postLeadToSupabaseCRM
