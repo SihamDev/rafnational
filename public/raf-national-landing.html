@@ -371,11 +371,12 @@ const API_SECRET = window.__RAF_FUNNEL_SECRET__ || 'raf_national_funnel_secret_c
 
 function FormPanel({ onSubmitted }) {
   const [step, setStep] = useState(1);
-  const total = 5;
+  const total = 6;
   const [data, setData] = useState({
     firstName:'', lastName:'',
-    phone:'', city:'',
+    phone:'', email:'', city:'',
     finance:'',
+    hasMortgage:'', sakaniSupport:'', sector:'', bank:'', stopServices:'', urgency:'',
     obligation:'', salary:'',
     consent: true,
   });
@@ -399,6 +400,13 @@ function FormPanel({ onSubmitted }) {
     } else if (step === 3) {
       if (!data.finance) e.finance = 'اختر نوع التمويل';
     } else if (step === 4) {
+      if (!data.hasMortgage) e.hasMortgage = 'اختر الإجابة';
+      if (!data.sakaniSupport) e.sakaniSupport = 'اختر الإجابة';
+      if (!data.sector) e.sector = 'اختر القطاع';
+      if (!data.bank) e.bank = 'اختر البنك';
+      if (!data.stopServices) e.stopServices = 'اختر الإجابة';
+      if (!data.urgency) e.urgency = 'اختر الاحتياج';
+    } else if (step === 5) {
       if (!data.salary || Number(data.salary) < 1000) e.salary = 'أدخل دخلًا شهريًا صحيحًا';
     }
     setErrors(e);
@@ -430,8 +438,15 @@ function FormPanel({ onSubmitted }) {
       first_name: data.firstName.trim(),
       family_name: data.lastName.trim(),
       phone_number: data.phone.trim(),
+      email: data.email.trim() || null,
       city: data.city,
-      financing_need_raw: data.finance,
+      requested_amount_raw: data.finance,
+      has_existing_mortgage: data.hasMortgage,
+      housing_support_raw: data.sakaniSupport,
+      employer_raw: data.sector,
+      bank_name: data.bank,
+      has_service_hold: data.stopServices,
+      financing_need_raw: data.urgency,
       salary_range_raw:      salaryNum     ? `${salaryNum.toLocaleString('en-US')} ريال`                : null,
       requested_amount_raw:  obligationNum ? `التزامات: ${obligationNum.toLocaleString('en-US')} ريال` : null,
       /* numeric fields used by server-side auto-qualification */
@@ -472,8 +487,9 @@ function FormPanel({ onSubmitted }) {
     1: 'بيانات الاسم',
     2: 'بيانات التواصل',
     3: 'نوع التمويل المطلوب',
-    4: 'الالتزام والدخل',
-    5: 'مراجعة وإرسال',
+    4: 'أسئلة الأهلية',
+    5: 'الالتزام والدخل',
+    6: 'مراجعة وإرسال',
   };
 
   return (
@@ -506,6 +522,9 @@ function FormPanel({ onSubmitted }) {
             <Field label="رقم الجوال" error={errors.phone}>
               <input dir="ltr" inputMode="numeric" value={data.phone} onChange={e=>set('phone', e.target.value.replace(/[^\d]/g,''))} placeholder="05XXXXXXXX" className={inputCls(errors.phone) + ' text-left'} maxLength={10}/>
             </Field>
+            <Field label="البريد الإلكتروني — اختياري">
+              <input dir="ltr" value={data.email} onChange={e=>set('email', e.target.value)} placeholder="name@example.com" className={inputCls('') + ' text-left'} />
+            </Field>
             <Field label="المدينة" error={errors.city}>
               <select value={data.city} onChange={e=>set('city', e.target.value)} className={inputCls(errors.city)}>
                 <option value="">اختر مدينتك</option>
@@ -530,6 +549,54 @@ function FormPanel({ onSubmitted }) {
 
         {step === 4 && (
           <>
+            <Field label="هل لديك تمويل عقاري قائم؟" error={errors.hasMortgage}>
+              <select value={data.hasMortgage} onChange={e=>set('hasMortgage', e.target.value)} className={inputCls(errors.hasMortgage)}>
+                <option value="">اختر الإجابة</option>
+                <option value="نعم">نعم</option>
+                <option value="لا">لا</option>
+              </select>
+            </Field>
+            <Field label="هل لديك دعم سكني (سكني/وزارة الإسكان)؟" error={errors.sakaniSupport}>
+              <select value={data.sakaniSupport} onChange={e=>set('sakaniSupport', e.target.value)} className={inputCls(errors.sakaniSupport)}>
+                <option value="">اختر الإجابة</option>
+                <option value="نعم">نعم</option>
+                <option value="لا">لا</option>
+              </select>
+            </Field>
+            <Field label="قطاع العمل" error={errors.sector}>
+              <select value={data.sector} onChange={e=>set('sector', e.target.value)} className={inputCls(errors.sector)}>
+                <option value="">اختر القطاع</option>
+                <option value="حكومي">حكومي</option>
+                <option value="شبه حكومي">شبه حكومي</option>
+                <option value="خاص">خاص</option>
+                <option value="أعمال حرة">أعمال حرة</option>
+                <option value="متقاعد">متقاعد</option>
+              </select>
+            </Field>
+            <Field label="البنك المحوّل عليه الراتب" error={errors.bank}>
+              <input value={data.bank} onChange={e=>set('bank', e.target.value)} placeholder="مثال: الراجحي" className={inputCls(errors.bank)} />
+            </Field>
+            <Field label="هل عليك إيقاف خدمات؟" error={errors.stopServices}>
+              <select value={data.stopServices} onChange={e=>set('stopServices', e.target.value)} className={inputCls(errors.stopServices)}>
+                <option value="">اختر الإجابة</option>
+                <option value="نعم">نعم</option>
+                <option value="لا">لا</option>
+              </select>
+            </Field>
+            <Field label="الاحتياج التمويلي" error={errors.urgency}>
+              <select value={data.urgency} onChange={e=>set('urgency', e.target.value)} className={inputCls(errors.urgency)}>
+                <option value="">اختر الاحتياج</option>
+                <option value="عاجل جدًا">عاجل جدًا</option>
+                <option value="خلال شهر">خلال شهر</option>
+                <option value="خلال 3 أشهر">خلال 3 أشهر</option>
+                <option value="استفسار مبدئي">استفسار مبدئي</option>
+              </select>
+            </Field>
+          </>
+        )}
+
+        {step === 5 && (
+          <>
             <Field label="الدخل الشهري (ريال)" error={errors.salary}>
               <input dir="ltr" inputMode="numeric" value={data.salary} onChange={e=>set('salary', e.target.value.replace(/[^\d]/g,''))} placeholder="مثال: 15000" className={inputCls(errors.salary) + ' text-left'} />
             </Field>
@@ -539,12 +606,19 @@ function FormPanel({ onSubmitted }) {
           </>
         )}
 
-        {step === 5 && (
+        {step === 6 && (
           <div className="space-y-3">
             <ReviewRow label="الاسم" value={`${data.firstName} ${data.lastName}`} />
             <ReviewRow label="الجوال" value={data.phone} dir="ltr" />
+            <ReviewRow label="البريد الإلكتروني" value={data.email || '—'} dir="ltr" />
             <ReviewRow label="المدينة" value={data.city} />
             <ReviewRow label="نوع التمويل" value={data.finance} />
+            <ReviewRow label="تمويل قائم" value={data.hasMortgage} />
+            <ReviewRow label="دعم سكني" value={data.sakaniSupport} />
+            <ReviewRow label="قطاع العمل" value={data.sector} />
+            <ReviewRow label="البنك" value={data.bank} />
+            <ReviewRow label="إيقاف خدمات" value={data.stopServices} />
+            <ReviewRow label="الاحتياج" value={data.urgency} />
             <ReviewRow label="الدخل الشهري" value={data.salary ? `${Number(data.salary).toLocaleString('en-US')} ريال` : '—'} />
             <ReviewRow label="الالتزامات" value={data.obligation ? `${Number(data.obligation).toLocaleString('en-US')} ريال` : '—'} />
 
@@ -636,7 +710,7 @@ function FormSection({ formRef, onSubmitted, submitted, leadId }) {
             ابدأ التقييم الآن<span className="text-gold">.</span>
           </h2>
           <p className="text-muted mt-2 text-[14px] md:text-[16px] max-w-xl mx-auto">
-            عبّي بياناتك بخمس خطوات بسيطة وراح يتواصل معك الفريق خلال 24 ساعة.
+            عبّي بياناتك بست خطوات بسيطة وراح يتواصل معك الفريق خلال 24 ساعة.
           </p>
         </div>
         <div className="grid md:grid-cols-12 gap-5 md:gap-6">

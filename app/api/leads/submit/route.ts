@@ -90,6 +90,9 @@ function parseNumber(v: unknown): number | null {
 function autoQualify(body: Record<string, unknown>): 'qualified' | 'unqualified' {
   const salary     = parseNumber(body.salary_numeric ?? body.salary_range_raw)
   const obligation = parseNumber(body.obligation_numeric ?? body.requested_amount_raw)
+  const hasMortgage = String(body.has_existing_mortgage ?? '').trim()
+  const hasServiceHold = String(body.has_service_hold ?? '').trim()
+  const sector = String(body.employer_raw ?? '').trim()
 
   // No salary provided → unqualified (form requires salary so this is a bad submission)
   if (salary === null) return 'unqualified'
@@ -99,6 +102,25 @@ function autoQualify(body: Record<string, unknown>): 'qualified' | 'unqualified'
 
   // Rule 2: debt-burden ratio — total monthly obligations ≤ 45% of salary
   if (obligation !== null && obligation / salary > 0.45) return 'unqualified'
+
+  // Rule 3: service hold means not eligible until resolved
+  if (hasServiceHold === 'نعم' || hasServiceHold.toLowerCase() === 'yes' || hasServiceHold === 'true') {
+    return 'unqualified'
+  }
+
+  // Rule 4: free-work sector needs stricter salary floor
+  if ((sector.includes('أعمال حرة') || sector.toLowerCase().includes('self')) && salary < 7000) {
+    return 'unqualified'
+  }
+
+  // Rule 5: existing mortgage + low remaining affordability
+  if (
+    (hasMortgage === 'نعم' || hasMortgage.toLowerCase() === 'yes' || hasMortgage === 'true')
+    && obligation !== null
+    && obligation / salary > 0.35
+  ) {
+    return 'unqualified'
+  }
 
   return 'qualified'
 }
