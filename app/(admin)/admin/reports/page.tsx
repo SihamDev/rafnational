@@ -3,6 +3,7 @@ import { assertAdminOnly } from '@/lib/auth/assert-admin-only'
 import AdminTopbar from '@/components/admin/AdminTopbar'
 import { TrendingUp, Users, CheckCircle, Clock, MapPin, Megaphone } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formatWesternInt } from '@/lib/format-western'
 
 export const metadata = { title: 'التقارير والأداء — راف الوطنية' }
 
@@ -93,7 +94,7 @@ export default async function ReportsPage() {
             { label: 'مؤهَّلون', value: qualN, icon: CheckCircle, color: 'text-emerald-500' },
             { label: 'غير مؤهَّلين', value: unqualN, icon: TrendingUp, color: 'text-red-500' },
             { label: 'قيد التقييم', value: pendN, icon: Clock, color: 'text-amber-500' },
-            { label: 'معدل التأهيل', value: `${qualRate}٪`, icon: TrendingUp, color: 'text-blue-500' },
+            { label: 'معدل التأهيل', value: `${qualRate}%`, icon: TrendingUp, color: 'text-blue-500' },
           ].map((kpi) => (
             <div key={kpi.label} className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
               <div className="mb-2 flex items-center gap-2">
@@ -101,7 +102,7 @@ export default async function ReportsPage() {
                 <span className="text-[11px] font-medium text-gray-400">{kpi.label}</span>
               </div>
               <p className={cn('font-sans text-2xl font-bold tabular-nums', kpi.color)}>
-                {typeof kpi.value === 'number' ? kpi.value.toLocaleString('ar-SA') : kpi.value}
+                {typeof kpi.value === 'number' ? formatWesternInt(kpi.value) : kpi.value}
               </p>
             </div>
           ))}
@@ -161,7 +162,7 @@ function ReportCard({
                 <div className="mb-1.5 flex items-center justify-between">
                   <span className="text-navy-900 max-w-[65%] truncate text-[12px] font-semibold">{label}</span>
                   <span className="font-sans text-[12px] font-bold text-gray-500 tabular-nums">
-                    {count.toLocaleString('ar-SA')}
+                    {formatWesternInt(count)}
                   </span>
                 </div>
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">

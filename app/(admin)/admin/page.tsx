@@ -16,6 +16,7 @@ import AdminTopbar from '@/components/admin/AdminTopbar'
 import StatCard from '@/components/admin/StatCard'
 import ChartCard from '@/components/admin/ChartCard'
 import { cn } from '@/lib/utils'
+import { formatWesternInt, formatWesternShortDateTime } from '@/lib/format-western'
 import type { LineChartProps } from '@/components/charts/LineChart'
 import type { BarChartProps } from '@/components/charts/BarChart'
 import type { PieChartProps } from '@/components/charts/PieChart'
@@ -155,8 +156,8 @@ export default async function AdminDashboard() {
             {/* Hero KPIs */}
             <div className="flex flex-wrap gap-2.5">
               {[
-                { label: 'إجمالي العملاء', value: totalN.toLocaleString('en-US'), color: 'text-brand' },
-                { label: 'مؤهَّلون', value: qualN.toLocaleString('en-US'), color: 'text-emerald-400' },
+                { label: 'إجمالي العملاء', value: formatWesternInt(totalN), color: 'text-brand' },
+                { label: 'مؤهَّلون', value: formatWesternInt(qualN), color: 'text-emerald-400' },
                 { label: 'معدل التأهيل', value: `${qualRate}%`, color: 'text-blue-400' },
               ].map((kpi) => (
                 <div
@@ -175,7 +176,7 @@ export default async function AdminDashboard() {
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <StatCard
             label="إجمالي العملاء"
-            value={totalN.toLocaleString('en-US')}
+            value={formatWesternInt(totalN)}
             icon={Users}
             tone="base"
             href="/admin/leads"
@@ -189,7 +190,7 @@ export default async function AdminDashboard() {
           />
           <StatCard
             label="قيد التقييم"
-            value={pendingN.toLocaleString('en-US')}
+            value={formatWesternInt(pendingN)}
             icon={Clock}
             tone="pending"
             href="/admin/leads?qualification=pending"
@@ -258,7 +259,7 @@ export default async function AdminDashboard() {
                         <span className="text-navy-900 text-[12px] font-semibold">{stage.label}</span>
                       </div>
                       <span className={cn('font-sans text-[12px] font-bold tabular-nums', stage.text.replace('text-', 'text-'))}>
-                        {count.toLocaleString('en-US')}
+                        {formatWesternInt(count)}
                       </span>
                     </div>
                     <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
@@ -279,7 +280,7 @@ export default async function AdminDashboard() {
                     <span className="text-sm font-bold text-emerald-700">إجمالي التحويلات</span>
                   </div>
                   <span className="font-sans text-lg font-bold text-emerald-600 tabular-nums">
-                    {(wfMap.converted ?? 0).toLocaleString('en-US')}
+                    {formatWesternInt(wfMap.converted ?? 0)}
                   </span>
                 </div>
               )}
@@ -317,9 +318,7 @@ export default async function AdminDashboard() {
                   const cls = QUAL_CLS[q] ?? QUAL_CLS.pending
                   const src = normalizeSource(lead.visit_source_raw)
                   const name = [lead.first_name, lead.family_name].filter(Boolean).join(' ') || '—'
-                  const date = new Date(lead.created_at).toLocaleDateString('ar-SA', {
-                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
-                  })
+                  const date = formatWesternShortDateTime(lead.created_at)
                   return (
                     <Link
                       key={lead.id}

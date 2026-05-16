@@ -1,5 +1,7 @@
 'use client'
 
+import { formatWesternInt } from '@/lib/format-western'
+
 interface PieData {
   label: string
   value: number
@@ -61,7 +63,7 @@ export default function PieChart({ data, centerLabel = 'عميل', overrideTotal
           <path key={i} d={s.path} fill={s.color} stroke="white" strokeWidth="1.5" />
         ))}
         <text x={cx} y={cy - 4} textAnchor="middle" fontSize="18" fontWeight="bold" fill="#0f2847">
-          {displayTotal.toLocaleString('en-US')}
+          {formatWesternInt(displayTotal)}
         </text>
         <text x={cx} y={cy + 14} textAnchor="middle" fontSize="10" fill="#9ca3af">
           {centerLabel}
@@ -72,7 +74,7 @@ export default function PieChart({ data, centerLabel = 'عميل', overrideTotal
           <div key={i} className="flex items-center gap-2 text-xs text-gray-600">
             <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: s.color }} />
             <span className="max-w-28 truncate">{s.label}</span>
-            <span className="text-navy-900 ms-auto font-sans font-semibold">{s.value}</span>
+            <span className="text-navy-900 ms-auto font-sans font-semibold">{formatWesternInt(s.value)}</span>
             <span className="font-sans text-gray-400">({s.pct}٪)</span>
           </div>
         ))}

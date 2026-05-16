@@ -13,6 +13,7 @@ import {
 import { getStaffUser } from '@/lib/supabase/server'
 import AdminTopbar from '@/components/admin/AdminTopbar'
 import { cn } from '@/lib/utils'
+import { formatWesternInt, formatWesternLongDateAr, formatWesternShortDateTime } from '@/lib/format-western'
 import { SALES_STATUS_LABELS, SALES_WORKFLOW_ORDER } from '@/types/leads'
 
 type LeadItem = {
@@ -128,12 +129,7 @@ export default async function AgentDashboard() {
             {isAgent ? 'أهلاً، ما يلزم يلزم 👊' : 'لوحة المندوب'}
           </h2>
           <p className="mt-1 text-sm text-white/40">
-            {new Date().toLocaleDateString('ar-SA', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}
+            {formatWesternLongDateAr()}
           </p>
         </div>
 
@@ -157,7 +153,7 @@ export default async function AgentDashboard() {
                 )}
               >
                 <Icon size={16} className="text-gray-400" />
-                <p className="text-2xl font-black tabular-nums text-navy-900">{(kpi.value).toLocaleString('ar-SA')}</p>
+                <p className="text-2xl font-black tabular-nums text-navy-900">{formatWesternInt(kpi.value)}</p>
                 <p className="text-[11px] font-semibold text-gray-400">{kpi.label}</p>
               </Link>
             )
@@ -191,12 +187,7 @@ export default async function AgentDashboard() {
                   const name = `${lead.first_name ?? ''} ${lead.family_name ?? ''}`.trim()
                   const wa = waHref(lead.phone_number)
                   const dueDate = lead.next_followup_at
-                    ? new Date(lead.next_followup_at).toLocaleString('ar-SA', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })
+                    ? formatWesternShortDateTime(lead.next_followup_at)
                     : null
                   return (
                     <div
@@ -264,7 +255,7 @@ export default async function AgentDashboard() {
                         {SALES_STATUS_LABELS[key]}
                       </span>
                       <span className="font-mono text-[12px] font-bold text-gray-500">
-                        {count.toLocaleString('ar-SA')}
+                        {formatWesternInt(count)}
                       </span>
                     </div>
                     <div className="h-1.5 w-full rounded-full bg-gray-100 overflow-hidden">

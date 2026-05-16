@@ -41,6 +41,11 @@ import {
 import { adminUpdateLead, agentUpdateLead, quickQualifyLead, deleteLead } from '@/lib/actions/leads'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
+import {
+  formatWesternDateOnly,
+  formatWesternDateTime,
+  formatWesternInt,
+} from '@/lib/format-western'
 import type { StaffRole } from '@/types/leads'
 import {
   QUALIFICATION_LABELS,
@@ -364,7 +369,7 @@ export default function LeadsWorkbench({
           >
             <span>{s.label}</span>
             <span className="font-black tabular-nums">
-              {typeof s.value === 'number' ? s.value.toLocaleString('en-US') : s.value}
+              {typeof s.value === 'number' ? formatWesternInt(s.value) : s.value}
             </span>
           </Link>
         ))}
@@ -376,7 +381,7 @@ export default function LeadsWorkbench({
         {/* Filter / toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-black/[0.05] px-5 py-3">
           <UsersRound size={15} className="text-brand shrink-0" />
-          <span className="text-sm font-bold text-navy-900 me-1">{total.toLocaleString('en-US')} عميل</span>
+          <span className="text-sm font-bold text-navy-900 me-1">{formatWesternInt(total)} عميل</span>
 
           {/* Live search */}
           <div className="relative flex-1 min-w-[180px]">
@@ -529,7 +534,7 @@ export default function LeadsWorkbench({
                       {lead.city ?? '—'}
                     </td>
                     <td className="px-5 py-3.5 font-mono text-[11px] text-gray-400 whitespace-nowrap">
-                      {date ? new Date(date).toLocaleDateString('ar-SA') : '—'}
+                      {date ? formatWesternDateOnly(date) : '—'}
                     </td>
                     <td className="px-5 py-3.5 whitespace-nowrap">
                       <span className={badgeQual(lead.qualification_status)}>
@@ -660,7 +665,7 @@ export default function LeadsWorkbench({
         {/* Pagination */}
         <div className="flex flex-col gap-3 border-t border-black/[0.05] px-5 py-3 text-[12px] text-gray-400 md:flex-row md:items-center md:justify-between">
           <span>
-            عرض {showingFrom}–{showingTo} من {total.toLocaleString('en-US')}
+            عرض {formatWesternInt(showingFrom)}–{formatWesternInt(showingTo)} من {formatWesternInt(total)}
           </span>
           <div className="flex items-center gap-2">
             {page > 1 && (
@@ -671,7 +676,7 @@ export default function LeadsWorkbench({
                 <ArrowLeft className="-scale-x-100" size={14} /> السابق
               </Link>
             )}
-            <span className="font-semibold text-gray-600">{page} / {pages}</span>
+            <span className="font-semibold text-gray-600">{formatWesternInt(page)} / {formatWesternInt(pages)}</span>
             {page < pages && (
               <Link
                 href={buildHref({ q: query, qualification: qualificationFilter, sales: salesFilter, sort, dir, page: String(page + 1) })}
@@ -785,7 +790,7 @@ export default function LeadsWorkbench({
                   <D label="الدعم السكني"        value={active?.housing_support_raw} />
                   <D label="مصدر الزيارة"        value={active?.visit_source_raw} />
                   <D label="الحملة"              value={active?.campaign_raw} />
-                  <D label="تاريخ الإرسال"       value={active?.funnel_submitted_at ? new Date(active.funnel_submitted_at).toLocaleString('en-US') : undefined} />
+                  <D label="تاريخ الإرسال"       value={active?.funnel_submitted_at ? formatWesternDateTime(active.funnel_submitted_at) : undefined} />
                 </dl>
               </section>
 

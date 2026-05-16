@@ -6,6 +6,7 @@ import { exportToCSV } from '@/lib/export/csv'
 import { toast } from 'sonner'
 import type { ActivityLog } from '@/types'
 import { cn } from '@/lib/utils'
+import { formatWesternDateTime } from '@/lib/format-western'
 
 const ACTION_META: Record<string, { icon: string; label: string; color: string }> = {
   submitted: { icon: '📋', label: 'تقديم طلب', color: 'bg-blue-100 text-blue-700' },
@@ -49,7 +50,7 @@ export default function ActivityClient({ initialLogs }: { initialLogs: ActivityL
 
   function handleExport() {
     const rows = filtered.map((log) => ({
-      التاريخ: new Date(log.created_at).toLocaleString('ar-SA'),
+      التاريخ: formatWesternDateTime(log.created_at),
       الإجراء: ACTION_META[log.action]?.label ?? log.action,
       المنفذ: log.actor?.full_name ?? 'النظام',
       النوع: log.entity_type,
@@ -179,7 +180,7 @@ export default function ActivityClient({ initialLogs }: { initialLogs: ActivityL
                         </p>
                       </td>
                       <td className="px-4 py-3 font-sans text-xs whitespace-nowrap text-gray-400">
-                        {new Date(log.created_at).toLocaleString('ar-SA')}
+                        {formatWesternDateTime(log.created_at)}
                       </td>
                     </tr>
                   )

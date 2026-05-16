@@ -6,6 +6,7 @@ import { Search, Plus, Shield, User, Trash2, X, Briefcase } from 'lucide-react'
 import { toast } from 'sonner'
 import { createUserAccount, updateUserRole, deleteUserAccount } from '@/lib/actions/admin'
 import { cn } from '@/lib/utils'
+import { formatWesternDateOnly, formatWesternInt } from '@/lib/format-western'
 
 interface UserRow {
   id: string
@@ -212,12 +213,12 @@ export default function UsersClient({
                       <div className="flex items-center gap-1.5">
                         <Briefcase size={12} className="text-gray-400" />
                         <span className="text-navy-900 font-sans text-sm font-semibold tabular-nums">
-                          {u.leads_count > 0 ? u.leads_count.toLocaleString('ar-SA') : '—'}
+                          {u.leads_count > 0 ? formatWesternInt(u.leads_count) : '—'}
                         </span>
                       </div>
                     </td>
                     <td className="px-4 py-3 font-sans text-xs text-gray-400">
-                      {new Date(u.created_at).toLocaleDateString('ar-SA')}
+                      {formatWesternDateOnly(u.created_at)}
                     </td>
                     <td className="px-4 py-3">
                       {isSelf ? (

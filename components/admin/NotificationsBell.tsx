@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { markNotificationRead, markAllNotificationsRead } from '@/lib/actions/notifications'
 import type { AdminNotification } from '@/types'
 import { cn } from '@/lib/utils'
+import { formatWesternShortDateTime } from '@/lib/format-western'
 
 export default function NotificationsBell() {
   const [open, setOpen] = useState(false)
@@ -133,12 +134,7 @@ export default function NotificationsBell() {
                         <p className="mt-0.5 line-clamp-2 text-xs text-gray-400">{n.body}</p>
                       )}
                       <p className="mt-1 text-[10px] text-gray-300">
-                        {new Date(n.created_at).toLocaleString('ar-SA', {
-                          month: 'short',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
+                        {formatWesternShortDateTime(n.created_at)}
                       </p>
                     </div>
                     <div className="flex shrink-0 flex-col items-end gap-1">
