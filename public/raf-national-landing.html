@@ -1123,7 +1123,7 @@ function App() {
       <FinalCTA onCTAClick={scrollToForm} />
       <TrustLogos />
       <Footer />
-      <StickyMobileCTA onCTAClick={scrollToForm} hidden={submitted} />
+      <StickyMobileCTA onCTAClick={scrollToForm} hidden={!!submitResult} />
     </div>
   );
 }
