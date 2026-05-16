@@ -6,6 +6,7 @@ export async function proxy(request: NextRequest) {
   if (!supabaseUrl.startsWith('http')) {
     return NextResponse.next({ request })
   }
+
   try {
     return await updateSession(request)
   } catch {
@@ -14,7 +15,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|html)$).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|html)$).+)'],
 }

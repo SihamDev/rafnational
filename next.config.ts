@@ -1,15 +1,7 @@
 import type { NextConfig } from 'next'
 
-const securityHeaders: { key: string; value: string }[] = [
-  { key: 'X-Content-Type-Options', value: 'nosniff' },
-  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-  { key: 'X-XSS-Protection', value: '1; mode=block' },
-  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-  { key: 'Vary', value: 'Accept-Encoding' },
-]
-
 const nextConfig: NextConfig = {
-  // Serve landing page at `/` — runs before page routing, no middleware needed
+  // Serve the landing page HTML at `/` — runs after middleware, before filesystem
   async rewrites() {
     return {
       beforeFiles: [
@@ -33,20 +25,28 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // Security headers + (prod only) immutable static cache — avoids Turbopack dev cache warnings
+  // Security headers
   async headers() {
-    const base: { source: string; headers: { key: string; value: string }[] }[] = [
-      { source: '/(.*)', headers: [...securityHeaders] },
-    ]
-
-    if (process.env.NODE_ENV === 'production') {
-      base.push({
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-XSS-Protection', value: '1; mode=block' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          // Allow browsers to cache static assets aggressively
+          { key: 'Vary', value: 'Accept-Encoding' },
+        ],
+      },
+      {
+        // Next.js static chunks — immutable (hash-named files)
         source: '/_next/static/(.*)',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-      })
-    }
-
-    return base
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+    ]
   },
 }
 
