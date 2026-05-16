@@ -5,7 +5,7 @@ interface BarData {
   value: number
 }
 
-interface BarChartProps {
+export interface BarChartProps {
   data: BarData[]
   height?: number
   color?: string

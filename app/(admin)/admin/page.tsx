@@ -11,15 +11,21 @@ import {
   Phone,
 } from 'lucide-react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import AdminTopbar from '@/components/admin/AdminTopbar'
 import StatCard from '@/components/admin/StatCard'
 import ChartCard from '@/components/admin/ChartCard'
 import { cn } from '@/lib/utils'
+import type { LineChartProps } from '@/components/charts/LineChart'
+import type { BarChartProps } from '@/components/charts/BarChart'
+import type { PieChartProps } from '@/components/charts/PieChart'
 
 // Cache dashboard stats for 60 seconds — reduces DB load significantly
 export const revalidate = 60
 
-import { LineChart, BarChart, PieChart } from '@/components/charts/ChartsClient'
+const LineChart = dynamic<LineChartProps>(() => import('@/components/charts/LineChart'))
+const BarChart = dynamic<BarChartProps>(() => import('@/components/charts/BarChart'))
+const PieChart = dynamic<PieChartProps>(() => import('@/components/charts/PieChart'))
 
 /* ── Types ─────────────────────────────────────────────────────────── */
 type RecentLead = {

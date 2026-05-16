@@ -10,10 +10,14 @@ interface DataPoint {
   value?: number
 }
 
+export type LineChartDataPoint = DataPoint
+
 interface LineChartProps {
-  data: DataPoint[]
+  data: LineChartDataPoint[]
   height?: number
 }
+
+export type { LineChartProps }
 
 const LINES = [
   { key: 'approved' as const, color: '#22c55e', label: 'مقبول', bg: 'bg-green-500' },
