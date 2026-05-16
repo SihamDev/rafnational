@@ -95,7 +95,7 @@ export default async function AdminDashboard() {
     by_sales: Record<string, number>
     by_source: { label: string; value: number }[]
     by_city: { label: string; value: number }[]
-    trend_30d: { label: string; pending: number; approved: number; rejected: number }[]
+    trend_30d: { label: string; approved: number; rejected: number }[]
     recent_leads: RecentLead[]
   }
   const stats = (rpc ?? {}) as DashStats
@@ -208,7 +208,7 @@ export default async function AdminDashboard() {
           <div className="lg:col-span-2">
             <ChartCard
               title="تدفق العملاء — آخر 30 يوم"
-              subtitle="الكل · مؤهَّل · غير مؤهَّل"
+              subtitle="مؤهَّل · غير مؤهل"
             >
               <LineChart data={trendData} />
             </ChartCard>

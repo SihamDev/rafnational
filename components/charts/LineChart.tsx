@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useMemo } from 'react'
 
 interface DataPoint {
   label: string
-  pending?: number
   approved?: number
   rejected?: number
+  pending?: number
   value?: number
 }
 
@@ -20,54 +20,80 @@ interface LineChartProps {
 export type { LineChartProps }
 
 const LINES = [
-  { key: 'approved' as const, color: '#22c55e', label: 'مقبول', bg: 'bg-green-500' },
-  { key: 'pending' as const, color: '#f59e0b', label: 'معلق', bg: 'bg-amber-400' },
-  { key: 'rejected' as const, color: '#ef4444', label: 'مرفوض', bg: 'bg-red-500' },
+  { key: 'approved' as const, color: '#10b981', gradient: ['#10b981', '#6ee7b7'], label: 'مؤهَّل' },
+  { key: 'rejected' as const, color: '#f97316', gradient: ['#f97316', '#fdba74'], label: 'غير مؤهل' },
 ]
 
-export default function LineChart({ data, height = 200 }: LineChartProps) {
+function smoothPath(points: { x: number; y: number }[]): string {
+  if (points.length < 2) return ''
+  let d = `M ${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1]
+    const curr = points[i]
+    const cpx = (prev.x + curr.x) / 2
+    d += ` C ${cpx.toFixed(1)},${prev.y.toFixed(1)} ${cpx.toFixed(1)},${curr.y.toFixed(1)} ${curr.x.toFixed(1)},${curr.y.toFixed(1)}`
+  }
+  return d
+}
+
+export default function LineChart({ data, height = 220 }: LineChartProps) {
   const [hoverIdx, setHoverIdx] = useState<number | null>(null)
-  const [hidden, setHidden] = useState<Set<string>>(new Set())
   const svgRef = useRef<SVGSVGElement>(null)
 
-  const width = 600
-  const pad = { t: 16, r: 20, b: 40, l: 36 }
+  const width = 640
+  const pad = { t: 20, r: 16, b: 44, l: 44 }
   const W = width - pad.l - pad.r
   const H = height - pad.t - pad.b
 
-  const visibleLines = LINES.filter((l) => !hidden.has(l.key))
+  const maxVal = useMemo(() => {
+    let max = 0
+    for (const d of data) {
+      for (const l of LINES) {
+        const v = d[l.key] ?? 0
+        if (v > max) max = v
+      }
+    }
+    return Math.max(max, 1)
+  }, [data])
 
-  const allVals = data.flatMap((d) =>
-    LINES.filter((l) => !hidden.has(l.key)).map((l) => d[l.key] ?? 0)
-  )
-  const maxVal = Math.max(...allVals, 1)
+  const niceMax = useMemo(() => {
+    const mag = Math.pow(10, Math.floor(Math.log10(maxVal)))
+    return Math.ceil(maxVal / mag) * mag || 1
+  }, [maxVal])
 
   function xPos(i: number) {
     return pad.l + (data.length > 1 ? (i / (data.length - 1)) * W : W / 2)
   }
   function yPos(v: number) {
-    return pad.t + H - (v / maxVal) * H
+    return pad.t + H - (v / niceMax) * H
   }
 
-  function pathD(key: 'pending' | 'approved' | 'rejected') {
-    return data
-      .map((d, i) => `${i === 0 ? 'M' : 'L'} ${xPos(i).toFixed(1)},${yPos(d[key] ?? 0).toFixed(1)}`)
-      .join(' ')
+  function getPoints(key: 'approved' | 'rejected') {
+    return data.map((d, i) => ({ x: xPos(i), y: yPos(d[key] ?? 0) }))
   }
 
-  // Smooth filled area under each line
-  function areaD(key: 'pending' | 'approved' | 'rejected') {
-    const base = (pad.t + H).toFixed(1)
-    const pts = data
-      .map((d, i) => `${xPos(i).toFixed(1)},${yPos(d[key] ?? 0).toFixed(1)}`)
-      .join(' L ')
-    return `M ${xPos(0).toFixed(1)},${base} L ${pts} L ${xPos(data.length - 1).toFixed(1)},${base} Z`
+  function areaPath(key: 'approved' | 'rejected') {
+    const points = getPoints(key)
+    if (points.length < 2) return ''
+    const line = smoothPath(points)
+    const base = pad.t + H
+    return `${line} L ${points[points.length - 1].x.toFixed(1)},${base.toFixed(1)} L ${points[0].x.toFixed(1)},${base.toFixed(1)} Z`
   }
 
-  // Y-axis labels
-  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((t) => Math.round(maxVal * (1 - t)))
+  const yTicks = useMemo(() => {
+    const count = 4
+    return Array.from({ length: count + 1 }, (_, i) => Math.round((niceMax / count) * (count - i)))
+  }, [niceMax])
 
-  // Handle mouse move over SVG
+  const visibleLabels = useMemo(() => {
+    if (data.length <= 7) return data.map((_, i) => i)
+    const step = Math.ceil(data.length / 6)
+    const indices: number[] = [0]
+    for (let i = step; i < data.length - 1; i += step) indices.push(i)
+    indices.push(data.length - 1)
+    return indices
+  }, [data.length])
+
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
       const svg = svgRef.current
@@ -78,27 +104,14 @@ export default function LineChart({ data, height = 200 }: LineChartProps) {
       const idx = Math.round(rel * (data.length - 1))
       setHoverIdx(Math.max(0, Math.min(data.length - 1, idx)))
     },
-    [data.length, W, pad.l, width]
-  )
-
-  const toggleLine = (key: string) => {
-    setHidden((prev) => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
-    })
-  }
-
-  const visibleLabels = data.filter(
-    (_, i) => data.length <= 10 || i % Math.ceil(data.length / 8) === 0 || i === data.length - 1
+    [data.length, W, width]
   )
 
   const hovered = hoverIdx !== null ? data[hoverIdx] : null
 
   if (!data.length)
     return (
-      <div className="flex h-32 items-center justify-center text-sm text-gray-300">
+      <div className="flex h-40 items-center justify-center text-sm text-gray-300">
         لا توجد بيانات
       </div>
     )
@@ -113,139 +126,137 @@ export default function LineChart({ data, height = 200 }: LineChartProps) {
           onMouseMove={handleMouseMove}
           onMouseLeave={() => setHoverIdx(null)}
         >
-          {/* Horizontal grid + Y labels */}
+          <defs>
+            {LINES.map(({ key, gradient }) => (
+              <linearGradient key={`grad-${key}`} id={`area-grad-${key}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={gradient[0]} stopOpacity="0.2" />
+                <stop offset="100%" stopColor={gradient[1]} stopOpacity="0.02" />
+              </linearGradient>
+            ))}
+          </defs>
+
+          {/* Grid lines */}
           {yTicks.map((val, ti) => {
             const yy = pad.t + H * (ti / (yTicks.length - 1))
             return (
               <g key={ti}>
-                <line x1={pad.l} x2={pad.l + W} y1={yy} y2={yy} stroke="#f3f4f6" strokeWidth="1" />
-                <text x={pad.l - 6} y={yy + 4} textAnchor="end" fontSize="9" fill="#d1d5db">
+                <line
+                  x1={pad.l} x2={pad.l + W} y1={yy} y2={yy}
+                  stroke="#f1f5f9" strokeWidth="1"
+                />
+                <text x={pad.l - 8} y={yy + 3.5} textAnchor="end" fontSize="10" fill="#94a3b8" fontFamily="system-ui">
                   {val}
                 </text>
               </g>
             )
           })}
 
-          {/* Filled areas (semi-transparent) */}
-          {visibleLines.map(({ key, color }) => (
-            <path key={`area-${key}`} d={areaD(key)} fill={color} fillOpacity="0.06" />
+          {/* Area fills */}
+          {LINES.map(({ key }) => (
+            <path
+              key={`area-${key}`}
+              d={areaPath(key)}
+              fill={`url(#area-grad-${key})`}
+            />
           ))}
 
-          {/* Lines */}
-          {visibleLines.map(({ key, color }) => (
+          {/* Lines (smooth) */}
+          {LINES.map(({ key, color }) => (
             <path
               key={`line-${key}`}
-              d={pathD(key)}
+              d={smoothPath(getPoints(key))}
               fill="none"
               stroke={color}
-              strokeWidth="2.2"
-              strokeLinejoin="round"
+              strokeWidth="2.5"
               strokeLinecap="round"
+              strokeLinejoin="round"
             />
           ))}
 
           {/* Hover vertical line */}
           {hoverIdx !== null && (
             <line
-              x1={xPos(hoverIdx)}
-              x2={xPos(hoverIdx)}
-              y1={pad.t}
-              y2={pad.t + H}
-              stroke="#e5e7eb"
-              strokeWidth="1.5"
-              strokeDasharray="4 3"
+              x1={xPos(hoverIdx)} x2={xPos(hoverIdx)}
+              y1={pad.t} y2={pad.t + H}
+              stroke="#cbd5e1" strokeWidth="1" strokeDasharray="4 3"
             />
           )}
 
-          {/* Data points — always show on hover, always show all on small datasets */}
-          {visibleLines.map(({ key, color }) =>
+          {/* Data dots */}
+          {LINES.map(({ key, color }) =>
             data.map((d, i) => {
-              const isHovered = hoverIdx === i
               const val = d[key] ?? 0
-              if (data.length > 10 && !isHovered && val === 0) return null
+              const isHovered = hoverIdx === i
+              const show = isHovered || data.length <= 10
+              if (!show && val === 0) return null
               return (
                 <circle
                   key={`dot-${key}-${i}`}
-                  cx={xPos(i)}
-                  cy={yPos(val)}
-                  r={isHovered ? 5 : data.length <= 10 ? 3.5 : 0}
-                  fill={color}
-                  stroke="white"
-                  strokeWidth="1.5"
-                  style={{ transition: 'r 0.1s' }}
+                  cx={xPos(i)} cy={yPos(val)}
+                  r={isHovered ? 5 : show ? 3 : 0}
+                  fill="white"
+                  stroke={color}
+                  strokeWidth={isHovered ? 2.5 : 2}
+                  style={{ transition: 'r 0.15s ease' }}
                 />
               )
             })
           )}
 
           {/* X-axis labels */}
-          {visibleLabels.map((d) => {
-            const i = data.indexOf(d)
-            return (
-              <text
-                key={i}
-                x={xPos(i)}
-                y={height - 6}
-                textAnchor="middle"
-                fontSize="10"
-                fill="#9ca3af"
-              >
-                {d.label.slice(5)}
-              </text>
-            )
-          })}
+          {visibleLabels.map((i) => (
+            <text
+              key={i}
+              x={xPos(i)} y={height - 8}
+              textAnchor="middle" fontSize="10" fill="#94a3b8" fontFamily="system-ui"
+            >
+              {data[i].label.slice(5)}
+            </text>
+          ))}
         </svg>
 
         {/* Tooltip */}
         {hovered && hoverIdx !== null && (
           <div
-            className="pointer-events-none absolute z-10 min-w-[120px] rounded-xl border border-gray-100 bg-white px-3 py-2.5 shadow-lg"
+            className="pointer-events-none absolute z-10 min-w-[130px] rounded-xl border border-gray-100 bg-white/95 backdrop-blur-sm px-3.5 py-3 shadow-xl"
             style={{
-              top: `${((yPos(Math.max(...visibleLines.map((l) => hovered[l.key] ?? 0))) - pad.t) / height) * 100}%`,
+              top: `${((yPos(Math.max(...LINES.map((l) => hovered[l.key] ?? 0))) - pad.t) / height) * 100}%`,
               left: `${(xPos(hoverIdx) / width) * 100}%`,
-              transform:
-                hoverIdx > data.length * 0.7 ? 'translate(-110%, -50%)' : 'translate(10%, -50%)',
+              transform: hoverIdx > data.length * 0.7 ? 'translate(-110%, -50%)' : 'translate(10%, -50%)',
             }}
           >
-            <p className="mb-1.5 text-[11px] font-semibold text-gray-500">
-              {hovered.label.slice(5)}
+            <p className="mb-2 text-[11px] font-bold text-gray-400 tabular-nums">
+              {hovered.label}
             </p>
-            {visibleLines.map(({ key, color, label }) => (
-              <div key={key} className="flex items-center justify-between gap-4 text-xs">
+            {LINES.map(({ key, color, label }) => (
+              <div key={key} className="flex items-center justify-between gap-5 py-0.5 text-xs">
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
-                  <span className="text-gray-500">{label}</span>
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
+                  <span className="text-gray-600 font-medium">{label}</span>
                 </div>
-                <span className="font-semibold text-gray-800 tabular-nums">
+                <span className="font-bold text-gray-900 tabular-nums">
                   {hovered[key] ?? 0}
                 </span>
               </div>
             ))}
+            <div className="mt-1.5 border-t border-gray-100 pt-1.5 flex items-center justify-between text-xs">
+              <span className="text-gray-400">الإجمالي</span>
+              <span className="font-bold text-gray-900 tabular-nums">
+                {(hovered.approved ?? 0) + (hovered.rejected ?? 0)}
+              </span>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Legend — clickable to toggle lines */}
-      <div className="mt-2 flex items-center justify-center gap-4">
-        {LINES.map(({ key, color, label }) => {
-          const isHidden = hidden.has(key)
-          return (
-            <button
-              key={key}
-              onClick={() => toggleLine(key)}
-              className={`flex items-center gap-1.5 text-xs transition-opacity ${isHidden ? 'opacity-30' : 'opacity-100'}`}
-              title={isHidden ? `إظهار ${label}` : `إخفاء ${label}`}
-            >
-              <span
-                className="h-1.5 w-4 rounded-full transition-opacity"
-                style={{ backgroundColor: color }}
-              />
-              <span className={isHidden ? 'text-gray-300 line-through' : 'text-gray-500'}>
-                {label}
-              </span>
-            </button>
-          )
-        })}
+      {/* Legend */}
+      <div className="mt-3 flex items-center justify-center gap-6">
+        {LINES.map(({ color, label }) => (
+          <div key={label} className="flex items-center gap-2 text-xs">
+            <span className="h-2 w-5 rounded-full" style={{ backgroundColor: color }} />
+            <span className="text-gray-500 font-medium">{label}</span>
+          </div>
+        ))}
       </div>
     </div>
   )
