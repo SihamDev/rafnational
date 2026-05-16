@@ -87,12 +87,12 @@ function parseNumber(v: unknown): number | null {
   return Number.isFinite(n) && n > 0 ? n : null
 }
 
-function autoQualify(body: Record<string, unknown>): 'qualified' | 'unqualified' | 'pending' {
+function autoQualify(body: Record<string, unknown>): 'qualified' | 'unqualified' {
   const salary     = parseNumber(body.salary_numeric ?? body.salary_range_raw)
   const obligation = parseNumber(body.obligation_numeric ?? body.requested_amount_raw)
 
-  // Not enough data → leave as pending for admin review
-  if (salary === null) return 'pending'
+  // No salary provided → unqualified (form requires salary so this is a bad submission)
+  if (salary === null) return 'unqualified'
 
   // Rule 1: minimum salary 4,000 SAR
   if (salary < 4000) return 'unqualified'
