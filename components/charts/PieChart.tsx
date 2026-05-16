@@ -61,7 +61,7 @@ export default function PieChart({ data, centerLabel = 'عميل', overrideTotal
           <path key={i} d={s.path} fill={s.color} stroke="white" strokeWidth="1.5" />
         ))}
         <text x={cx} y={cy - 4} textAnchor="middle" fontSize="18" fontWeight="bold" fill="#0f2847">
-          {displayTotal.toLocaleString('ar-SA')}
+          {displayTotal.toLocaleString('en-US')}
         </text>
         <text x={cx} y={cy + 14} textAnchor="middle" fontSize="10" fill="#9ca3af">
           {centerLabel}

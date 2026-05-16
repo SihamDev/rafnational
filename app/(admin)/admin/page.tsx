@@ -155,9 +155,9 @@ export default async function AdminDashboard() {
             {/* Hero KPIs */}
             <div className="flex flex-wrap gap-2.5">
               {[
-                { label: 'إجمالي العملاء', value: totalN.toLocaleString('ar-SA'), color: 'text-brand' },
-                { label: 'مؤهَّلون', value: qualN.toLocaleString('ar-SA'), color: 'text-emerald-400' },
-                { label: 'معدل التأهيل', value: `${qualRate}٪`, color: 'text-blue-400' },
+                { label: 'إجمالي العملاء', value: totalN.toLocaleString('en-US'), color: 'text-brand' },
+                { label: 'مؤهَّلون', value: qualN.toLocaleString('en-US'), color: 'text-emerald-400' },
+                { label: 'معدل التأهيل', value: `${qualRate}%`, color: 'text-blue-400' },
               ].map((kpi) => (
                 <div
                   key={kpi.label}
@@ -175,7 +175,7 @@ export default async function AdminDashboard() {
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <StatCard
             label="إجمالي العملاء"
-            value={totalN.toLocaleString('ar-SA')}
+            value={totalN.toLocaleString('en-US')}
             icon={Users}
             tone="base"
             href="/admin/leads"
@@ -189,14 +189,14 @@ export default async function AdminDashboard() {
           />
           <StatCard
             label="قيد التقييم"
-            value={pendingN.toLocaleString('ar-SA')}
+            value={pendingN.toLocaleString('en-US')}
             icon={Clock}
             tone="pending"
             href="/admin/leads?qualification=pending"
           />
           <StatCard
             label="معدل التأهيل"
-            value={`${qualRate}٪`}
+            value={`${qualRate}%`}
             icon={CheckCircle}
             tone="approved"
           />
@@ -258,7 +258,7 @@ export default async function AdminDashboard() {
                         <span className="text-navy-900 text-[12px] font-semibold">{stage.label}</span>
                       </div>
                       <span className={cn('font-sans text-[12px] font-bold tabular-nums', stage.text.replace('text-', 'text-'))}>
-                        {count.toLocaleString('ar-SA')}
+                        {count.toLocaleString('en-US')}
                       </span>
                     </div>
                     <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
@@ -279,7 +279,7 @@ export default async function AdminDashboard() {
                     <span className="text-sm font-bold text-emerald-700">إجمالي التحويلات</span>
                   </div>
                   <span className="font-sans text-lg font-bold text-emerald-600 tabular-nums">
-                    {(wfMap.converted ?? 0).toLocaleString('ar-SA')}
+                    {(wfMap.converted ?? 0).toLocaleString('en-US')}
                   </span>
                 </div>
               )}
