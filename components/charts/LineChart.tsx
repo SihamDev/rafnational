@@ -56,10 +56,25 @@ export default function LineChart({ data, height = 220 }: LineChartProps) {
     return Math.max(max, 1)
   }, [data])
 
+  // If one day massively dominates (e.g. a bulk import), cap the y-axis at
+  // 3× the second-highest day so today's small counts are still visible.
+  const cappedMax = useMemo(() => {
+    const allDayTotals = data.map((d) =>
+      LINES.reduce((s, l) => s + (d[l.key] ?? 0), 0)
+    )
+    const sorted = [...allDayTotals].sort((a, b) => b - a)
+    if (sorted.length >= 2 && sorted[0] > sorted[1] * 4 && sorted[1] > 0) {
+      return sorted[1] * 3
+    }
+    return maxVal
+  }, [data, maxVal])
+
   const niceMax = useMemo(() => {
-    const mag = Math.pow(10, Math.floor(Math.log10(maxVal)))
-    return Math.ceil(maxVal / mag) * mag || 1
-  }, [maxVal])
+    const v = cappedMax
+    if (v === 0) return 1
+    const mag = Math.pow(10, Math.floor(Math.log10(v)))
+    return Math.ceil(v / mag) * mag || 1
+  }, [cappedMax])
 
   function xPos(i: number) {
     return pad.l + (data.length > 1 ? (i / (data.length - 1)) * W : W / 2)
@@ -187,32 +202,62 @@ export default function LineChart({ data, height = 220 }: LineChartProps) {
             data.map((d, i) => {
               const val = d[key] ?? 0
               const isHovered = hoverIdx === i
-              const show = isHovered || data.length <= 10
+              const isLast = i === data.length - 1
+              const show = isHovered || isLast || data.length <= 10
               if (!show && val === 0) return null
               return (
                 <circle
                   key={`dot-${key}-${i}`}
                   cx={xPos(i)} cy={yPos(val)}
-                  r={isHovered ? 5 : show ? 3 : 0}
+                  r={isHovered ? 5 : isLast ? 4 : show ? 3 : 0}
                   fill="white"
                   stroke={color}
-                  strokeWidth={isHovered ? 2.5 : 2}
+                  strokeWidth={isHovered || isLast ? 2.5 : 2}
                   style={{ transition: 'r 0.15s ease' }}
                 />
               )
             })
           )}
 
+          {/* Always label the last point (today) with its value */}
+          {data.length > 0 && LINES.map(({ key, color }) => {
+            const lastIdx = data.length - 1
+            const val = data[lastIdx][key] ?? 0
+            if (val === 0) return null
+            const cx = xPos(lastIdx)
+            const cy = yPos(val)
+            return (
+              <text
+                key={`last-label-${key}`}
+                x={cx}
+                y={cy - 9}
+                textAnchor="middle"
+                fontSize="10"
+                fontWeight="700"
+                fill={color}
+                fontFamily="system-ui"
+              >
+                {val}
+              </text>
+            )
+          })}
+
           {/* X-axis labels */}
-          {visibleLabels.map((i) => (
-            <text
-              key={i}
-              x={xPos(i)} y={height - 8}
-              textAnchor="middle" fontSize="10" fill="#94a3b8" fontFamily="system-ui"
-            >
-              {data[i].label.slice(5)}
-            </text>
-          ))}
+          {visibleLabels.map((i) => {
+            const isLast = i === data.length - 1
+            return (
+              <text
+                key={i}
+                x={xPos(i)} y={height - 8}
+                textAnchor="middle" fontSize="10"
+                fill={isLast ? '#64748b' : '#94a3b8'}
+                fontWeight={isLast ? '700' : '400'}
+                fontFamily="system-ui"
+              >
+                {isLast ? 'اليوم' : data[i].label.slice(5)}
+              </text>
+            )
+          })}
         </svg>
 
         {/* Tooltip */}
