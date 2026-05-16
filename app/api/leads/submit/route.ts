@@ -78,6 +78,31 @@ function buildFunnelTimestamp(body: {
   return new Date().toISOString()
 }
 
+/* ──────────────────────────────────────────────────────────────
+   Auto-qualification rules (Saudi mortgage financing standards)
+   ────────────────────────────────────────────────────────────── */
+function parseNumber(v: unknown): number | null {
+  if (v === undefined || v === null) return null
+  const n = Number(String(v).replace(/[^\d.]/g, ''))
+  return Number.isFinite(n) && n > 0 ? n : null
+}
+
+function autoQualify(body: Record<string, unknown>): 'qualified' | 'unqualified' | 'pending' {
+  const salary     = parseNumber(body.salary_numeric ?? body.salary_range_raw)
+  const obligation = parseNumber(body.obligation_numeric ?? body.requested_amount_raw)
+
+  // Not enough data → leave as pending for admin review
+  if (salary === null) return 'pending'
+
+  // Rule 1: minimum salary 4,000 SAR
+  if (salary < 4000) return 'unqualified'
+
+  // Rule 2: debt-burden ratio — total monthly obligations ≤ 45% of salary
+  if (obligation !== null && obligation / salary > 0.45) return 'unqualified'
+
+  return 'qualified'
+}
+
 export async function OPTIONS(request: NextRequest) {
   return new NextResponse(null, { status: 204, headers: corsHeaders(request) })
 }
@@ -139,7 +164,7 @@ export async function POST(request: NextRequest) {
 
     const b = parsed.data
 
-    const emailClean: string | null =
+    let emailClean: string | null =
       typeof b.email === 'string' && b.email.includes('@')
         ? b.email.trim().toLowerCase()
         : null
@@ -182,6 +207,9 @@ export async function POST(request: NextRequest) {
 
     const submittedAt = submittedAtFromClient ?? buildFunnelTimestamp(b)
 
+    /* ── Auto-qualification based on salary & obligations ── */
+    const autoQual = autoQualify(body)
+
     const { data: row, error } = await supabase
       .from('leads')
       .insert({
@@ -201,7 +229,7 @@ export async function POST(request: NextRequest) {
         visit_source_raw: b.visit_source_raw?.trim() ?? null,
         campaign_raw: b.campaign_raw?.trim() ?? null,
         funnel_submitted_at: submittedAt,
-        qualification_status: 'pending',
+        qualification_status: autoQual,
         sales_workflow_status: 'new',
         import_source_sheet: null,
       } as Record<string, unknown>)
