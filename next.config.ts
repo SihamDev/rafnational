@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [{ source: '/funnel1', destination: '/funnel1/index.html' }]
+  },
+
   // Allow @react-pdf/renderer which uses Node APIs
   serverExternalPackages: ['@react-pdf/renderer'],
 
@@ -31,9 +35,7 @@ const nextConfig: NextConfig = {
       {
         // Next.js static chunks — immutable (hash-named files)
         source: '/_next/static/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
     ]
   },

@@ -11,6 +11,11 @@ export async function proxy(request: NextRequest) {
       url.pathname = '/raf-national-landing.html'
       return NextResponse.rewrite(url)
     }
+    if (pathname === '/funnel1' || pathname === '/funnel1/') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/funnel1/index.html'
+      return NextResponse.rewrite(url)
+    }
     return NextResponse.next({ request })
   }
 
@@ -20,6 +25,11 @@ export async function proxy(request: NextRequest) {
     if (pathname === '/') {
       const url = request.nextUrl.clone()
       url.pathname = '/raf-national-landing.html'
+      return NextResponse.rewrite(url)
+    }
+    if (pathname === '/funnel1' || pathname === '/funnel1/') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/funnel1/index.html'
       return NextResponse.rewrite(url)
     }
     return NextResponse.next({ request })

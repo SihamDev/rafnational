@@ -1,5 +1,6 @@
 import { getStaffUser } from '@/lib/supabase/server'
-import { ShieldCheck, Zap } from 'lucide-react'
+import { Zap } from 'lucide-react'
+import { RafLogo } from '@/components/brand/RafLogo'
 import Link from 'next/link'
 import NotificationsBell from './NotificationsBell'
 
@@ -21,57 +22,56 @@ export default async function AdminTopbar({ title, breadcrumb, adminEmail }: Adm
 
   const roleColor =
     staff?.role === 'admin'
-      ? 'text-brand'
+      ? 'text-gold'
       : staff?.role === 'sales_agent'
-        ? 'text-emerald-500'
-        : 'text-white/50'
+        ? 'text-grass-dark'
+        : 'text-muted-funnel'
 
   return (
-    <header className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.55] bg-white/80 px-6 py-3.5 backdrop-blur-md">
-      {/* Left: title */}
+    <header className="border-gold/20 shadow-soft sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b bg-white/90 px-6 py-3.5 backdrop-blur-md">
       <div className="flex items-center gap-3">
         {breadcrumb && (
-          <div className="flex items-center gap-1.5 text-[11px] text-gray-400">
+          <div className="text-muted-funnel flex items-center gap-1.5 text-[11px]">
             <span>راف الوطنية</span>
-            <span className="text-gray-300">/</span>
+            <span className="text-black/15">/</span>
             <span>{breadcrumb}</span>
-            <span className="text-gray-300">/</span>
+            <span className="text-black/15">/</span>
           </div>
         )}
         <div className="flex items-center gap-2.5">
           {!breadcrumb && (
-            <span className="hidden text-[11px] text-gray-400 sm:inline">
+            <span className="text-muted-funnel hidden text-[11px] sm:inline">
               راف الوطنية
-              <span className="mx-1.5 text-gray-300">/</span>
+              <span className="mx-1.5 text-black/15">/</span>
             </span>
           )}
-          <h1 className="text-navy-900 text-base font-bold leading-none">{title}</h1>
+          <h1 className="font-heading text-ink text-base leading-none font-bold">{title}</h1>
         </div>
       </div>
 
-      {/* Right: actions + user */}
       <div className="flex items-center gap-2.5">
         {staff?.role === 'admin' && <NotificationsBell />}
 
-        {/* Live indicator */}
-        <div className="hidden items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 sm:flex">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-          <span className="text-[10px] font-semibold text-emerald-600">مباشر</span>
+        <div className="border-grass/25 bg-grass/10 hidden items-center gap-1.5 rounded-full border px-2.5 py-1 sm:flex">
+          <span className="bg-grass h-1.5 w-1.5 animate-pulse rounded-full" />
+          <span className="text-grass-dark text-[10px] font-semibold">مباشر</span>
         </div>
 
-        {/* User chip */}
         <Link
           href={staff?.role === 'admin' ? '/admin/settings' : '/admin/leads'}
-          className="group flex items-center gap-2.5 rounded-xl border border-gray-100 bg-white px-3 py-2 shadow-sm transition-all hover:border-brand/30 hover:shadow-md"
+          className="group shadow-soft hover:border-gold/35 hover:shadow-soft-lg flex items-center gap-2.5 rounded-2xl border border-black/[0.06] bg-white px-3 py-2 transition-all"
         >
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-navy-900 shadow-sm">
-            <ShieldCheck size={14} className={roleColor} />
+          <div className="bg-honey-pale ring-gold/20 flex h-7 w-9 items-center justify-center rounded-xl px-0.5 ring-1">
+            <RafLogo className="max-h-5 w-full" width={36} height={20} />
           </div>
           <div className="hidden sm:block">
-            <p className="text-navy-900 text-[11px] font-semibold leading-tight">{email}</p>
+            <p className="text-ink text-[11px] leading-tight font-semibold">{email}</p>
             <p className={`text-[9px] font-bold tracking-wide ${roleColor}`}>{roleLabel}</p>
           </div>
-          <Zap size={11} className="hidden text-gray-300 transition-colors group-hover:text-brand sm:block" />
+          <Zap
+            size={11}
+            className="group-hover:text-gold hidden text-black/20 transition-colors sm:block"
+          />
         </Link>
       </div>
     </header>

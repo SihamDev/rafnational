@@ -1,0 +1,1266 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<base href="/funnel1/" />
+<title>راف الوطنية — تمويل عقاري</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+<script>
+!function (w, d, t) {
+  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+  ttq.load('D5BQSIJC77U3FL790DJ0');
+  ttq.page();
+}(window, document, 'ttq');
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Tajawal', 'system-ui', 'sans-serif'],
+          messiri: ['El Messiri', 'Tajawal', 'system-ui', 'sans-serif'],
+        },
+        colors: {
+          ink: '#2B2B2B',
+          muted: '#6B7280',
+          gold: '#F4C430',
+          honey: '#F8D873',
+          honeyPale: '#FFF6D6',
+          grass: '#22B84A',
+          grassDark: '#1AA13F',
+        },
+        boxShadow: {
+          soft: '0 10px 30px -12px rgba(20, 20, 20, 0.10), 0 2px 6px -2px rgba(20, 20, 20, 0.05)',
+          softLg: '0 30px 60px -25px rgba(20, 20, 20, 0.18), 0 6px 14px -6px rgba(20, 20, 20, 0.06)',
+        },
+        borderRadius: {
+          '2xl': '18px',
+          '3xl': '24px',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  html, body { font-family: 'Tajawal', system-ui, sans-serif; color: #2B2B2B; background: #FFFFFF; }
+  h1, h2, h3, h4, h5, h6 { font-family: 'El Messiri', 'Tajawal', system-ui, sans-serif; }
+  /* Western digits (0–9) for UI numbers; avoid Eastern Arabic–Indic numerals */
+  .nums-latin { font-variant-numeric: lining-nums; unicode-bidi: isolate; }
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  ::selection { background: #F4C430; color: #111; }
+
+  /* hide arrows on number inputs */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  /* Hero: warm gradient + soft dotted texture */
+  .hero-bg {
+    background:
+      radial-gradient(1200px 500px at 80% -10%, #FFE9A8 0%, rgba(255,233,168,0) 60%),
+      radial-gradient(900px 500px at 10% 110%, #F6CA5A 0%, rgba(246,202,90,0) 60%),
+      linear-gradient(180deg, #F8D873 0%, #F4C658 100%);
+  }
+  .hero-dots {
+    background-image: radial-gradient(rgba(60,40,0,0.10) 1px, transparent 1px);
+    background-size: 24px 24px;
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.65), rgba(0,0,0,0));
+            mask-image: linear-gradient(180deg, rgba(0,0,0,0.65), rgba(0,0,0,0));
+  }
+
+  /* Decorative gold rule used between sections */
+  .gold-rule {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(244,196,48,0) 0%, rgba(244,196,48,.55) 50%, rgba(244,196,48,0) 100%);
+  }
+  .gold-diamond {
+    width: 8px; height: 8px; transform: rotate(45deg);
+    background: #F4C430; box-shadow: 0 0 0 4px rgba(244,196,48,0.15);
+    border-radius: 1px;
+  }
+
+  /* Subtle card lift on hover */
+  .card-lift { transition: transform .25s ease, box-shadow .25s ease; }
+  .card-lift:hover { transform: translateY(-2px); }
+
+  /* Animated entrance */
+  .fadeIn { animation: fade .4s ease-out both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Big display headline with subtle highlighter behind a keyword */
+  .ink-highlight {
+    background: linear-gradient(180deg, transparent 60%, rgba(244,196,48,0.45) 60%, rgba(244,196,48,0.45) 92%, transparent 92%);
+    padding: 0 .15em;
+  }
+
+  /* Section eyebrow chip */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .35rem .8rem; border-radius: 999px;
+    background: #FFF6D6; color: #6b4a00;
+    font-size: 12px; font-weight: 700; letter-spacing: .02em;
+    border: 1px solid rgba(244,196,48,0.35);
+  }
+
+  /* Form field focus glow */
+  .field:focus { box-shadow: 0 0 0 4px rgba(244,196,48,0.18); border-color: #F4C430; }
+
+  /* prevent ios input zoom */
+  input, select, textarea { font-size: 16px; }
+
+  /* Marquee for trust logos on small screens — keep simple, no animation needed */
+
+  /* ===== Fusion / ClickFunnels-style lead form (#raf-form-container) ===== */
+  #raf-form-container,
+  #raf-form-container button,
+  #raf-form-container input,
+  #raf-form-container select,
+  #raf-form-container textarea,
+  #raf-form-container label,
+  #raf-form-container .progress-text,
+  #raf-form-container .phone-prefix {
+    font-family: 'Tajawal', system-ui, sans-serif !important;
+  }
+  #raf-form-container .step-title,
+  #raf-form-container .final-screen h2 {
+    font-family: 'El Messiri', 'Tajawal', system-ui, sans-serif !important;
+  }
+  #raf-form-container {
+    direction: rtl; text-align: right; background: transparent;
+    padding: 10px; max-width: 500px; margin: 0 auto;
+  }
+  #raf-form-container .progress-container {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 30px; direction: ltr;
+  }
+  #raf-form-container .progress-text { font-weight: 900; font-size: 14px; color: #333; width: 40px; }
+  #raf-form-container .progress-track {
+    flex-grow: 1; background-color: #e9ecef; height: 8px;
+    border-radius: 20px; margin-left: 10px; overflow: hidden;
+  }
+  #raf-form-container .progress-fill {
+    height: 100%; background: #f5c848; width: 20%;
+    border-radius: 20px; transition: width 0.5s ease;
+  }
+  #raf-form-container .step-title { font-size: 20px; font-weight: 800; color: #111; margin-bottom: 25px; }
+  #raf-form-container label { display: block; margin-bottom: 10px; font-weight: 700; font-size: 15px; color: #333; }
+  #raf-form-container .input-group { margin-bottom: 30px; position: relative; }
+  #raf-form-container .form-control {
+    width: 100%; padding: 16px 20px; padding-left: 45px;
+    border: 1px solid #e5e7eb; border-radius: 12px;
+    font-size: 15px; font-weight: 600; color: #333;
+    background-color: #f9fafb; transition: all 0.3s;
+    outline: none; text-align: right; appearance: none;
+  }
+  #raf-form-container select.form-control {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: left 15px center;
+    background-size: 16px; cursor: pointer;
+  }
+  #raf-form-container .phone-wrapper {
+    position: relative;
+    direction: ltr !important;
+    width: 100%;
+  }
+  #raf-form-container .phone-prefix {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #22c55e;
+    font-weight: 800;
+    font-size: 15px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  #raf-form-container #phone {
+    padding-left: 65px !important;
+    text-align: left;
+    direction: ltr;
+  }
+  #raf-form-container .form-control:focus {
+    background-color: #fff; border-color: #f5c848;
+    box-shadow: 0 0 0 4px rgba(245, 200, 72, 0.2);
+  }
+  #raf-form-container .form-control.valid {
+    border-color: #22c55e; background-color: #fff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2322c55e'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: 15px center; background-size: 24px;
+  }
+  #raf-form-container #phone.valid { background-image: none; border-color: #22c55e; }
+  #raf-form-container .form-control.error {
+    border-color: #ef4444 !important; background-color: #fff5f5 !important;
+    animation: rafShake 0.3s;
+  }
+  @keyframes rafShake {
+    0% { transform: translateX(0); } 25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); } 100% { transform: translateX(0); }
+  }
+  #raf-form-container button.btn-yellow,
+  #raf-form-container a.btn-whatsapp {
+    font-family: 'El Messiri', 'Tajawal', system-ui, sans-serif !important;
+  }
+  #raf-form-container .btn-yellow {
+    background-color: #f5c848; color: #000;
+    border: none; padding: 16px;
+    border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 800;
+    width: 100%; margin-top: 10px; display: flex; justify-content: center;
+    align-items: center; gap: 8px; transition: background 0.3s;
+  }
+  #raf-form-container .btn-yellow:hover { background-color: #e0b63e; }
+  #raf-form-container .btn-yellow:disabled { opacity: 0.7; cursor: not-allowed; }
+  #raf-form-container .btn-back {
+    background: #fff; border: 2px solid #e5e7eb; color: #555;
+    margin-top: 15px; width: 100%; cursor: pointer; font-size: 15px;
+    font-weight: 700; padding: 14px; border-radius: 12px;
+  }
+  #raf-form-container #otherCityInput { display: none; margin-top: 15px; }
+  #raf-form-container #otherCityInput.is-visible { display: block; }
+  #raf-form-container .step-hint-note {
+    font-size: 12px;
+    color: #6B7280;
+    margin-top: 12px;
+    line-height: 1.65;
+    text-align: right;
+    font-weight: 500;
+  }
+  #raf-form-container .final-screen {
+    text-align: center !important;
+    padding: 20px 0;
+    display: none;
+    flex-direction: column;
+    align-items: center !important;
+  }
+  #raf-form-container .final-screen.active {
+    display: flex;
+    animation: rafFadeIn 0.4s;
+  }
+  #raf-form-container .success-icon {
+    width: 70px; height: 70px; background: #fff8e1;
+    border-radius: 50%; margin: 0 auto 20px; display: flex;
+    align-items: center; justify-content: center;
+  }
+  #raf-form-container .success-icon svg { width: 35px; fill: #f5c848; }
+  #raf-form-container .duplicate-icon {
+    width: 70px; height: 70px; background: #fee2e2;
+    border-radius: 50%; margin: 0 auto 20px; display: flex;
+    align-items: center; justify-content: center;
+  }
+  #raf-form-container .duplicate-icon svg { width: 35px; fill: #ef4444; }
+  #raf-form-container .btn-whatsapp {
+    background-color: #25D366; color: white; border: none; padding: 16px;
+    border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 700;
+    width: 100%; margin-top: 20px; display: flex; justify-content: center;
+    align-items: center; text-decoration: none;
+  }
+  #raf-form-container .step { display: none; }
+  #raf-form-container .step.active { display: block; animation: rafFadeIn 0.4s; }
+  @keyframes rafFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useMemo } = React;
+
+/* ---------- Brand logo (PNG) ---------- */
+function LogoImg({ className = '' }) {
+  return (
+    <img
+      src="/brand/logo.png"
+      alt="شركة راف الوطنية للتطوير والاستثمار العقاري"
+      className={`h-auto w-auto object-contain select-none ${className}`}
+      width={200}
+      height={120}
+      decoding="async"
+    />
+  );
+}
+
+
+/* ---------- Header (مدمج داخل Hero لخلفية واحدة) ---------- */
+
+/* ---------- Reusable buttons ---------- */
+function GreenCTA({ children, className = '', onClick, full }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center justify-center gap-2 font-messiri bg-grass hover:bg-grassDark transition-colors text-white font-bold rounded-2xl px-6 py-3.5 shadow-soft active:scale-[0.99] ${full ? 'w-full' : ''} ${className}`}
+    >
+      <span>{children}</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M14 6l-6 6 6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </button>
+  );
+}
+function BlackCTA({ children, className = '', onClick, full }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center justify-center gap-2 font-messiri bg-black hover:bg-neutral-800 transition-colors text-white font-bold rounded-2xl px-6 py-3.5 ${full ? 'w-full' : ''} ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+/* ---------- Hero ---------- */
+function Hero({ onCTAClick }) {
+  return (
+    <section className="relative hero-bg overflow-hidden">
+      {/* decorative dots + orbs — تغطي الشعار والمحتوى كسيكشن واحد */}
+      <div className="absolute inset-0 hero-dots pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-white/20 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -left-24 w-80 h-80 rounded-full bg-amber-300/30 blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 max-w-[1100px] mx-auto px-5 pt-6 md:pt-8 pb-12 md:pb-16">
+        <a
+          href="/login"
+          aria-label="تسجيل الدخول"
+          title="تسجيل الدخول"
+          className="absolute top-6 right-5 z-20 flex items-center justify-center rounded-2xl border border-ink/10 bg-white/92 p-2.5 text-ink shadow-soft backdrop-blur-sm transition hover:border-gold/45 hover:bg-white hover:shadow-softLg md:top-8 md:right-6"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </a>
+        <header className="flex flex-col items-center justify-center pb-8 md:pb-10">
+          <LogoImg className="max-h-[100px] md:max-h-[112px]" />
+        </header>
+
+        <div className="grid md:grid-cols-12 gap-5 md:gap-6">
+          {/* Right large card (first in RTL) */}
+          <div className="md:col-span-7 bg-white rounded-3xl shadow-softLg p-6 md:p-10 relative overflow-hidden card-lift">
+            {/* subtle gold corner accent */}
+            <div className="absolute -top-10 -left-10 w-32 h-32 rounded-full bg-honey/40" />
+            <div className="relative">
+            <div className="eyebrow mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-grass inline-block" />
+              تمويل عقاري مرخّص — حلول مدروسة
+            </div>
+            <h1 className="text-[28px] md:text-[44px] font-black leading-[1.2] text-ink tracking-tight">
+              لا تخلي نقص السيولة يوقف طموحاتك<span className="text-gold">…</span><br/>
+              حوّل تمويلك العقاري إلى <span className="ink-highlight">كاش عالي</span> يتجاوز
+              <span className="whitespace-nowrap"> المليون ريال</span>
+            </h1>
+
+            <ul className="mt-6 space-y-3">
+              {[
+                'سيولة نقدية تبدأ على حسب الأهلية',
+                'إجراءات خلال 24 ساعة من فريقك',
+                'حلول واضحة وخطوات مضمونة',
+              ].map((t,i)=>(
+                <li key={i} className="flex items-center gap-3 text-[15px] md:text-[16px] text-ink">
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-grass/10 text-grass flex items-center justify-center">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4 10-10" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </span>
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-7 flex flex-col sm:flex-row gap-3">
+              <GreenCTA onClick={onCTAClick} className="sm:flex-1">سجل الآن وأبشر بالسعد</GreenCTA>
+              <BlackCTA className="sm:flex-none">متابعة طلب سابق</BlackCTA>
+            </div>
+            <p className="mt-4 text-[12px] text-muted leading-relaxed">
+              * التقييم مبدئي — بدون التزام. النتائج والمدة تختلف حسب الحالة واشتراطات الجهات التمويلية.
+            </p>
+            </div>
+          </div>
+
+          {/* Left smaller card */}
+          <div className="md:col-span-5 bg-white rounded-3xl shadow-softLg p-6 md:p-8 card-lift">
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-11 h-11 rounded-2xl bg-honey/60 flex items-center justify-center">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2" stroke="#7a5a00" strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="12" r="4" fill="#F4C430"/></svg>
+              </div>
+              <div>
+                <h2 className="text-[20px] md:text-[22px] font-extrabold text-ink leading-tight">ابدأ التقييم خلال دقيقة</h2>
+                <p className="text-[14px] text-muted mt-1">نعرف وضعك ونرشح لك أفضل خيار.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 md:gap-3 mt-6">
+              {[
+                { big: '100%', small: 'خصوصية' },
+                { big: '3', small: 'خطوات بسيطة' },
+                { big: '24h', small: 'وقت الرد' },
+              ].map((s,i)=>(
+                <div key={i} className="text-center bg-neutral-50 border border-black/[0.04] rounded-2xl py-4">
+                  <div className="text-[18px] md:text-[20px] font-extrabold text-ink nums-latin" dir="ltr">{s.big}</div>
+                  <div className="text-[12px] text-muted mt-0.5">{s.small}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6">
+              <GreenCTA full onClick={onCTAClick}>سجل الآن وأبشر بالسعد</GreenCTA>
+            </div>
+            <p className="mt-3 text-[11px] text-muted text-center leading-relaxed">
+              بياناتك محمية ولن تُستخدم إلا لتقييم طلب التمويل.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Intro accordion ---------- */
+function IntroAccordion() {
+  const [open, setOpen] = useState(true);
+  return (
+    <section className="bg-white relative">
+      <div className="max-w-[920px] mx-auto px-5 py-12 md:py-16">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <span className="gold-rule flex-1 max-w-[120px]" />
+          <span className="gold-diamond" />
+          <span className="gold-rule flex-1 max-w-[120px]" />
+        </div>
+        <div className="bg-white rounded-3xl border border-black/[0.06] shadow-soft p-6 md:p-8 card-lift">
+          <button
+            onClick={() => setOpen(o => !o)}
+            className="w-full flex items-center justify-between gap-4 text-right"
+          >
+            <span className="text-[19px] md:text-[22px] font-extrabold text-ink tracking-tight">
+              وايش الفكرة باختصار؟ <span aria-hidden>💡</span>
+            </span>
+            <span className={`shrink-0 w-10 h-10 rounded-full bg-honey/40 flex items-center justify-center transition-transform ${open ? 'rotate-180' : ''}`}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#2B2B2B" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </span>
+          </button>
+
+          {open && (
+            <div className="fadeIn mt-5 grid md:grid-cols-5 gap-4 items-stretch">
+              <div className="md:col-span-3 bg-honeyPale border border-gold/30 rounded-2xl px-5 py-5 text-ink font-bold flex items-center gap-3">
+                <div className="shrink-0 w-10 h-10 rounded-xl bg-gold/90 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 7v6l4 2" stroke="#2B2B2B" strokeWidth="2.2" strokeLinecap="round"/><circle cx="12" cy="12" r="9" stroke="#2B2B2B" strokeWidth="2"/></svg>
+                </div>
+                <span className="text-[15px] md:text-[16px] leading-snug">الإنجاز قد يتم خلال مدة سريعة وقد تصل إلى 9 أيام</span>
+              </div>
+              <p className="md:col-span-2 text-[14px] md:text-[15px] text-muted leading-relaxed self-center">
+                حسب الحالة وبعد تقييم الأهلية واشتراطات الجهات التمويلية.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Steps ---------- */
+function Steps({ onCTAClick }) {
+  const items = [
+    { n: '1', t: 'الاستلام الأولي', d: 'بعد التسجيل، نراجع طلبك خلال 24 ساعة ونحدد المسار المناسب.', icon: 'inbox' },
+    { n: '2', t: 'تجهيز الاتفاقيات والعقود', d: 'نوضح لك الخيارات والإجراءات اللازمة بشكل واضح.', icon: 'doc' },
+    { n: '3', t: 'تنفيذ الإجراءات التمويلية', d: 'نرتب المعاملة ونبلغك بالمراحل حتى إتمام الوصول.', icon: 'check' },
+  ];
+  const icons = {
+    inbox: <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 13l3-7h10l3 7M4 13v5a2 2 0 002 2h12a2 2 0 002-2v-5M4 13h5l1 2h4l1-2h5" stroke="#2B2B2B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+    doc: <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z" stroke="#2B2B2B" strokeWidth="1.8" strokeLinejoin="round"/><path d="M14 3v5h5M8 13h8M8 17h5" stroke="#2B2B2B" strokeWidth="1.8" strokeLinecap="round"/></svg>,
+    check: <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2B2B2B" strokeWidth="1.8"/><path d="M8 12.5l3 3 5-6" stroke="#2B2B2B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  };
+  return (
+    <section className="bg-[#FAFAF7] relative">
+      <div className="max-w-[1100px] mx-auto px-5 py-14 md:py-20">
+        <div className="text-center">
+          <div className="eyebrow">كيف تسير العملية</div>
+          <h2 className="mt-3 text-[26px] md:text-[36px] font-black text-ink tracking-tight">
+            نرتّب لك الطريق<span className="text-gold">…</span> خطوة بخطوة
+          </h2>
+          <p className="text-muted mt-2 text-[14px] md:text-[16px] max-w-xl mx-auto">
+            ثلاث خطوات واضحة، بدون مفاجآت وبدون وعود غير واقعية.
+          </p>
+        </div>
+
+        <div className="relative grid md:grid-cols-3 gap-4 md:gap-6 mt-10">
+          {/* connecting dashed line on desktop */}
+          <div className="hidden md:block absolute right-[16%] left-[16%] top-[42px] h-px border-t-2 border-dashed border-gold/40" aria-hidden />
+          {items.map((s, i) => (
+            <div key={i} className="relative bg-white rounded-3xl border border-black/[0.05] shadow-soft p-6 md:p-7 card-lift">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="relative w-12 h-12 rounded-2xl bg-gold flex items-center justify-center text-ink font-black text-[18px] shadow-soft nums-latin" dir="ltr">
+                  {s.n}
+                </div>
+                <div className="w-11 h-11 rounded-xl bg-honeyPale flex items-center justify-center">
+                  {icons[s.icon]}
+                </div>
+              </div>
+              <h3 className="text-[18px] md:text-[20px] font-extrabold text-ink tracking-tight mt-1">{s.t}</h3>
+              <p className="text-[14px] md:text-[15px] text-muted leading-relaxed mt-2">{s.d}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10">
+          <button
+            onClick={onCTAClick}
+            className="w-full font-messiri bg-grass hover:bg-grassDark transition-colors text-white font-extrabold rounded-2xl py-4 md:py-5 text-[16px] md:text-[18px] shadow-soft active:scale-[0.995]"
+          >
+            سجل الآن وأبشر بالسعد
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Lead form — CRM API ---------- */
+const WEBHOOK_URL = '/api/leads/submit';
+const FUNNEL_SECRET = 'raf-funnel1-2026';
+const WHATSAPP_NUMBER = '966920031241';
+
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param) || '';
+}
+
+function FusionFormPanel({ onComplete }) {
+  const [step, setStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [outcome, setOutcome] = useState(null);
+  const [waSuccessHref, setWaSuccessHref] = useState('#');
+  const [waDupHref, setWaDupHref] = useState('#');
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [city, setCity] = useState('');
+  const [otherCity, setOtherCity] = useState('');
+
+  const [hasMortgage, setHasMortgage] = useState('');
+  const [salary, setSalary] = useState('');
+  const [sakaniSupport, setSakaniSupport] = useState('');
+  const [bank, setBank] = useState('');
+
+  const [sector, setSector] = useState('');
+  const [loanAmount, setLoanAmount] = useState('');
+  const [stopServices, setStopServices] = useState('');
+  const [urgency, setUrgency] = useState('');
+
+  const [err, setErr] = useState({});
+
+  const progressPct = Math.round((step / 5) * 100);
+  const showOtherCity = city === 'أخرى';
+
+  function trackStepEvent(stepNumber) {
+    const eventName = 'Step_' + stepNumber + '_View';
+    const props = { step_number: stepNumber, page_url: window.location.href };
+    try {
+      const c = city === 'أخرى' ? otherCity : city;
+      if (c) props.Selected_City = c;
+      if (salary) props.Salary_Range = salary;
+      if (hasMortgage) props.Has_Mortgage = hasMortgage;
+      if (sakaniSupport) props.Sakani_Support = sakaniSupport;
+    } catch (e) { console.error('Error gathering props', e); }
+    if (window.mixpanel) window.mixpanel.track(eventName, props);
+    if (window.ttq) window.ttq.track('ViewContent', { content_name: eventName });
+    if (window.snaptr) window.snaptr('track', 'VIEW_CONTENT', { description: eventName });
+  }
+
+  useEffect(() => { trackStepEvent(1); }, []);
+
+  function clearErr(key) {
+    setErr((e) => { const n = { ...e }; delete n[key]; return n; });
+  }
+
+  function fc(name, val) {
+    const v = val != null ? String(val).trim() : '';
+    if (err[name]) return 'form-control error';
+    if (v !== '') return 'form-control valid';
+    return 'form-control';
+  }
+
+  function validateStep(s) {
+    const e = {};
+    if (s === 1) {
+      if (!firstName.trim()) e.firstName = true;
+      if (!lastName.trim()) e.lastName = true;
+    }
+    if (s === 2) {
+      if (!/^5\d{8}$/.test(phone)) e.phone = true;
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.trim() || !emailPattern.test(email.trim())) e.email = true;
+      if (!city) e.city = true;
+      if (city === 'أخرى' && !otherCity.trim()) e.otherCity = true;
+    }
+    if (s === 3) {
+      if (!hasMortgage) e.hasMortgage = true;
+      if (!salary) e.salary = true;
+      if (!sakaniSupport) e.sakaniSupport = true;
+      if (!bank) e.bank = true;
+    }
+    if (s === 4) {
+      if (!sector.trim()) e.sector = true;
+      if (!loanAmount) e.loanAmount = true;
+      if (!stopServices) e.stopServices = true;
+      if (!urgency) e.urgency = true;
+    }
+    setErr(e);
+    return Object.keys(e).length === 0;
+  }
+
+  function goNext(target) {
+    const cur = target - 1;
+    if (!validateStep(cur)) return;
+    setStep(target);
+    trackStepEvent(target);
+  }
+
+  function goPrev(target) {
+    setStep(target);
+    trackStepEvent(target);
+  }
+
+  function submitToN8n() {
+    if (!firstName.trim() || !lastName.trim() || !phone.trim() || !email.trim()) {
+      window.alert('توجد بيانات ناقصة، يرجى التأكد من تعبئة جميع الحقول.');
+      return;
+    }
+    if (!validateStep(4)) return;
+
+    setSubmitting(true);
+    const finalCity = city === 'أخرى' ? otherCity : city;
+    const fullPhone = '+966' + phone;
+    const utmSource = getQueryParam('utm_source');
+    const data = {
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      phone,
+      email: email.trim(),
+      city: finalCity,
+      hasMortgage,
+      salary,
+      sakaniSupport,
+      bank,
+      sector: sector.trim(),
+      loanAmount,
+      stopServices,
+      urgency,
+      fullPhone,
+      utm_source: utmSource || 'funnel1',
+      utm_medium: getQueryParam('utm_medium'),
+      utm_campaign: getQueryParam('utm_campaign'),
+      funnel_page: '/funnel1',
+      date: new Date().toISOString(),
+    };
+
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + FUNNEL_SECRET,
+      },
+      body: JSON.stringify(data),
+    })
+      .then((r) => r.json())
+      .then((result) => {
+        setStep(5);
+        setOutcome(result.status === 'duplicate' ? 'duplicate' : 'success');
+        trackStepEvent(5);
+        onComplete();
+
+        if (result.status === 'duplicate') {
+          if (window.mixpanel) window.mixpanel.track('Duplicate_Submission', { phone: fullPhone });
+          const dupMsg = `مرحباً، ظهر لي أن طلبي مسجل مسبقاً، أرغب بمتابعة حالة الطلب.\nالاسم: ${data.firstName} ${data.lastName}\nالجوال: 0${data.phone}`;
+          setWaDupHref(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(dupMsg)}`);
+        } else {
+          if (window.ttq) window.ttq.track('CompleteRegistration');
+          if (window.snaptr) window.snaptr('track', 'SIGN_UP', { user_email: data.email, user_phone_number: fullPhone });
+          const msg = `مرحباً، تفاصيل طلبي الجديد:
+الاسم: ${data.firstName} ${data.lastName}
+الجوال: 0${data.phone}
+المدينة: ${data.city}
+الراتب: ${data.salary}
+الدعم السكني: ${data.sakaniSupport}
+البنك: ${data.bank}
+العمل: ${data.sector}
+تمويل قائم: ${data.hasMortgage}
+المبلغ: ${data.loanAmount}
+إيقاف خدمات: ${data.stopServices}
+الجدية: ${data.urgency}`;
+          setWaSuccessHref(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+        }
+      })
+      .catch((err) => {
+        console.error('Error sending form:', err);
+        setStep(5);
+        setOutcome('success');
+        trackStepEvent(5);
+        onComplete();
+        if (window.ttq) window.ttq.track('CompleteRegistration');
+        const msg = `مرحباً، تفاصيل طلبي الجديد:
+الاسم: ${firstName.trim()} ${lastName.trim()}
+الجوال: 0${phone}
+المدينة: ${city === 'أخرى' ? otherCity : city}`;
+        setWaSuccessHref(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+      })
+      .finally(() => setSubmitting(false));
+  }
+
+  return (
+    <div className="bg-white rounded-3xl p-5 md:p-7 shadow-softLg border-2 border-gold/60">
+      <div id="raf-form-container">
+        {step < 5 && (
+          <div className="progress-container" id="progressWrapper">
+            <div className="progress-text nums-latin" id="progressText" dir="ltr">{progressPct}%</div>
+            <div className="progress-track">
+              <div className="progress-fill" id="progressBar" style={{ width: progressPct + '%' }} />
+            </div>
+          </div>
+        )}
+
+        <form id="multiStepForm" onSubmit={(e) => e.preventDefault()}>
+          <div className={'step' + (step === 1 ? ' active' : '')} id="step1">
+            <h3 className="step-title">بيانات الاسم</h3>
+            <div className="input-group">
+              <label>الاسم الأول</label>
+              <input type="text" className={fc('firstName', firstName)} placeholder="مثال: محمد" value={firstName} onChange={(e) => { setFirstName(e.target.value); clearErr('firstName'); }} />
+            </div>
+            <div className="input-group">
+              <label>اسم العائلة</label>
+              <input type="text" className={fc('lastName', lastName)} placeholder="مثال: العتيبي" value={lastName} onChange={(e) => { setLastName(e.target.value); clearErr('lastName'); }} />
+            </div>
+            <button type="button" className="btn-yellow" onClick={() => goNext(2)}>التالي ←</button>
+            <p className="step-hint-note">لن نطلب منك معلومات أكثر من اللازم. فقط ما نحتاجه للتقييم.</p>
+          </div>
+
+          <div className={'step' + (step === 2 ? ' active' : '')} id="step2">
+            <h3 className="step-title">بيانات التواصل</h3>
+            <div className="input-group">
+              <label>رقم الجوال</label>
+              <div className="phone-wrapper">
+                <span className="phone-prefix">+966</span>
+                <input type="tel" id="phone" className={fc('phone', phone)} placeholder="5xxxxxxxx" maxLength={9} dir="ltr" value={phone} onChange={(e) => { setPhone(e.target.value.replace(/\D/g, '').slice(0, 9)); clearErr('phone'); }} />
+              </div>
+              <div style={{ textAlign: 'left', fontSize: '11px', color: '#888', marginTop: '5px' }}>أدخل الرقم بدون 05</div>
+            </div>
+            <div className="input-group">
+              <label>البريد الإلكتروني</label>
+              <input type="email" id="email" className={fc('email', email)} placeholder="name@example.com" value={email} onChange={(e) => { setEmail(e.target.value); clearErr('email'); }} />
+            </div>
+            <div className="input-group">
+              <label>المدينة</label>
+              <select id="city" className={fc('city', city)} value={city} onChange={(e) => { setCity(e.target.value); clearErr('city'); if (e.target.value !== 'أخرى') setOtherCity(''); }}>
+                <option value="" disabled hidden>اختر المدينة</option>
+                <option value="الرياض">الرياض</option>
+                <option value="جدة">جدة</option>
+                <option value="الدمام">الدمام</option>
+                <option value="مكة المكرمة">مكة المكرمة</option>
+                <option value="المدينة المنورة">المدينة المنورة</option>
+                <option value="الخبر">الخبر</option>
+                <option value="الظهران">الظهران</option>
+                <option value="الطائف">الطائف</option>
+                <option value="أبها">أبها</option>
+                <option value="تبوك">تبوك</option>
+                <option value="حائل">حائل</option>
+                <option value="جازان">جازان</option>
+                <option value="نجران">نجران</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+              <input type="text" id="otherCityInput" className={(showOtherCity ? 'is-visible ' : '') + fc('otherCity', otherCity)} placeholder="اكتب مدينتك..." value={otherCity} onChange={(e) => { setOtherCity(e.target.value); clearErr('otherCity'); }} />
+            </div>
+            <button type="button" className="btn-yellow" onClick={() => goNext(3)}>التالي ←</button>
+            <button type="button" className="btn-back" onClick={() => goPrev(1)}>رجوع</button>
+          </div>
+
+          <div className={'step' + (step === 3 ? ' active' : '')} id="step3">
+            <h3 className="step-title">الأهلية</h3>
+            <div className="input-group">
+              <label>هل عندك تمويل عقاري قائم؟</label>
+              <select id="hasMortgage" className={fc('hasMortgage', hasMortgage)} value={hasMortgage} onChange={(e) => { setHasMortgage(e.target.value); clearErr('hasMortgage'); }}>
+                <option value="" disabled hidden>اختر الإجابة</option>
+                <option value="لا">لا</option>
+                <option value="نعم">نعم</option>
+              </select>
+            </div>
+            <div className="input-group">
+              <label>إجمالي الراتب</label>
+              <select id="salary" className={fc('salary', salary)} value={salary} onChange={(e) => { setSalary(e.target.value); clearErr('salary'); }}>
+                <option value="" disabled hidden>اختر الراتب</option>
+                <option value="5000-7000">5,000 - 7,000</option>
+                <option value="8000-10000">8,000 - 10,000</option>
+                <option value="11000-15000">11,000 - 15,000</option>
+                <option value="15000-20000">15,000 - 20,000</option>
+                <option value="20000-30000">20,000 - 30,000</option>
+                <option value="أكثر من 30,000">أكثر من 30,000</option>
+              </select>
+            </div>
+            <div className="input-group">
+              <label>هل انت مستحق لدعم سكني؟</label>
+              <select id="sakaniSupport" className={fc('sakaniSupport', sakaniSupport)} value={sakaniSupport} onChange={(e) => { setSakaniSupport(e.target.value); clearErr('sakaniSupport'); }}>
+                <option value="" disabled hidden>اختر الإجابة</option>
+                <option value="نعم مستحق لدعم سكني">نعم مستحق لدعم سكني</option>
+                <option value="لا، غير مستحق لدعم سكني">لا، غير مستحق لدعم سكني</option>
+              </select>
+            </div>
+            <div className="input-group">
+              <label>راتبك الحالي على أي بنك</label>
+              <select id="bank" className={fc('bank', bank)} value={bank} onChange={(e) => { setBank(e.target.value); clearErr('bank'); }}>
+                <option value="" disabled hidden>اختر البنك</option>
+                <option value="الراجحي">الراجحي</option>
+                <option value="الأهلي">الأهلي</option>
+                <option value="بنك الرياض">بنك الرياض</option>
+                <option value="الإنماء">الإنماء</option>
+                <option value="بنك البلاد">بنك البلاد</option>
+                <option value="العربي">العربي</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+            </div>
+            <button type="button" className="btn-yellow" onClick={() => goNext(4)}>التالي ←</button>
+            <button type="button" className="btn-back" onClick={() => goPrev(2)}>رجوع</button>
+          </div>
+
+          <div className={'step' + (step === 4 ? ' active' : '')} id="step4">
+            <h3 className="step-title">تفاصيل الطلب</h3>
+            <div className="input-group">
+              <label>جهة العمل</label>
+              <input type="text" id="sector" className={fc('sector', sector)} placeholder="اكتب جهة عملك هنا..." value={sector} onChange={(e) => { setSector(e.target.value); clearErr('sector'); }} />
+            </div>
+            <div className="input-group">
+              <label>المبلغ المطلوب</label>
+              <select id="loanAmount" className={fc('loanAmount', loanAmount)} value={loanAmount} onChange={(e) => { setLoanAmount(e.target.value); clearErr('loanAmount'); }}>
+                <option value="" disabled hidden>اختر المبلغ</option>
+                <option value="200k">من 200,000 إلى 500,000</option>
+                <option value="500k">من 500,000 إلى 1,000,000</option>
+                <option value="1m+">أكثر من 1,000,000</option>
+              </select>
+            </div>
+            <div className="input-group">
+              <label>هل لديك إيقاف خدمات حاليًا؟</label>
+              <select id="stopServices" className={fc('stopServices', stopServices)} value={stopServices} onChange={(e) => { setStopServices(e.target.value); clearErr('stopServices'); }}>
+                <option value="" disabled hidden>اختر الإجابة</option>
+                <option value="لا">لا</option>
+                <option value="نعم">نعم</option>
+              </select>
+            </div>
+            <div className="input-group">
+              <label>مدى احتياجك للتمويل</label>
+              <select id="urgency" className={fc('urgency', urgency)} value={urgency} onChange={(e) => { setUrgency(e.target.value); clearErr('urgency'); }}>
+                <option value="" disabled hidden>اختر الإجابة</option>
+                <option value="بشكل عاجل">بشكل عاجل</option>
+                <option value="في أقرب وقت">في أقرب وقت</option>
+                <option value="أفكر بالأمر">أفكر بالأمر</option>
+              </select>
+            </div>
+            <button type="button" className="btn-yellow" onClick={submitToN8n} disabled={submitting}>{submitting ? 'جاري الإرسال...' : 'إرسال الطلب'}</button>
+            <button type="button" className="btn-back" onClick={() => goPrev(3)}>رجوع</button>
+          </div>
+
+          <div className={'step' + (step === 5 ? ' active' : '')} id="step5">
+            <div id="success-message" className={'final-screen' + (outcome === 'success' ? ' active' : '')}>
+              <div className="success-icon">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" /></svg>
+              </div>
+              <h2>مبروك.. تم إرسال طلبك بنجاح</h2>
+              <p style={{ color: '#555', marginBottom: '25px', lineHeight: 1.7, fontSize: '15px', fontWeight: 600 }}>
+                أكملت أول خطوة للحصول على عقار وكاش بكل ثقة.<br />
+                فريقنا حيتواصل معك خلال 24 ساعة لشرح الخطوات القادمة ومتابعة طلبك
+              </p>
+              <a href={waSuccessHref} className="btn-whatsapp" id="success-btn" target="_blank" rel="noopener noreferrer">متابعة على واتساب</a>
+            </div>
+
+            <div id="duplicate-message" className={'final-screen' + (outcome === 'duplicate' ? ' active' : '')}>
+              <div className="duplicate-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" /></svg>
+              </div>
+              <h2>عذراً.. طلبك مسجل لدينا مسبقاً</h2>
+              <p style={{ color: '#555', marginBottom: '25px', lineHeight: 1.7, fontSize: '15px', fontWeight: 600 }}>
+                لقد استلمنا بياناتك بالفعل وهي قيد المعالجة الآن.<br />
+                لا داعي لإرسال الطلب مرة أخرى، سنقوم بالتواصل معك قريباً.
+              </p>
+              <a href={waDupHref} className="btn-whatsapp" id="duplicate-btn" target="_blank" rel="noopener noreferrer">متابعة طلب سابق على واتساب</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Form sidebar: تنويه الأهلية (بدل كروت Mini) ---------- */
+function FormEligibilityNotice() {
+  const [open, setOpen] = useState(false);
+  const maroon = '#B01E43';
+  const lines = [
+    'عندك هدف واضح وتعرف كيف تستفيد من السيولة العالية.',
+    'عندك خطة استثمارية أو توسع وتعرف تدير رأس المال.',
+    'جاهز لاتخاذ القرار والمتبقي لك هو السيولة للانطلاق.',
+  ];
+  return (
+    <div className="mt-5 rounded-2xl border border-[#f5c2cf] bg-[#FFF5F6] overflow-hidden text-right shadow-sm">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="w-full flex items-center justify-between gap-3 bg-white px-4 py-3.5 border-b border-[#fce8ec] hover:bg-[#fffafb] transition-colors"
+      >
+        <span className="flex items-center gap-2 min-w-0">
+          <svg width="12" height="12" viewBox="0 0 24 24" className="shrink-0 opacity-90" aria-hidden="true" style={{ fill: maroon }}>
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          <span className="font-extrabold text-[14px] md:text-[15px]" style={{ color: maroon }}>تنويه مهم قبل الإرسال</span>
+        </span>
+        <span className={`shrink-0 w-8 h-8 rounded-full bg-[#FFF5F6] flex items-center justify-center transition-transform ${open ? 'rotate-180' : ''}`}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke={maroon} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </button>
+      {open && (
+        <div className="px-4 py-4 space-y-4 fadeIn">
+          <p className="font-extrabold text-[14px] leading-snug" style={{ color: maroon }}>
+            هذا الحل مناسب لك في الحالات التالية فقط:
+          </p>
+          <ul className="space-y-3">
+            {lines.map((t, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-[13px] md:text-[14px] font-semibold leading-relaxed" style={{ color: maroon }}>
+                <span className="shrink-0 mt-0.5" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3L2 21h20L12 3z" fill="#F4C430" stroke="#b8860b" strokeWidth="0.5" strokeLinejoin="round" />
+                    <path d="M12 9v5M12 17h.01" stroke="#422006" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </span>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="h-px bg-[#f5c2cf]/60" />
+          <p className="flex items-start gap-2.5 text-[12px] md:text-[13px] font-semibold leading-relaxed" style={{ color: maroon }}>
+            <span className="shrink-0 w-5 h-5 rounded-sm bg-sky-500 text-white flex items-center justify-center text-[10px] font-black leading-none mt-0.5 shadow-sm" aria-hidden="true">i</span>
+            <span>في راف الوطنية نقيّم كل حالة بعناية، ونقدّم الحل الأنسب حسب الأهلية وخطة العميل.</span>
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Form Section + Explanation ---------- */
+function FormSection({ formRef, onSubmitted }) {
+  return (
+    <section ref={formRef} id="form" className="bg-white scroll-mt-6 relative">
+      <div className="max-w-[1100px] mx-auto px-5 py-14 md:py-20">
+        <div className="text-center mb-10">
+          <div className="eyebrow">تقييم أولي سريع</div>
+          <h2 className="mt-3 text-[26px] md:text-[36px] font-black text-ink tracking-tight">
+            ابدأ التقييم الآن<span className="text-gold">.</span>
+          </h2>
+          <p className="text-muted mt-2 text-[14px] md:text-[16px] max-w-xl mx-auto">
+            عبّي بياناتك بخمس خطوات بسيطة وراح يتواصل معك الفريق خلال 24 ساعة.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-12 gap-5 md:gap-6">
+          {/* Left column (form) — appears right in RTL */}
+          <div className="md:col-span-7 order-1">
+            <FusionFormPanel onComplete={onSubmitted} />
+          </div>
+
+          {/* Right column (explanation) — appears left in RTL */}
+          <div className="md:col-span-5 order-2">
+            <div className="bg-white rounded-3xl border border-black/[0.06] shadow-soft p-6 md:p-8 card-lift">
+              <h3 className="text-[20px] md:text-[22px] font-extrabold text-ink leading-tight tracking-tight">
+                خلنا نعرف وضعك ونقولك وش الأفضل لك
+              </h3>
+              <p className="text-[14px] md:text-[15px] text-muted leading-relaxed mt-3">
+                فريق راف يستلم طلبك ويراجع حالتك بشكل دقيق، ثم يرشّح لك مسار التمويل المناسب من بين الخيارات المتاحة لدينا بالتعاون مع الجهات الممولة المرخصة.
+              </p>
+
+              <div className="grid grid-cols-3 gap-2 md:gap-3 mt-5">
+                <Pill icon="chat" title="استشارة" />
+                <Pill icon="clock" title="خلال 24 ساعة" />
+                <Pill icon="percent" title="خيارات حتى 100%" />
+              </div>
+
+              <div className="mt-5 rounded-2xl bg-neutral-50 border border-black/[0.05] px-4 py-3.5 text-[13px] text-muted leading-relaxed">
+                <strong className="text-ink font-bold">ملاحظة:</strong> البيانات تساعدنا نتحقق من أهليتك قبل تحديد المعاملة الصحيحة.
+              </div>
+
+              <FormEligibilityNotice />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+function Pill({ icon, title }) {
+  const icons = {
+    chat: <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 12a8 8 0 11-3.3-6.5L21 4l-1 4 .3.3A8 8 0 0121 12z" stroke="#2B2B2B" strokeWidth="1.8" strokeLinejoin="round"/></svg>,
+    clock: <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2B2B2B" strokeWidth="1.8"/><path d="M12 7v5l3 2" stroke="#2B2B2B" strokeWidth="1.8" strokeLinecap="round"/></svg>,
+    percent: <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 19L19 5" stroke="#2B2B2B" strokeWidth="1.8" strokeLinecap="round"/><circle cx="7" cy="7" r="2.5" stroke="#2B2B2B" strokeWidth="1.8"/><circle cx="17" cy="17" r="2.5" stroke="#2B2B2B" strokeWidth="1.8"/></svg>,
+  };
+  return (
+    <div className="bg-honeyPale/70 border border-gold/30 rounded-2xl py-3 px-2 text-center">
+      <div className="flex justify-center">{icons[icon]}</div>
+      <div className="text-[12px] font-bold text-ink mt-1.5">{title}</div>
+    </div>
+  );
+}
+
+/* ---------- Commitment Banner ---------- */
+function Commitment() {
+  return (
+    <section className="bg-white">
+      <div className="max-w-[1100px] mx-auto px-5 py-2">
+        <div className="relative bg-gradient-to-l from-honeyPale via-honey/40 to-honeyPale border border-gold/30 rounded-3xl px-6 md:px-10 py-7 md:py-9 text-center shadow-soft overflow-hidden">
+          <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-gold/15 blur-2xl" />
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-gold/15 blur-2xl" />
+          <div className="relative flex flex-col items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-white shadow-soft flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z" stroke="#2B2B2B" strokeWidth="1.8" strokeLinejoin="round"/><path d="M8.5 12.5l2.5 2.5L16 10" stroke="#F4C430" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </div>
+            <p className="font-messiri text-[16px] md:text-[20px] font-extrabold text-ink leading-relaxed tracking-tight max-w-2xl">
+              نلتزم في راف بتقديم حلول مدروسة للحالات المؤهلة وفق معايير واضحة.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Testimonials ---------- */
+const TESTIMONIALS = [
+  { q: 'الإجراءات كانت منظمة وتحس إن الفريق فاهم احتياجي من أول مكالمة', n: 'عبدالله محمد م.', c: 'الرياض' },
+  { q: 'التقييم كان سريع وواضح، والخطوات اليوم قالوا لي وش المناسب قبل أي التزام', n: 'سعود فهد غ.', c: 'جدة' },
+  { q: 'تواصلوا معي بنفس اليوم وشرحوا لي السيناريو المناسب لحالتي بشكل واضح ومرتب', n: 'فيصل تركي ز.', c: 'الدمام' },
+  { q: 'أخذت تقييم مرتب لحالتي وفهمت الخيارات المتاحة بشكل ممتاز', n: 'نورة سعد ع.', c: 'مكة المكرمة' },
+  { q: 'أعطوني وضوح بالخطوات والمتطلبات وما فيه وعود غير واقعية', n: 'محمد عبدالله د.', c: 'الخبر' },
+  { q: 'شرح مبسط واحترافي والرد خلال 24 ساعة فعلاً', n: 'عبدالعزيز فيصل ق.', c: 'الطائف' },
+  { q: 'أسلوبهم احترافي وشرحوا لي التفاصيل بلغة بسيطة', n: 'مشاعل ناصر س.', c: 'المدينة المنورة' },
+  { q: 'قدّموا لي تصور واضح للمسار والتوقيت المتوقع حسب الأهلية', n: 'سلطان فهد ش.', c: 'تبوك' },
+  { q: 'تعامل محترم وتنظيم عالي والتواصل كان سريع', n: 'لطيفة ناصر ب.', c: 'أبها' },
+  { q: 'فريق متعاون ومرن ونفذوا المتابعة بشكل واضح', n: 'تركي سلمان ع.', c: 'بريدة' },
+];
+
+function Stars() {
+  return (
+    <div className="flex gap-0.5">
+      {Array.from({length:5}).map((_,i)=>(
+        <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#F4C430"><path d="M12 2l3 6.9 7.5.6-5.7 4.9 1.8 7.3L12 17.8 5.4 21.7l1.8-7.3L1.5 9.5 9 8.9z"/></svg>
+      ))}
+    </div>
+  );
+}
+function Testimonials() {
+  return (
+    <section className="bg-[#FAFAF7] relative">
+      <div className="max-w-[1100px] mx-auto px-5 py-14 md:py-20">
+        <div className="text-center">
+          <div className="eyebrow">شهادات حقيقية</div>
+          <h2 className="mt-3 text-[26px] md:text-[36px] font-black text-ink tracking-tight">
+            آراء عملائنا
+          </h2>
+          <p className="text-muted mt-2 text-[14px] md:text-[16px] max-w-xl mx-auto">
+            تجارب من حالات تم تقييمها ومعالجتها مؤخرًا من فريق راف.
+          </p>
+        </div>
+
+        <div className="mt-10 columns-1 md:columns-3 gap-5 [column-fill:_balance]">
+          {TESTIMONIALS.map((t, i) => (
+            <div key={i} className="break-inside-avoid mb-5 bg-white rounded-3xl border border-black/[0.05] shadow-soft p-6 relative card-lift">
+              <div className="absolute top-4 left-5 text-gold/30 leading-none select-none" style={{fontFamily:'Georgia, serif', fontSize:'56px'}}>“</div>
+              <Stars />
+              <p className="mt-3 text-[14.5px] md:text-[15.5px] text-ink leading-[1.85]">
+                {t.q}
+              </p>
+              <div className="mt-5 pt-4 border-t border-black/[0.05] flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-honey to-gold flex items-center justify-center text-ink shadow-soft shrink-0" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-ink">
+                    <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M5 20.5c1.7-3.2 5.2-5 7-5s5.3 1.8 7 5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <div className="text-[13px] font-bold text-ink">{t.n}</div>
+                  <div className="text-[12px] text-muted">{t.c}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Final CTA ---------- */
+function FinalCTA({ onCTAClick }) {
+  return (
+    <section className="bg-white">
+      <div className="max-w-[1100px] mx-auto px-5 py-14 md:py-16">
+        <div className="relative bg-gradient-to-bl from-grass to-[#16953A] rounded-[28px] px-6 md:px-12 py-12 md:py-16 text-center shadow-softLg overflow-hidden">
+          <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full border-2 border-white/15" />
+          <div className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full border-2 border-white/10" />
+          <div className="absolute top-8 left-10 w-3 h-3 rounded-full bg-honey/80" />
+          <div className="absolute bottom-12 right-12 w-2 h-2 rounded-full bg-white/40" />
+
+          <div className="relative">
+            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-[12px] font-bold px-3 py-1.5 rounded-full mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-honey inline-block" />
+              تقييم مجاني وبدون أي التزام
+            </div>
+            <h3 className="text-white text-[26px] md:text-[40px] font-black leading-tight tracking-tight">
+              خطوة وحدة تفصلك<br className="md:hidden"/> عن السيولة المناسبة
+            </h3>
+            <p className="text-white/85 mt-3 text-[14px] md:text-[17px] max-w-xl mx-auto leading-relaxed">
+              سجّل الآن — التقييم خلال 24 ساعة، ومجاني تمامًا، ويُجرى بسرية كاملة.
+            </p>
+            <button
+              onClick={onCTAClick}
+              className="mt-7 inline-flex items-center justify-center gap-2 font-messiri bg-white text-grass hover:bg-honey hover:text-ink transition font-extrabold rounded-2xl px-8 py-4 text-[16px] md:text-[18px] shadow-softLg active:scale-[0.99]"
+            >
+              سجل الآن وأبشر بالسعد
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 6l-6 6 6 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Trust logos (original generic placeholders, not real org logos) ---------- */
+function TrustLogos() {
+  const items = [
+    { t: 'سمة الائتمانية', s: 'Credit Bureau', logo: '/funnel1/assets/trust-simah.png', alt: 'سمة — السعودية للمعلومات الائتمانية' },
+    { t: 'السوق العقاري', s: 'Real Estate Market', logo: '/funnel1/assets/trust-real-estate-market.png', alt: 'البورصة العقارية' },
+    { t: 'وزارة العدل', s: 'Ministry of Justice', logo: '/funnel1/assets/trust-moj.png', alt: 'وزارة العدل المملكة العربية السعودية' },
+  ];
+  return (
+    <section className="bg-white">
+      <div className="max-w-[1100px] mx-auto px-5 py-14 md:py-16">
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <span className="gold-rule flex-1 max-w-[100px]" />
+          <span className="gold-diamond" />
+          <span className="gold-rule flex-1 max-w-[100px]" />
+        </div>
+        <p className="text-center text-[13px] md:text-[14px] text-muted mb-8 font-medium">جهات مرجعية ورسمية نتعامل معها</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-5 max-w-3xl mx-auto">
+          {items.map((it, i) => (
+            <div key={i} className="bg-neutral-50/70 border border-black/[0.05] rounded-2xl py-5 px-3 md:px-4 text-center transition-all hover:bg-white hover:border-gold/40 hover:shadow-soft card-lift flex flex-col">
+              <div className="mx-auto mb-3 flex h-[72px] w-full max-w-[200px] items-center justify-center rounded-xl bg-white px-3 py-2 ring-1 ring-black/[0.06]">
+                <img src={it.logo} alt={it.alt} className="max-h-[56px] w-auto max-w-full object-contain object-center bg-white rounded-md" loading="lazy" decoding="async" />
+              </div>
+              <div className="text-[14px] font-bold text-ink leading-tight">{it.t}</div>
+              <div className="text-[11px] text-muted mt-1 tracking-wide">{it.s}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Footer ---------- */
+function Footer() {
+  return (
+    <footer className="bg-black text-white">
+      <div className="max-w-[1100px] mx-auto px-5 py-12 md:py-14">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-10">
+          <div>
+            <div className="flex items-center gap-3">
+              <div className="bg-white rounded-xl p-2.5 inline-flex shrink-0">
+                <LogoImg className="max-h-[52px]" />
+              </div>
+            </div>
+            <h4 className="mt-6 font-extrabold text-[15px]">خلنا نعرف وضعك ونقولك وش الأفضل لك</h4>
+            <p className="text-[13px] text-white/70 mt-2 leading-relaxed">
+              الرياض — حي الصحافة — طريق الثمامة <span className="nums-latin" dir="ltr">3835</span><br/>
+              سجل تجاري رقم: <span className="nums-latin font-bold text-white/85" dir="ltr">1009188749</span>
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-extrabold text-[15px]">تواصل</h4>
+            <ul className="mt-3 space-y-2 text-[14px]">
+              <li><a href="https://wa.me/9665XXXXXXXX" target="_blank" rel="noopener noreferrer" className="text-white/85 hover:text-gold transition">واتساب خدمة العملاء</a></li>
+              <li><a href="#" className="text-white/85 hover:text-gold transition">سياسة الخصوصية</a></li>
+              <li><a href="#" className="text-white/85 hover:text-gold transition">الشروط والأحكام</a></li>
+            </ul>
+            <div className="mt-5 flex items-center gap-3">
+              <a href="https://wa.me/9665XXXXXXXX" target="_blank" rel="noopener noreferrer" aria-label="واتساب" className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#25D366] hover:text-white text-white/90 transition flex items-center justify-center">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 3.6A11 11 0 003.2 17.5L2 22l4.6-1.2A11 11 0 1020 3.6zM12 20a8 8 0 01-4.1-1.1l-.3-.2-2.7.7.7-2.6-.2-.3A8 8 0 1112 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.6 6.6 0 01-3.3-2.9c-.2-.4.2-.4.6-1.2.1-.1 0-.3 0-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.4a.8.8 0 00-.6.3 2.4 2.4 0 00-.8 1.8c0 1.1.8 2.1.9 2.3.1.1 1.6 2.5 4 3.5.5.2 1 .3 1.3.3.4 0 1.2-.5 1.4-.9.2-.5.2-.9.1-1 0-.1-.2-.2-.4-.3z"/></svg>
+              </a>
+              <a href="#" aria-label="x" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 3h3l-7.5 8.6L22 21h-6.8l-5.3-6.3L3.5 21H.5l8-9.1L0 3h6.9l4.8 5.8L18 3z"/></svg></a>
+              <a href="#" aria-label="ig" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+              <a href="#" aria-label="li" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h4v4H4zM4 10h4v10H4zM10 10h4v1.6c.7-1 2-1.9 3.7-1.9 3.4 0 4.3 2 4.3 4.8V20h-4v-4.6c0-1.4-.5-2.3-1.8-2.3-1.2 0-1.9.8-2.2 1.6-.1.3-.1.7-.1 1.1V20h-4V10z"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 pt-6 border-t border-white/10 text-center text-[12px] text-white/60">
+          <span className="nums-latin" dir="ltr">2026</span> © جميع الحقوق محفوظة لـ شركة راف الوطنية للتطوير والاستثمار العقاري
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ---------- Sticky mobile CTA ---------- */
+function StickyMobileCTA({ onCTAClick, hidden }) {
+  if (hidden) return null;
+  return (
+    <div className="md:hidden fixed inset-x-0 bottom-0 z-40 px-4 pb-3 pt-2 bg-gradient-to-t from-white via-white/95 to-white/0">
+      <button
+        onClick={onCTAClick}
+        className="w-full font-messiri bg-grass hover:bg-grassDark transition text-white font-extrabold rounded-2xl py-3.5 shadow-softLg"
+      >
+        سجل الآن وأبشر بالسعد
+      </button>
+    </div>
+  );
+}
+
+/* ---------- App ---------- */
+function App() {
+  const [submitted, setSubmitted] = useState(false);
+  const formRef = useRef(null);
+
+  function scrollToForm() {
+    if (!formRef.current) return;
+    const top = formRef.current.getBoundingClientRect().top + window.scrollY - 16;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  return (
+    <div className="min-h-screen pb-24 md:pb-0">
+      <Hero onCTAClick={scrollToForm} />
+      <IntroAccordion />
+      <Steps onCTAClick={scrollToForm} />
+      <FormSection formRef={formRef} onSubmitted={()=>setSubmitted(true)} />
+      <Commitment />
+      <Testimonials />
+      <FinalCTA onCTAClick={scrollToForm} />
+      <TrustLogos />
+      <StickyMobileCTA onCTAClick={scrollToForm} hidden={submitted} />
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

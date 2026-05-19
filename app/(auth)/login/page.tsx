@@ -4,10 +4,18 @@ import { Suspense, useState, useTransition, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSearchParams } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Eye, EyeOff, Mail, Lock, ArrowLeft, ChevronLeft, ShieldCheck, BadgeCheck } from 'lucide-react'
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  ArrowLeft,
+  ChevronLeft,
+  ShieldCheck,
+  BadgeCheck,
+} from 'lucide-react'
 import { toast } from 'sonner'
-import Link from 'next/link'
-
+import { RafBrand, RafLogo } from '@/components/brand/RafLogo'
 import { signIn, forgotPassword } from '@/lib/actions/auth'
 import { loginSchema, forgotPasswordSchema } from '@/lib/validations/auth'
 import type { LoginInput, ForgotPasswordInput } from '@/lib/validations/auth'
@@ -23,79 +31,6 @@ const cardShellCls =
 const cardInnerCls =
   'relative space-y-6 rounded-[1.85rem] bg-navy-950/75 px-8 py-9 ring-1 ring-white/[0.06]'
 
-/* ─── RAF National inline SVG logo mark ─── */
-function RafLogo({ size = 48 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 48 48"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      {/* Hexagonal background */}
-      <path
-        d="M24 3L42 13.5V34.5L24 45L6 34.5V13.5L24 3Z"
-        fill="url(#rafGrad)"
-        stroke="#F5A623"
-        strokeWidth="1"
-        strokeOpacity="0.4"
-      />
-      {/* Inner glow ring */}
-      <path
-        d="M24 8L38 16V32L24 40L10 32V16L24 8Z"
-        fill="none"
-        stroke="#F5A623"
-        strokeWidth="0.6"
-        strokeOpacity="0.25"
-      />
-      {/* Stylised "R" lettermark */}
-      <text
-        x="24"
-        y="31"
-        textAnchor="middle"
-        fontSize="18"
-        fontWeight="700"
-        fontFamily="'El Messiri', serif"
-        fill="#F5A623"
-        letterSpacing="-0.5"
-      >
-        ر
-      </text>
-      <defs>
-        <linearGradient id="rafGrad" x1="6" y1="3" x2="42" y2="45" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#14223A" />
-          <stop offset="100%" stopColor="#0A1424" />
-        </linearGradient>
-      </defs>
-    </svg>
-  )
-}
-
-/* ─── Full brand header ─── */
-function RafBrandFull({ size = 52 }: { size?: number }) {
-  return (
-    <div className="flex items-center gap-4">
-      <RafLogo size={size} />
-      <div className="flex flex-col leading-tight">
-        <span
-          className="font-heading font-bold text-white"
-          style={{ fontSize: size * 0.42 }}
-        >
-          راف الوطنية
-        </span>
-        <span
-          className="text-brand font-heading font-semibold tracking-widest uppercase"
-          style={{ fontSize: size * 0.22 }}
-        >
-          RAF NATIONAL
-        </span>
-      </div>
-    </div>
-  )
-}
-
 function LoginPageInner() {
   const searchParams = useSearchParams()
   const redirectAfterLogin = searchParams.get('redirect')
@@ -104,7 +39,7 @@ function LoginPageInner() {
     if (searchParams.get('error') === 'no_access') {
       toast.error('ليس لديك صلاحية الوصول إلى لوحة التحكم')
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [panel, setPanel] = useState<Panel>('login')
@@ -154,12 +89,12 @@ function LoginPageInner() {
           }}
         />
         {/* Glow orbs */}
-        <div className="absolute -start-[20%] -top-[30%] h-[70vmin] w-[70vmin] rounded-full bg-brand/[0.07] blur-[110px]" />
-        <div className="absolute end-0 bottom-[10%] h-[42vmin] w-[42vmin] rounded-full bg-navy-600/30 blur-[90px]" />
+        <div className="bg-brand/[0.07] absolute -start-[20%] -top-[30%] h-[70vmin] w-[70vmin] rounded-full blur-[110px]" />
+        <div className="bg-navy-600/30 absolute end-0 bottom-[10%] h-[42vmin] w-[42vmin] rounded-full blur-[90px]" />
 
         {/* City skyline silhouette */}
         <svg
-          className="pointer-events-none absolute bottom-0 start-0 end-0 w-full"
+          className="pointer-events-none absolute start-0 end-0 bottom-0 w-full"
           viewBox="0 0 800 280"
           preserveAspectRatio="xMidYMax slice"
           aria-hidden
@@ -231,17 +166,31 @@ function LoginPageInner() {
 
           {/* Window grid on tall tower */}
           <g fill="#F5A623" fillOpacity="0.12">
-            {[0,1,2,3,4,5,6,7,8].map(row =>
-              [0,1,2].map(col => (
-                <rect key={`w-${row}-${col}`} x={140 + col * 18} y={60 + row * 22} width="10" height="14" rx="1" />
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((row) =>
+              [0, 1, 2].map((col) => (
+                <rect
+                  key={`w-${row}-${col}`}
+                  x={140 + col * 18}
+                  y={60 + row * 22}
+                  width="10"
+                  height="14"
+                  rx="1"
+                />
               ))
             )}
           </g>
           {/* Window grid on secondary tower */}
           <g fill="#F5A623" fillOpacity="0.10">
-            {[0,1,2,3,4,5].map(row =>
-              [0,1].map(col => (
-                <rect key={`w2-${row}-${col}`} x={442 + col * 18} y={85 + row * 22} width="10" height="13" rx="1" />
+            {[0, 1, 2, 3, 4, 5].map((row) =>
+              [0, 1].map((col) => (
+                <rect
+                  key={`w2-${row}-${col}`}
+                  x={442 + col * 18}
+                  y={85 + row * 22}
+                  width="10"
+                  height="13"
+                  rx="1"
+                />
               ))
             )}
           </g>
@@ -249,31 +198,38 @@ function LoginPageInner() {
 
         {/* Content */}
         <header className="relative z-[1] flex flex-col gap-12">
-          <RafBrandFull size={64} />
+          <RafBrand
+            logoClassName="max-h-[72px] md:max-h-20"
+            logoShellClassName="rounded-2xl bg-white p-3 shadow-soft ring-1 ring-black/10"
+            wordmarkTheme="light"
+            priority
+            showWordmark={false}
+          />
 
           <div className="max-w-xl space-y-8">
             <div className="inline-flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/25 bg-brand/10 px-3 py-1 text-[11px] font-semibold tracking-wide text-brand-light">
+              <span className="border-brand/25 bg-brand/10 text-brand-light inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold tracking-wide">
                 <BadgeCheck size={13} />
                 جلسة آمنة ومشفّرة
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-navy-500/40 bg-black/25 px-3 py-1 text-[11px] font-medium tracking-wide text-navy-100">
+              <span className="border-navy-500/40 text-navy-100 inline-flex items-center gap-1.5 rounded-full border bg-black/25 px-3 py-1 text-[11px] font-medium tracking-wide">
                 <ShieldCheck size={13} className="text-brand" />
                 بيانات سرّية 100%
               </span>
             </div>
 
             <div className="space-y-4">
-              <p className="font-heading text-[0.72rem] font-bold tracking-[0.38em] uppercase text-brand-light">
+              <p className="font-heading text-brand-light text-[0.72rem] font-bold tracking-[0.38em] uppercase">
                 منصة عملاء التمويل العقاري
               </p>
-              <h2 className="font-heading text-4xl font-bold leading-[1.14] text-white lg:text-[2.65rem]">
+              <h2 className="font-heading text-4xl leading-[1.14] font-bold text-white lg:text-[2.65rem]">
                 حوّل عملاءك إلى
-                <span className="px-2 text-brand">صفقات ناجحة</span>
+                <span className="text-brand px-2">صفقات ناجحة</span>
                 مع راف الوطنية.
               </h2>
-              <p className="max-w-[28rem] font-heading text-base leading-relaxed text-navy-100/90">
-                منصة متكاملة لإدارة عملاء التمويل العقاري — من أول تسجيل في الفانيل حتى إغلاق الصفقة. تابع الأهلية، وزّع العملاء، وراقب أداء الفريق.
+              <p className="font-heading text-navy-100/90 max-w-[28rem] text-base leading-relaxed">
+                منصة متكاملة لإدارة عملاء التمويل العقاري — من أول تسجيل في الفانيل حتى إغلاق
+                الصفقة. تابع الأهلية، وزّع العملاء، وراقب أداء الفريق.
               </p>
             </div>
           </div>
@@ -284,8 +240,14 @@ function LoginPageInner() {
           <div className="flex flex-wrap gap-3">
             {[
               { label: 'CRM العملاء', color: 'bg-brand/15 text-brand border-brand/20' },
-              { label: 'التمويل العقاري', color: 'bg-navy-600/30 text-navy-100 border-navy-500/30' },
-              { label: 'تقارير المبيعات', color: 'bg-navy-600/30 text-navy-100 border-navy-500/30' },
+              {
+                label: 'التمويل العقاري',
+                color: 'bg-navy-600/30 text-navy-100 border-navy-500/30',
+              },
+              {
+                label: 'تقارير المبيعات',
+                color: 'bg-navy-600/30 text-navy-100 border-navy-500/30',
+              },
             ].map((f) => (
               <span
                 key={f.label}
@@ -295,7 +257,7 @@ function LoginPageInner() {
               </span>
             ))}
           </div>
-          <p className="max-w-[12rem] text-end text-[11px] leading-relaxed text-navy-400">
+          <p className="text-navy-400 max-w-[12rem] text-end text-[11px] leading-relaxed">
             راف الوطنية · التطوير والاستثمار العقاري
           </p>
         </div>
@@ -304,32 +266,40 @@ function LoginPageInner() {
       {/* ── Form panel ── */}
       <main className="relative z-[1] flex min-h-[100dvh] flex-1 flex-col justify-center px-5 py-12 sm:px-8 lg:px-16">
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-          <div className="absolute top-[-15%] end-[-8%] h-[min(60vw,22rem)] w-[min(60vw,22rem)] rounded-full bg-brand/12 blur-[90px]" />
-          <div className="absolute bottom-[-25%] start-[-20%] h-[min(120vw,32rem)] w-[min(120vw,32rem)] rounded-full bg-[#1a3760]/50 blur-[100px]" />
+          <div className="bg-brand/12 absolute end-[-8%] top-[-15%] h-[min(60vw,22rem)] w-[min(60vw,22rem)] rounded-full blur-[90px]" />
+          <div className="absolute start-[-20%] bottom-[-25%] h-[min(120vw,32rem)] w-[min(120vw,32rem)] rounded-full bg-[#1a3760]/50 blur-[100px]" />
         </div>
 
         <div className="relative mx-auto w-full max-w-[440px]">
           {/* Mobile brand */}
           <div className="mb-10 flex items-center justify-center md:hidden">
-            <RafBrandFull size={48} />
+            <RafBrand
+              logoClassName="max-h-12"
+              wordmarkTheme="light"
+              className="justify-center"
+              showWordmark={false}
+            />
           </div>
 
           {/* ══ LOGIN PANEL ══ */}
           {panel === 'login' && (
             <div className={cardShellCls}>
               <div className={cardInnerCls}>
-                <div className="absolute -end-24 -top-24 h-48 w-48 rounded-full bg-brand/20 blur-[60px]" aria-hidden />
+                <div
+                  className="bg-brand/20 absolute -end-24 -top-24 h-48 w-48 rounded-full blur-[60px]"
+                  aria-hidden
+                />
 
                 <div className="relative space-y-1">
                   <div className="mb-5 inline-flex flex-col gap-1">
-                    <span className="font-heading text-[0.62rem] font-bold tracking-[0.32em] uppercase text-brand-light">
+                    <span className="font-heading text-brand-light text-[0.62rem] font-bold tracking-[0.32em] uppercase">
                       تسجيل الدخول
                     </span>
-                    <span className="bg-linear-to-l from-white to-navy-100 bg-clip-text font-heading text-3xl font-bold text-transparent">
+                    <span className="to-navy-100 font-heading bg-linear-to-l from-white bg-clip-text text-3xl font-bold text-transparent">
                       أهلاً بعودتك
                     </span>
                   </div>
-                  <p className="text-sm leading-relaxed text-navy-200">
+                  <p className="text-navy-200 text-sm leading-relaxed">
                     أدخل بياناتك للوصول إلى لوحة إدارة عملاء التمويل العقاري.
                   </p>
                 </div>
@@ -337,11 +307,11 @@ function LoginPageInner() {
                 <form onSubmit={loginForm.handleSubmit(onLogin)} className="relative space-y-5">
                   {/* Email */}
                   <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-navy-100">
+                    <label className="text-navy-100 block text-sm font-semibold">
                       البريد الإلكتروني <span className="text-brand">*</span>
                     </label>
                     <div className="relative">
-                      <span className="pointer-events-none absolute top-1/2 end-3.5 -translate-y-1/2 text-navy-400">
+                      <span className="text-navy-400 pointer-events-none absolute end-3.5 top-1/2 -translate-y-1/2">
                         <Mail size={17} />
                       </span>
                       <input
@@ -349,28 +319,30 @@ function LoginPageInner() {
                         type="email"
                         dir="ltr"
                         placeholder="name@example.com"
-                        className={`${fieldCls} pe-11 ps-4`}
+                        className={`${fieldCls} ps-4 pe-11`}
                       />
                     </div>
                     {loginForm.formState.errors.email && (
-                      <p className="mt-1 text-xs text-red-400">{loginForm.formState.errors.email.message}</p>
+                      <p className="mt-1 text-xs text-red-400">
+                        {loginForm.formState.errors.email.message}
+                      </p>
                     )}
                   </div>
 
                   {/* Password */}
                   <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-navy-100">
+                    <label className="text-navy-100 block text-sm font-semibold">
                       كلمة المرور <span className="text-brand">*</span>
                     </label>
                     <div className="relative">
                       <button
                         type="button"
                         onClick={() => setShowPw((s) => !s)}
-                        className="absolute top-1/2 end-3.5 -translate-y-1/2 text-navy-400 transition-colors hover:text-navy-200"
+                        className="text-navy-400 hover:text-navy-200 absolute end-3.5 top-1/2 -translate-y-1/2 transition-colors"
                       >
                         {showPw ? <EyeOff size={17} /> : <Eye size={17} />}
                       </button>
-                      <span className="pointer-events-none absolute top-1/2 start-3.5 -translate-y-1/2 text-navy-500">
+                      <span className="text-navy-500 pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2">
                         <Lock size={16} />
                       </span>
                       <input
@@ -378,24 +350,26 @@ function LoginPageInner() {
                         type={showPw ? 'text' : 'password'}
                         dir="ltr"
                         placeholder="••••••••"
-                        className={`${fieldCls} pe-11 ps-10`}
+                        className={`${fieldCls} ps-10 pe-11`}
                       />
                     </div>
                     {loginForm.formState.errors.password && (
-                      <p className="mt-1 text-xs text-red-400">{loginForm.formState.errors.password.message}</p>
+                      <p className="mt-1 text-xs text-red-400">
+                        {loginForm.formState.errors.password.message}
+                      </p>
                     )}
                   </div>
 
                   {/* Remember + forgot */}
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs">
-                    <label className="flex cursor-pointer items-center gap-2 select-none text-navy-300">
+                    <label className="text-navy-300 flex cursor-pointer items-center gap-2 select-none">
                       <input type="checkbox" defaultChecked className="accent-brand rounded" />
                       تذكّرني
                     </label>
                     <button
                       type="button"
                       onClick={() => setPanel('forgot')}
-                      className="font-medium text-brand transition-colors hover:text-brand-light"
+                      className="text-brand hover:text-brand-light font-medium transition-colors"
                     >
                       نسيت كلمة المرور؟
                     </button>
@@ -405,24 +379,27 @@ function LoginPageInner() {
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="group mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-brand py-3.5 font-heading text-[15px] font-bold tracking-wide text-[#061018] shadow-[0_12px_40px_-12px_rgba(245,166,35,0.45)] transition-[transform,box-shadow] hover:bg-brand-light hover:shadow-[0_16px_48px_-12px_rgba(245,166,35,0.55)] active:scale-[0.99] disabled:pointer-events-none disabled:opacity-50"
+                    className="group bg-brand font-heading hover:bg-brand-light mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl py-3.5 text-[15px] font-bold tracking-wide text-[#061018] shadow-[0_12px_40px_-12px_rgba(245,166,35,0.45)] transition-[transform,box-shadow] hover:shadow-[0_16px_48px_-12px_rgba(245,166,35,0.55)] active:scale-[0.99] disabled:pointer-events-none disabled:opacity-50"
                   >
                     {isPending ? (
-                      <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-navy-900/30 border-t-navy-900" />
+                      <span className="border-navy-900/30 border-t-navy-900 inline-block h-4 w-4 animate-spin rounded-full border-2" />
                     ) : (
                       <>
                         <span>دخول</span>
-                        <ArrowLeft size={18} className="transition-transform group-hover:translate-x-[-2px]" />
+                        <ArrowLeft
+                          size={18}
+                          className="transition-transform group-hover:translate-x-[-2px]"
+                        />
                       </>
                     )}
                   </button>
                 </form>
 
                 {/* divider */}
-                <div className="mt-2 flex items-center gap-3 text-xs text-navy-500">
-                  <span className="h-px flex-1 bg-navy-500/35" />
+                <div className="mt-2 flex items-center gap-3 text-xs text-white/60">
+                  <span className="h-px flex-1 bg-white/15" />
                   <span className="shrink-0">شركة راف الوطنية للتطوير والاستثمار العقاري</span>
-                  <span className="h-px flex-1 bg-navy-500/35" />
+                  <span className="h-px flex-1 bg-white/15" />
                 </div>
               </div>
             </div>
@@ -434,21 +411,25 @@ function LoginPageInner() {
               <div className={cardInnerCls}>
                 <div className="space-y-1">
                   <div className="mb-4 inline-flex flex-col gap-1">
-                    <span className="font-heading text-[0.62rem] font-bold tracking-[0.32em] uppercase text-brand-light">
+                    <span className="font-heading text-brand-light text-[0.62rem] font-bold tracking-[0.32em] uppercase">
                       استرداد الحساب
                     </span>
-                    <span className="font-heading text-3xl font-bold text-white">نسيت كلمة المرور؟</span>
+                    <span className="font-heading text-3xl font-bold text-white">
+                      نسيت كلمة المرور؟
+                    </span>
                   </div>
-                  <p className="text-sm text-navy-200">
+                  <p className="text-navy-200 text-sm">
                     أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.
                   </p>
                 </div>
 
                 <form onSubmit={forgotForm.handleSubmit(onForgot)} className="space-y-5">
                   <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-navy-100">البريد الإلكتروني</label>
+                    <label className="text-navy-100 block text-sm font-semibold">
+                      البريد الإلكتروني
+                    </label>
                     <div className="relative">
-                      <span className="pointer-events-none absolute top-1/2 end-3.5 -translate-y-1/2 text-navy-400">
+                      <span className="text-navy-400 pointer-events-none absolute end-3.5 top-1/2 -translate-y-1/2">
                         <Mail size={17} />
                       </span>
                       <input
@@ -456,21 +437,23 @@ function LoginPageInner() {
                         type="email"
                         dir="ltr"
                         placeholder="name@example.com"
-                        className={`${fieldCls} pe-11 ps-4`}
+                        className={`${fieldCls} ps-4 pe-11`}
                       />
                     </div>
                     {forgotForm.formState.errors.email && (
-                      <p className="mt-1 text-xs text-red-400">{forgotForm.formState.errors.email.message}</p>
+                      <p className="mt-1 text-xs text-red-400">
+                        {forgotForm.formState.errors.email.message}
+                      </p>
                     )}
                   </div>
 
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand py-3.5 font-heading text-[15px] font-bold text-[#061018] transition-colors hover:bg-brand-light disabled:opacity-50"
+                    className="bg-brand font-heading hover:bg-brand-light flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-[15px] font-bold text-[#061018] transition-colors disabled:opacity-50"
                   >
                     {isPending ? (
-                      <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-navy-900/30 border-t-navy-900" />
+                      <span className="border-navy-900/30 border-t-navy-900 inline-block h-4 w-4 animate-spin rounded-full border-2" />
                     ) : (
                       'إرسال رابط الاسترداد'
                     )}
@@ -480,7 +463,7 @@ function LoginPageInner() {
                 <button
                   type="button"
                   onClick={() => setPanel('login')}
-                  className="flex w-full items-center justify-center gap-1.5 text-sm text-navy-400 transition-colors hover:text-navy-200"
+                  className="text-navy-400 hover:text-navy-200 flex w-full items-center justify-center gap-1.5 text-sm transition-colors"
                 >
                   <ChevronLeft size={15} />
                   العودة لتسجيل الدخول
@@ -489,14 +472,12 @@ function LoginPageInner() {
             </div>
           )}
 
-          <footer className="mt-10 space-y-2 pb-6 text-center text-xs text-navy-600 md:pb-0">
-            <div className="flex items-center justify-center gap-2 text-navy-500">
-              <RafLogo size={18} />
+          <footer className="text-navy-600 mt-10 space-y-2 pb-6 text-center text-xs md:pb-0">
+            <div className="text-navy-500 flex items-center justify-center gap-2">
+              <RafLogo className="max-h-[18px]" width={36} height={22} />
               <span>© 2026 شركة راف الوطنية للتطوير والاستثمار العقاري</span>
             </div>
-            <div className="text-navy-600">
-              الرياض — حي الصحافة · س.ت 1009188749
-            </div>
+            <div className="text-navy-600">الرياض — حي الصحافة · س.ت 1009188749</div>
           </footer>
         </div>
       </main>
@@ -508,7 +489,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-navy-950 text-sm text-navy-400">
+        <div className="bg-navy-950 text-navy-400 flex min-h-screen items-center justify-center text-sm">
           جاري التحميل…
         </div>
       }

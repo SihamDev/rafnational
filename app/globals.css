@@ -4,9 +4,19 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ───────────── RAF National Brand Tokens ───────────── */
+/* ───────────── RAF National — Funnel-aligned tokens ───────────── */
 :root {
-  /* Navy palette */
+  /* Funnel palette (source of truth) */
+  --raf-ink: #2b2b2b;
+  --raf-muted: #6b7280;
+  --raf-gold: #f4c430;
+  --raf-honey: #f8d873;
+  --raf-honey-pale: #fff6d6;
+  --raf-grass: #22b84a;
+  --raf-grass-dark: #1aa13f;
+  --raf-black: #1a1a1a;
+
+  /* Legacy navy (login panels) */
   --raf-navy-950: #0a1424;
   --raf-navy-900: #0e1a33;
   --raf-navy-800: #14223a;
@@ -16,62 +26,72 @@
   --raf-navy-200: #7a9cc4;
   --raf-navy-100: #b8cfe0;
 
-  /* Brand orange */
-  --raf-orange: #f5a623;
-  --raf-orange-light: #fbbf5e;
-  --raf-orange-dark: #d4861a;
+  /* Brand = funnel gold */
+  --raf-orange: var(--raf-gold);
+  --raf-orange-light: var(--raf-honey);
+  --raf-orange-dark: #d4a81e;
 
-  /* Status */
-  --raf-success: #22c55e;
+  --raf-success: var(--raf-grass);
   --raf-pending: #f59e0b;
   --raf-danger: #ef4444;
 
-  /* shadcn overrides – RAF National theme */
-  --background: oklch(1 0 0);
-  --foreground: var(--raf-navy-900);
-  --card: oklch(1 0 0);
-  --card-foreground: var(--raf-navy-900);
-  --popover: oklch(1 0 0);
-  --popover-foreground: var(--raf-navy-900);
-  --primary: var(--raf-navy-900);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: var(--raf-navy-900);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: var(--raf-navy-900);
+  --background: #ffffff;
+  --foreground: var(--raf-ink);
+  --card: #ffffff;
+  --card-foreground: var(--raf-ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--raf-ink);
+  --primary: var(--raf-ink);
+  --primary-foreground: #ffffff;
+  --secondary: var(--raf-honey-pale);
+  --secondary-foreground: var(--raf-ink);
+  --muted: #f5f5f4;
+  --muted-foreground: var(--raf-muted);
+  --accent: var(--raf-honey-pale);
+  --accent-foreground: var(--raf-ink);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: var(--raf-orange);
-  --radius: 0.625rem;
+  --border: rgb(43 43 43 / 0.08);
+  --input: rgb(43 43 43 / 0.12);
+  --ring: var(--raf-gold);
+  --radius: 1.125rem;
 
-  --sidebar: var(--raf-navy-900);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: var(--raf-orange);
-  --sidebar-primary-foreground: var(--raf-navy-900);
-  --sidebar-accent: var(--raf-navy-700);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: var(--raf-navy-700);
-  --sidebar-ring: var(--raf-orange);
+  --sidebar: var(--raf-black);
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: var(--raf-gold);
+  --sidebar-primary-foreground: var(--raf-ink);
+  --sidebar-accent: rgb(255 255 255 / 0.08);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgb(255 255 255 / 0.08);
+  --sidebar-ring: var(--raf-gold);
 
-  /* CRM shell (premium light admin over funnel palette) */
-  --crm-shell: #f4f3ec;
+  --crm-shell: #fffef8;
   --crm-card: #ffffff;
-  --crm-text: #102016;
-  --crm-muted: #5c6f63;
-  --crm-forest-deep: #1b4632;
+  --crm-text: var(--raf-ink);
+  --crm-muted: var(--raf-muted);
+
+  --shadow-soft: 0 10px 30px -12px rgb(20 20 20 / 0.1), 0 2px 6px -2px rgb(20 20 20 / 0.05);
+  --shadow-soft-lg: 0 30px 60px -25px rgb(20 20 20 / 0.18), 0 6px 14px -6px rgb(20 20 20 / 0.06);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: 'Tajawal', 'Cairo', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    var(--font-tajawal), 'Tajawal', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
-  --font-heading: 'Tajawal', 'Cairo', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
+  --font-heading:
+    var(--font-el-messiri), 'El Messiri', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
+  --font-messiri:
+    var(--font-el-messiri), 'El Messiri', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
 
-  /* Brand colours accessible as Tailwind utilities */
+  --color-ink: var(--raf-ink);
+  --color-muted-funnel: var(--raf-muted);
+  --color-gold: var(--raf-gold);
+  --color-honey: var(--raf-honey);
+  --color-honey-pale: var(--raf-honey-pale);
+  --color-grass: var(--raf-grass);
+  --color-grass-dark: var(--raf-grass-dark);
+
   --color-navy-950: var(--raf-navy-950);
   --color-navy-900: var(--raf-navy-900);
   --color-navy-800: var(--raf-navy-800);
@@ -80,11 +100,10 @@
   --color-navy-400: var(--raf-navy-400);
   --color-navy-200: var(--raf-navy-200);
   --color-navy-100: var(--raf-navy-100);
-  --color-brand: var(--raf-orange);
-  --color-brand-light: var(--raf-orange-light);
+  --color-brand: var(--raf-gold);
+  --color-brand-light: var(--raf-honey);
   --color-brand-dark: var(--raf-orange-dark);
 
-  /* Semantic */
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -113,10 +132,15 @@
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-xl: calc(var(--radius) * 1.35);
+  --radius-2xl: 1.125rem;
+  --radius-3xl: 1.5rem;
 
   --color-crm-text: var(--crm-text);
   --color-crm-muted: var(--crm-muted);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-soft-lg: var(--shadow-soft-lg);
 }
 
 @layer base {
@@ -129,42 +153,93 @@
   html {
     @apply font-sans;
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+  ::selection {
+    background: var(--raf-gold);
+    color: #111;
+  }
 }
 
-/* CRM admin shell */
+/* CRM admin — warm funnel shell */
 .bg-crm-shell {
-  background: radial-gradient(1200px circle at 20% -10%, rgb(247 239 217 / 0.75), transparent 62%),
-    radial-gradient(800px circle at 90% 0%, rgb(229 239 229 / 0.75), transparent 55%),
-    linear-gradient(180deg, var(--crm-shell), #eae7db 55%, var(--crm-shell));
+  background:
+    radial-gradient(1200px 500px at 80% -10%, #ffe9a8 0%, rgb(255 233 168 / 0) 55%),
+    radial-gradient(900px 500px at 10% 110%, #f6ca5a 0%, rgb(246 202 90 / 0) 55%),
+    linear-gradient(180deg, #fffef8 0%, #fff6d6 42%, #fffef8 100%);
 }
 
 .crm-content {
-  border-inline-start: 1px solid rgb(255 255 255 / 0.35);
+  border-inline-start: 1px solid rgb(244 196 48 / 0.15);
 }
 
-.crm-hero-ring {
-  box-shadow:
-    inset 0 1px rgb(255 255 255 / 0.6),
-    0 18px 40px -38px rgb(42 112 71 / 0.35);
+.crm-card {
+  @apply shadow-soft overflow-hidden rounded-2xl border border-black/[0.05] bg-white backdrop-blur-sm;
 }
 
-.crm-stat-chip {
+.crm-card-header {
+  @apply relative flex items-center justify-between border-b border-black/[0.05] px-5 py-4;
+}
+
+.crm-card-header::before {
+  content: '';
+  @apply absolute start-0 end-0 top-0 h-[1.5px] rounded-t-2xl;
+  background: linear-gradient(90deg, transparent 0%, rgb(244 196 48 / 0.55) 50%, transparent 100%);
+}
+
+/* Funnel-style hero banner (dashboard) */
+.funnel-hero-banner {
   position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(1200px 500px at 80% -10%, #ffe9a8 0%, rgb(255 233 168 / 0) 60%),
+    radial-gradient(900px 500px at 10% 110%, #f6ca5a 0%, rgb(246 202 90 / 0) 60%),
+    linear-gradient(180deg, #f8d873 0%, #f4c658 100%);
+  box-shadow: var(--shadow-soft-lg);
 }
 
-.crm-stat-chip::after {
+.funnel-hero-banner::before {
   content: '';
   position: absolute;
-  inset: auto 10% -10%;
-  height: 40%;
-  background: radial-gradient(circle at top, rgb(247 239 217 / 0.45), transparent 70%);
+  inset: 0;
+  background-image: radial-gradient(rgb(60 40 0 / 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(180deg, rgb(0 0 0 / 0.5), transparent);
+  pointer-events: none;
 }
 
-.crm-dialog-shell {
-  background: linear-gradient(180deg, #fffefb, #fdfbf6);
+.funnel-eyebrow {
+  @apply border-gold/35 bg-honey-pale inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-bold text-[#6b4a00];
 }
 
-/* ───────────── Shared layout helpers ───────────── */
+.font-messiri {
+  font-family: var(--font-messiri);
+}
+
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+.shadow-soft-lg {
+  box-shadow: var(--shadow-soft-lg);
+}
+
+.card-lift {
+  @apply transition-[transform,box-shadow] duration-200 ease-out;
+}
+
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft-lg);
+}
+
 .raf-app {
   @apply min-h-screen;
 }

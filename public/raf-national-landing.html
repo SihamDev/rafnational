@@ -153,7 +153,21 @@
 <script type="text/babel">
 const { useState, useEffect, useRef, useMemo } = React;
 
-/* ---------- Original placeholder brand mark (geometric, not the reference) ---------- */
+/* ---------- Official brand logo (PNG) ---------- */
+function LogoImg({ className = '' }) {
+  return (
+    <img
+      src="/brand/logo.png"
+      alt="شركة راف الوطنية للتطوير والاستثمار العقاري"
+      className={'h-auto w-auto object-contain select-none ' + className}
+      width="200"
+      height="120"
+      decoding="async"
+    />
+  );
+}
+
+/* ---------- Legacy placeholder (unused in header; kept for reference) ---------- */
 function BrandMark({ size = 56, light = false }) {
   // Original geometric emblem: pentagon ring + offset inner ring + gold center
   const ink = light ? '#fff' : '#111';
@@ -175,11 +189,7 @@ function Header() {
   return (
     <header className="bg-white relative">
       <div className="max-w-[1100px] mx-auto px-5 py-6 flex flex-col items-center justify-center">
-        <BrandMark size={52} />
-        <div className="text-center mt-2.5 leading-tight">
-          <div className="text-[20px] md:text-[22px] font-extrabold text-ink tracking-tight">شركة راف الوطنية</div>
-          <div className="text-[12px] md:text-[13px] text-muted mt-1">للتطوير والاستثمار العقاري</div>
-        </div>
+        <LogoImg className="max-h-[100px] md:max-h-[112px]" />
       </div>
       <div className="gold-rule" />
     </header>
@@ -1044,7 +1054,7 @@ function Footer() {
         <div className="grid md:grid-cols-2 gap-8 md:gap-10">
           <div>
             <div className="flex items-center gap-3">
-              <div className="bg-white rounded-xl p-2"><BrandMark size={32} /></div>
+              <div className="bg-white rounded-xl p-2"><LogoImg className="max-h-8" /></div>
               <div>
                 <div className="font-extrabold text-[17px]">شركة راف الوطنية</div>
                 <div className="text-[12px] text-white/60">للتطوير والاستثمار العقاري</div>

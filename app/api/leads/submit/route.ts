@@ -17,7 +17,9 @@ function funnelMaxPerMinute(): number {
 }
 
 function corsHeaders(request: NextRequest): HeadersInit {
-  const origins = process.env.FUNNEL_ALLOWED_ORIGINS?.split(',').map((s) => s.trim()).filter(Boolean)
+  const origins = process.env.FUNNEL_ALLOWED_ORIGINS?.split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
 
   const origin = request.headers.get('origin')
   let allowOrigin = '*'
@@ -66,8 +68,7 @@ function buildFunnelTimestamp(body: {
 }): string {
   if (body.submitted_date?.match(/^\d{4}-\d{2}-\d{2}$/)) {
     const t = body.submitted_time?.trim()
-    const timePart =
-      t && /^\d{1,2}:\d{2}(:\d{2})?$/.test(t) ? t : '12:00:00'
+    const timePart = t && /^\d{1,2}:\d{2}(:\d{2})?$/.test(t) ? t : '12:00:00'
 
     /* Treat as Arabia Standard Time without DST */
     const iso = `${body.submitted_date}T${timePart}+03:00`
@@ -79,48 +80,21 @@ function buildFunnelTimestamp(body: {
 }
 
 /* ──────────────────────────────────────────────────────────────
-   Auto-qualification rules (Saudi mortgage financing standards)
+   Auto-qualification rules — matches ClickFunnels/n8n flow logic
    ────────────────────────────────────────────────────────────── */
-function parseNumber(v: unknown): number | null {
-  if (v === undefined || v === null) return null
-  const n = Number(String(v).replace(/[^\d.]/g, ''))
-  return Number.isFinite(n) && n > 0 ? n : null
-}
-
 function autoQualify(body: Record<string, unknown>): 'qualified' | 'unqualified' {
-  const salary     = parseNumber(body.salary_numeric ?? body.salary_range_raw)
-  const obligation = parseNumber(body.obligation_numeric ?? body.requested_amount_raw)
-  const hasMortgage = String(body.has_existing_mortgage ?? '').trim()
-  const hasServiceHold = String(body.has_service_hold ?? '').trim()
-  const sector = String(body.employer_raw ?? '').trim()
+  const salary = String(body.salary_range_raw ?? body.salary ?? '').trim()
+  const hasMortgage = String(body.has_existing_mortgage ?? body.hasMortgage ?? '').trim()
+  const hasServiceHold = String(body.has_service_hold ?? body.stopServices ?? '').trim()
 
-  // No salary provided → unqualified (form requires salary so this is a bad submission)
-  if (salary === null) return 'unqualified'
+  // Rule 1: salary 5,000–10,000 → unqualified
+  if (salary === '5000-7000' || salary === '8000-10000') return 'unqualified'
 
-  // Rule 1: minimum salary 4,000 SAR
-  if (salary < 4000) return 'unqualified'
+  // Rule 2: active service hold → unqualified
+  if (hasServiceHold === 'نعم') return 'unqualified'
 
-  // Rule 2: debt-burden ratio — total monthly obligations ≤ 45% of salary
-  if (obligation !== null && obligation / salary > 0.45) return 'unqualified'
-
-  // Rule 3: service hold means not eligible until resolved
-  if (hasServiceHold === 'نعم' || hasServiceHold.toLowerCase() === 'yes' || hasServiceHold === 'true') {
-    return 'unqualified'
-  }
-
-  // Rule 4: free-work sector needs stricter salary floor
-  if ((sector.includes('أعمال حرة') || sector.toLowerCase().includes('self')) && salary < 7000) {
-    return 'unqualified'
-  }
-
-  // Rule 5: existing mortgage + low remaining affordability
-  if (
-    (hasMortgage === 'نعم' || hasMortgage.toLowerCase() === 'yes' || hasMortgage === 'true')
-    && obligation !== null
-    && obligation / salary > 0.35
-  ) {
-    return 'unqualified'
-  }
+  // Rule 3: existing mortgage → unqualified
+  if (hasMortgage === 'نعم') return 'unqualified'
 
   return 'qualified'
 }
@@ -141,14 +115,19 @@ export async function POST(request: NextRequest) {
     }
 
     const auth =
-      request.headers.get('authorization')?.replace(/^Bearer\s+/i, '').trim()
-        ?? request.headers.get('x-funnel-secret')
+      request.headers
+        .get('authorization')
+        ?.replace(/^Bearer\s+/i, '')
+        .trim() ?? request.headers.get('x-funnel-secret')
 
     if (auth !== expected) {
-      return NextResponse.json({ ok: false, error: 'غير مصرح' }, {
-        status: 401,
-        headers: corsHeaders(request),
-      })
+      return NextResponse.json(
+        { ok: false, error: 'غير مصرح' },
+        {
+          status: 401,
+          headers: corsHeaders(request),
+        }
+      )
     }
 
     const json = await request.json()
@@ -157,7 +136,7 @@ export async function POST(request: NextRequest) {
     if (funnelHoneypotTriggered(body)) {
       return NextResponse.json(
         { ok: false, error: 'تعذّر معالجة الطلب' },
-        { status: 400, headers: corsHeaders(request) },
+        { status: 400, headers: corsHeaders(request) }
       )
     }
 
@@ -167,7 +146,7 @@ export async function POST(request: NextRequest) {
       retryHeaders.set('Retry-After', '60')
       return NextResponse.json(
         { ok: false, error: 'طلبات كثيرة، حاول بعد قليل' },
-        { status: 429, headers: retryHeaders },
+        { status: 429, headers: retryHeaders }
       )
     }
 
@@ -186,10 +165,8 @@ export async function POST(request: NextRequest) {
 
     const b = parsed.data
 
-    let emailClean: string | null =
-      typeof b.email === 'string' && b.email.includes('@')
-        ? b.email.trim().toLowerCase()
-        : null
+    const emailClean: string | null =
+      typeof b.email === 'string' && b.email.includes('@') ? b.email.trim().toLowerCase() : null
 
     const supabase = createServiceRoleClient()
 
@@ -223,7 +200,7 @@ export async function POST(request: NextRequest) {
           status: 'duplicate' as const,
           id: duplicateId,
         },
-        { status: 200, headers: corsHeaders(request) },
+        { status: 200, headers: corsHeaders(request) }
       )
     }
 
@@ -271,7 +248,7 @@ export async function POST(request: NextRequest) {
       {
         status: 201,
         headers: corsHeaders(request),
-      },
+      }
     )
   } catch (e) {
     console.error('leads/submit:', e)

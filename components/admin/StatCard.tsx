@@ -12,39 +12,29 @@ interface StatCardProps {
 
 const TONE = {
   base: {
-    shell: 'bg-navy-900 border-navy-800',
-    accent: 'bg-brand/15',
-    icon: 'text-brand',
-    val: 'text-white',
-    bar: 'bg-brand',
+    iconWrap: 'bg-honey-pale text-gold',
+    bar: 'bg-gold',
+    val: 'text-ink',
   },
   pending: {
-    shell: 'bg-[#1c160a] border-amber-900/40',
-    accent: 'bg-amber-500/15',
-    icon: 'text-amber-400',
-    val: 'text-amber-300',
+    iconWrap: 'bg-amber-50 text-amber-600',
     bar: 'bg-amber-400',
+    val: 'text-ink',
   },
   approved: {
-    shell: 'bg-[#0b1a10] border-emerald-900/40',
-    accent: 'bg-emerald-500/15',
-    icon: 'text-emerald-400',
-    val: 'text-emerald-300',
-    bar: 'bg-emerald-400',
+    iconWrap: 'bg-grass/10 text-grass-dark',
+    bar: 'bg-grass',
+    val: 'text-ink',
   },
   rejected: {
-    shell: 'bg-[#1a0b0b] border-red-900/40',
-    accent: 'bg-red-500/15',
-    icon: 'text-red-400',
-    val: 'text-red-300',
+    iconWrap: 'bg-red-50 text-red-600',
     bar: 'bg-red-500',
+    val: 'text-ink',
   },
   info: {
-    shell: 'bg-[#0b1220] border-blue-900/40',
-    accent: 'bg-blue-500/15',
-    icon: 'text-blue-400',
-    val: 'text-blue-300',
-    bar: 'bg-blue-400',
+    iconWrap: 'bg-sky-50 text-sky-600',
+    bar: 'bg-sky-400',
+    val: 'text-ink',
   },
 }
 
@@ -61,30 +51,28 @@ export default function StatCard({
   const inner = (
     <div
       className={cn(
-        'group relative overflow-hidden rounded-2xl border p-5 transition-all hover:scale-[1.015] hover:shadow-xl',
-        t.shell
+        'card-lift group shadow-soft relative overflow-hidden rounded-2xl border border-black/[0.05] bg-white p-5',
+        href && 'cursor-pointer'
       )}
     >
-      {/* Top accent bar */}
-      <div className={cn('absolute top-0 start-0 end-0 h-[2px] rounded-t-2xl', t.bar)} />
-
-      {/* Glow blob */}
-      <div className={cn('absolute -top-6 -end-6 h-20 w-20 rounded-full blur-2xl', t.accent)} />
+      <div className={cn('absolute start-0 end-0 top-0 h-[2px] rounded-t-2xl', t.bar)} />
 
       <div className="relative">
         <div className="mb-4 flex items-start justify-between">
-          <div className={cn('flex h-9 w-9 items-center justify-center rounded-xl', t.accent)}>
-            <Icon size={17} className={t.icon} />
+          <div className={cn('flex h-10 w-10 items-center justify-center rounded-xl', t.iconWrap)}>
+            <Icon size={18} />
           </div>
           {delta && (
-            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+            <span className="bg-grass/10 text-grass-dark rounded-full px-2 py-0.5 text-[10px] font-bold">
               {delta}
             </span>
           )}
         </div>
 
-        <p className={cn('font-sans text-3xl font-bold leading-none', t.val)}>{value}</p>
-        <p className="mt-2 text-[12px] font-medium text-white/40">{label}</p>
+        <p className={cn('font-sans text-3xl leading-none font-bold tabular-nums', t.val)}>
+          {value}
+        </p>
+        <p className="text-muted-funnel mt-2 text-[12px] font-medium">{label}</p>
       </div>
     </div>
   )

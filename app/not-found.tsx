@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Home, FileQuestion } from 'lucide-react'
+import { RafBrand } from '@/components/brand/RafLogo'
 
 export const metadata = {
   title: '404 — الصفحة غير موجودة | راف الوطنية',
@@ -38,18 +39,11 @@ export default function NotFound() {
       {/* Header */}
       <header className="border-navy-700/50 relative z-10 border-b">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden>
-              <path d="M18 2L32 10.5V25.5L18 34L4 25.5V10.5L18 2Z" fill="url(#nfGrad)" stroke="#F5A623" strokeWidth="0.75" strokeOpacity="0.5" />
-              <text x="18" y="24" textAnchor="middle" fontSize="14" fontWeight="700" fontFamily="'El Messiri', serif" fill="#F5A623">ر</text>
-              <defs><linearGradient id="nfGrad" x1="4" y1="2" x2="32" y2="34" gradientUnits="userSpaceOnUse"><stop stopColor="#162844" /><stop offset="1" stopColor="#0c1828" /></linearGradient></defs>
-            </svg>
-            <div className="flex flex-col leading-tight">
-              <span className="font-heading text-[15px] font-bold text-white">راف الوطنية</span>
-              <span className="text-brand text-[9px] font-semibold tracking-[0.22em] uppercase opacity-80">RAF NATIONAL</span>
-            </div>
-          </div>
-          <Link href="/login" className="text-navy-200 hover:text-brand hidden items-center gap-2 text-sm transition-colors sm:flex">
+          <RafBrand logoClassName="max-h-9" wordmarkTheme="light" />
+          <Link
+            href="/login"
+            className="text-navy-200 hover:text-brand hidden items-center gap-2 text-sm transition-colors sm:flex"
+          >
             تسجيل الدخول
           </Link>
         </div>
@@ -62,7 +56,8 @@ export default function NotFound() {
             <div
               className="font-sans text-[140px] leading-none font-black tracking-tighter select-none md:text-[200px]"
               style={{
-                background: 'linear-gradient(180deg, rgba(245,166,35,0.25) 0%, rgba(245,166,35,0.05) 100%)',
+                background:
+                  'linear-gradient(180deg, rgba(245,166,35,0.25) 0%, rgba(245,166,35,0.05) 100%)',
                 WebkitBackgroundClip: 'text',
                 backgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',

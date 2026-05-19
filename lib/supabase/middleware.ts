@@ -38,7 +38,6 @@ export async function updateSession(request: NextRequest) {
     // Removing the extra profiles query here saves one DB round-trip per admin request.
   }
 
-
   if (pathname === '/login' && user) {
     const next = safeInternalNext(request.nextUrl.searchParams.get('redirect'))
     if (next) return NextResponse.redirect(new URL(next, request.url))
@@ -52,6 +51,17 @@ export async function updateSession(request: NextRequest) {
     }
     const url = request.nextUrl.clone()
     url.pathname = '/raf-national-landing.html'
+    const rewriteRes = NextResponse.rewrite(url)
+    supabaseResponse.cookies.getAll().forEach(({ name, value }) => {
+      rewriteRes.cookies.set(name, value)
+    })
+    return rewriteRes
+  }
+
+  // Funnel landing — static page at /funnel1 (URL stays /funnel1)
+  if (pathname === '/funnel1' || pathname === '/funnel1/') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/funnel1/index.html'
     const rewriteRes = NextResponse.rewrite(url)
     supabaseResponse.cookies.getAll().forEach(({ name, value }) => {
       rewriteRes.cookies.set(name, value)

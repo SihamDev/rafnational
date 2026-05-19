@@ -165,7 +165,7 @@ export default function ActivityClient({ initialLogs }: { initialLogs: ActivityL
                           {meta.icon} {meta.label}
                         </span>
                       </td>
-                      <td className="text-navy-900 px-4 py-3 text-sm">
+                      <td className="text-ink px-4 py-3 text-sm">
                         {log.actor?.full_name ?? 'النظام'}
                       </td>
                       <td className="px-4 py-3">

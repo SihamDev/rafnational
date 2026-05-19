@@ -87,7 +87,7 @@ export default function NotificationsBell() {
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute end-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-              <h3 className="text-navy-900 text-sm font-semibold">الإشعارات</h3>
+              <h3 className="text-ink text-sm font-semibold">الإشعارات</h3>
               <div className="flex items-center gap-2">
                 {unread > 0 && (
                   <button
@@ -125,7 +125,7 @@ export default function NotificationsBell() {
                       <p
                         className={cn(
                           'truncate text-sm',
-                          !n.read_at ? 'text-navy-900 font-semibold' : 'text-gray-700'
+                          !n.read_at ? 'text-ink font-semibold' : 'text-gray-700'
                         )}
                       >
                         {n.title}

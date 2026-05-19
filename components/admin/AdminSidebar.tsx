@@ -17,61 +17,8 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { signOut } from '@/lib/actions/auth'
+import { RafLogo } from '@/components/brand/RafLogo'
 import type { StaffRole } from '@/types/leads'
-
-/* ── RAF National inline logo mark ── */
-function RafMark({ size = 36 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 36 36" fill="none" aria-hidden>
-      <path
-        d="M18 2L32 10.5V25.5L18 34L4 25.5V10.5L18 2Z"
-        fill="url(#sbGrad)"
-        stroke="#F5A623"
-        strokeWidth="0.75"
-        strokeOpacity="0.5"
-      />
-      <path
-        d="M18 7L28 13V25L18 31L8 25V13L18 7Z"
-        fill="none"
-        stroke="#F5A623"
-        strokeWidth="0.4"
-        strokeOpacity="0.22"
-      />
-      <text
-        x="18" y="24"
-        textAnchor="middle"
-        fontSize="14"
-        fontWeight="700"
-        fontFamily="'El Messiri', serif"
-        fill="#F5A623"
-      >
-        ر
-      </text>
-      <defs>
-        <linearGradient id="sbGrad" x1="4" y1="2" x2="32" y2="34" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#162844" />
-          <stop offset="1" stopColor="#0c1828" />
-        </linearGradient>
-      </defs>
-    </svg>
-  )
-}
-
-function RafBrandExpanded() {
-  return (
-    <div className="flex items-center gap-3">
-      <RafMark size={40} />
-      <div className="flex flex-col leading-tight">
-        <span className="font-heading text-[15px] font-bold text-white tracking-tight">
-          راف الوطنية
-        </span>
-        <span className="text-brand font-sans text-[9px] font-semibold tracking-[0.22em] uppercase opacity-80">
-          RAF NATIONAL
-        </span>
-      </div>
-    </div>
-  )
-}
 
 const CRM_LINK = {
   href: '/admin/leads',
@@ -88,11 +35,11 @@ const AGENT_HOME_LINK = {
 } as const
 
 const ADMIN_ONLY_NAV = [
-  { href: '/admin',          label: 'لوحة التحكم',     icon: LayoutDashboard, exact: true },
-  { href: '/admin/reports',  label: 'التقارير والأداء', icon: TrendingUp },
-  { href: '/admin/users',    label: 'فريق المبيعات',   icon: Users },
-  { href: '/admin/activity', label: 'سجل النشاطات',    icon: Activity },
-  { href: '/admin/settings', label: 'الإعدادات',        icon: Settings },
+  { href: '/admin', label: 'لوحة التحكم', icon: LayoutDashboard, exact: true },
+  { href: '/admin/reports', label: 'التقارير والأداء', icon: TrendingUp },
+  { href: '/admin/users', label: 'فريق المبيعات', icon: Users },
+  { href: '/admin/activity', label: 'سجل النشاطات', icon: Activity },
+  { href: '/admin/settings', label: 'الإعدادات', icon: Settings },
 ]
 
 const STORAGE_KEY = 'admin_sidebar_collapsed'
@@ -129,38 +76,51 @@ export default function AdminSidebar({
     return pathname.startsWith(href)
   }
 
-  const navItems = staffRole === 'sales_agent'
-    ? [
-        { ...AGENT_HOME_LINK, exact: true as const },
-        { ...CRM_LINK, exact: false as const },
-      ]
-    : [{ ...CRM_LINK, exact: false as const }, ...ADMIN_ONLY_NAV]
+  const navItems =
+    staffRole === 'sales_agent'
+      ? [
+          { ...AGENT_HOME_LINK, exact: true as const },
+          { ...CRM_LINK, exact: false as const },
+        ]
+      : [{ ...CRM_LINK, exact: false as const }, ...ADMIN_ONLY_NAV]
 
   return (
     <aside
       className={cn(
         'sticky top-0 hidden h-screen shrink-0 flex-col overflow-hidden border-l transition-all duration-300 lg:flex',
-        'bg-[#0a1220] border-white/[0.06]',
+        'border-white/10 bg-black text-white',
         collapsed ? 'w-[68px]' : 'w-60'
       )}
     >
       {/* Top glow */}
-      <div className="pointer-events-none absolute -top-10 start-1/2 h-32 w-32 -translate-x-1/2 rounded-full bg-brand/10 blur-[50px]" />
+      <div className="bg-gold/15 pointer-events-none absolute start-1/2 -top-10 h-32 w-32 -translate-x-1/2 rounded-full blur-[50px]" />
 
       {/* Logo */}
       <div
         className={cn(
-          'relative flex items-center border-b border-white/[0.06] transition-all duration-300',
+          'relative flex items-center border-b border-white/10 transition-all duration-300',
           collapsed ? 'justify-center p-4' : 'px-4 py-5'
         )}
       >
-        {collapsed ? <RafMark size={34} /> : <RafBrandExpanded />}
+        <div
+          className={cn(
+            'flex items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-black/10',
+            collapsed ? 'p-2' : 'p-2.5'
+          )}
+        >
+          <RafLogo
+            className={cn(
+              'w-auto object-contain',
+              collapsed ? 'max-h-8 max-w-[120px]' : 'max-h-10 max-w-[160px]'
+            )}
+          />
+        </div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 space-y-0.5 overflow-x-hidden overflow-y-auto px-2.5 py-3">
         {!collapsed && (
-          <p className="px-3 py-2 font-sans text-[9.5px] font-semibold tracking-[0.18em] uppercase text-white/30">
+          <p className="px-3 py-2 font-sans text-[9.5px] font-semibold tracking-[0.18em] text-white/55 uppercase">
             {staffRole === 'sales_agent' ? 'مساحة المبيعات' : 'الإدارة والمبيعات'}
           </p>
         )}
@@ -177,31 +137,31 @@ export default function AdminSidebar({
                 'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150',
                 collapsed && 'justify-center px-2',
                 active
-                  ? 'bg-white/[0.08] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]'
-                  : 'text-white/50 hover:bg-white/[0.05] hover:text-white/80'
+                  ? 'bg-white/10 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]'
+                  : 'text-white/75 hover:bg-white/5 hover:text-white'
               )}
             >
               {/* Gold left accent line for active */}
               {active && (
-                <span className="absolute end-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-brand" />
+                <span className="bg-brand absolute end-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full" />
               )}
               <Icon
                 size={15}
                 className={cn(
                   'shrink-0 transition-colors',
-                  active ? 'text-brand' : 'text-white/35 group-hover:text-white/60'
+                  active ? 'text-brand' : 'text-white/55 group-hover:text-white/90'
                 )}
               />
               {!collapsed && <span className="truncate text-[13px]">{item.label}</span>}
 
               {/* Leads badge */}
               {!collapsed && item.href === '/admin/leads' && leadsNewCount > 0 && (
-                <span className="ms-auto shrink-0 rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400">
+                <span className="ms-auto shrink-0 rounded-full bg-white/10 px-1.5 py-0.5 text-[9px] font-bold text-white ring-1 ring-white/15">
                   {leadsNewCount > 99 ? '99+' : leadsNewCount}
                 </span>
               )}
               {collapsed && item.href === '/admin/leads' && leadsNewCount > 0 && (
-                <span className="absolute -top-0.5 -start-0.5 h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="bg-brand absolute -start-0.5 -top-0.5 h-2 w-2 rounded-full ring-2 ring-black" />
               )}
             </Link>
           )
@@ -209,12 +169,12 @@ export default function AdminSidebar({
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-white/[0.06] px-2.5 py-3 space-y-0.5">
+      <div className="space-y-0.5 border-t border-white/10 px-2.5 py-3">
         <button
           onClick={toggle}
           title={collapsed ? 'توسيع القائمة' : 'طي القائمة'}
           className={cn(
-            'flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-xs text-white/30 transition-colors hover:bg-white/[0.05] hover:text-white/60',
+            'flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-xs text-white/60 transition-colors hover:bg-white/5 hover:text-white',
             collapsed && 'justify-center px-2'
           )}
         >
@@ -226,7 +186,7 @@ export default function AdminSidebar({
           <button
             title={collapsed ? 'تسجيل الخروج' : undefined}
             className={cn(
-              'flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-xs text-white/30 transition-colors hover:bg-red-500/10 hover:text-red-400',
+              'flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-xs text-white/60 transition-colors hover:bg-red-500/15 hover:text-red-300',
               collapsed && 'justify-center px-2'
             )}
           >

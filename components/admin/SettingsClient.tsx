@@ -17,15 +17,11 @@ export default function SettingsClient({ initialSettings }: Props) {
   const [isPending, startTransition] = useTransition()
 
   // Funnel settings
-  const [funnelSecret, setFunnelSecret] = useState(
-    String(initialSettings.funnel?.secret ?? '')
-  )
+  const [funnelSecret, setFunnelSecret] = useState(String(initialSettings.funnel?.secret ?? ''))
   const [allowedOrigins, setAllowedOrigins] = useState(
     String(initialSettings.funnel?.allowed_origins ?? 'https://www.rafnationals.com')
   )
-  const [rateLimit, setRateLimit] = useState(
-    Number(initialSettings.funnel?.rate_limit ?? 40)
-  )
+  const [rateLimit, setRateLimit] = useState(Number(initialSettings.funnel?.rate_limit ?? 40))
 
   // Notification settings
   const [whatsappEnabled, setWhatsappEnabled] = useState(
@@ -84,8 +80,8 @@ export default function SettingsClient({ initialSettings }: Props) {
   ]
 
   const inputCls =
-    'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-navy-900 focus:border-brand focus:outline-none'
-  const labelCls = 'text-sm font-medium text-navy-900 mb-1 block'
+    'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none'
+  const labelCls = 'text-sm font-medium text-ink mb-1 block'
   const hintCls = 'text-xs text-gray-400 mt-1'
 
   return (
@@ -98,7 +94,7 @@ export default function SettingsClient({ initialSettings }: Props) {
             onClick={() => setTab(t.id)}
             className={cn(
               'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors',
-              tab === t.id ? 'bg-navy-900 text-white' : 'text-gray-600 hover:bg-gray-100'
+              tab === t.id ? 'bg-ink text-white' : 'text-gray-600 hover:bg-gray-100'
             )}
           >
             <t.icon size={15} />
@@ -119,7 +115,9 @@ export default function SettingsClient({ initialSettings }: Props) {
               onChange={(e) => setFunnelSecret(e.target.value)}
               className={cn(inputCls, 'font-mono text-xs')}
             />
-            <p className={hintCls}>يُرسل في header كـ Authorization: Bearer عند POST إلى /api/leads/submit</p>
+            <p className={hintCls}>
+              يُرسل في header كـ Authorization: Bearer عند POST إلى /api/leads/submit
+            </p>
           </div>
           <div>
             <label className={labelCls}>المصادر المسموحة (CORS Origins)</label>
@@ -130,7 +128,9 @@ export default function SettingsClient({ initialSettings }: Props) {
               onChange={(e) => setAllowedOrigins(e.target.value)}
               className={cn(inputCls, 'font-mono text-xs')}
             />
-            <p className={hintCls}>افصل بين الروابط بفاصلة — مثال: https://www.rafnationals.com,http://localhost:3030</p>
+            <p className={hintCls}>
+              افصل بين الروابط بفاصلة — مثال: https://www.rafnationals.com,http://localhost:3030
+            </p>
           </div>
           <div>
             <label className={labelCls}>الحد الأقصى للطلبات في الدقيقة</label>
@@ -145,7 +145,7 @@ export default function SettingsClient({ initialSettings }: Props) {
           <button
             disabled={isPending}
             onClick={handleSaveFunnel}
-            className="bg-brand hover:bg-brand-light text-navy-900 flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
+            className="bg-brand hover:bg-brand-light text-ink flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
           >
             <Save size={14} />
             حفظ إعدادات الفانل
@@ -164,9 +164,9 @@ export default function SettingsClient({ initialSettings }: Props) {
                 onChange={(e) => setWhatsappEnabled(e.target.checked)}
                 className="peer sr-only"
               />
-              <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all peer-checked:bg-emerald-500 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full" />
+              <div className="peer h-6 w-11 rounded-full bg-gray-200 peer-checked:bg-emerald-500 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full" />
             </label>
-            <span className="text-navy-900 text-sm font-medium">إشعارات واتساب عند وصول عميل جديد</span>
+            <span className="text-ink text-sm font-medium">إشعارات واتساب عند وصول عميل جديد</span>
           </div>
           <div>
             <label className={labelCls}>رقم الواتساب</label>
@@ -182,7 +182,7 @@ export default function SettingsClient({ initialSettings }: Props) {
           <button
             disabled={isPending}
             onClick={handleSaveNotifications}
-            className="bg-brand hover:bg-brand-light text-navy-900 flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
+            className="bg-brand hover:bg-brand-light text-ink flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
           >
             <Save size={14} />
             حفظ
@@ -215,7 +215,7 @@ export default function SettingsClient({ initialSettings }: Props) {
           <button
             disabled={isPending}
             onClick={handleSaveGeneral}
-            className="bg-brand hover:bg-brand-light text-navy-900 flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
+            className="bg-brand hover:bg-brand-light text-ink flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
           >
             <Save size={14} />
             حفظ الإعدادات

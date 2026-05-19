@@ -136,7 +136,7 @@ export default function UsersClient({
               className={cn(
                 'rounded-lg px-3 py-2 text-xs font-medium transition-colors',
                 roleFilter === f.key
-                  ? 'bg-navy-900 text-white'
+                  ? 'bg-ink text-white'
                   : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
               )}
             >
@@ -150,7 +150,7 @@ export default function UsersClient({
 
         <button
           onClick={() => setCreateModal(true)}
-          className="bg-brand hover:bg-brand-light text-navy-900 flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold transition-colors"
+          className="bg-brand hover:bg-brand-light text-ink flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold transition-colors"
         >
           <Plus size={14} />
           عضو جديد
@@ -161,11 +161,13 @@ export default function UsersClient({
         <table className="w-full text-right">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50">
-              {['العضو', 'الدور الوظيفي', 'عملاء مسندون', 'تاريخ الانضمام', 'الإجراءات'].map((h) => (
-                <th key={h} className="px-4 py-3 text-xs font-semibold text-gray-500">
-                  {h}
-                </th>
-              ))}
+              {['العضو', 'الدور الوظيفي', 'عملاء مسندون', 'تاريخ الانضمام', 'الإجراءات'].map(
+                (h) => (
+                  <th key={h} className="px-4 py-3 text-xs font-semibold text-gray-500">
+                    {h}
+                  </th>
+                )
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
@@ -186,21 +188,21 @@ export default function UsersClient({
                   <tr key={u.id} className="transition-colors hover:bg-gray-50/50">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="bg-navy-900 text-brand flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold">
+                        <div className="bg-ink text-brand flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold">
                           {initials}
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <p className="text-navy-900 text-sm font-semibold">
-                              {u.full_name ?? '—'}
-                            </p>
+                            <p className="text-ink text-sm font-semibold">{u.full_name ?? '—'}</p>
                             {isSelf && (
-                              <span className="rounded-full bg-brand/15 px-2 py-0.5 text-[10px] font-bold text-brand">
+                              <span className="bg-brand/15 text-brand rounded-full px-2 py-0.5 text-[10px] font-bold">
                                 أنت
                               </span>
                             )}
                           </div>
-                          <p className="font-sans text-xs text-gray-400">{u.email || (u.phone ?? '—')}</p>
+                          <p className="font-sans text-xs text-gray-400">
+                            {u.email || (u.phone ?? '—')}
+                          </p>
                         </div>
                       </div>
                     </td>
@@ -212,7 +214,7 @@ export default function UsersClient({
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5">
                         <Briefcase size={12} className="text-gray-400" />
-                        <span className="text-navy-900 font-sans text-sm font-semibold tabular-nums">
+                        <span className="text-ink font-sans text-sm font-semibold tabular-nums">
                           {u.leads_count > 0 ? formatWesternInt(u.leads_count) : '—'}
                         </span>
                       </div>
@@ -270,7 +272,7 @@ export default function UsersClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
           <div className="w-full max-w-md space-y-5 rounded-2xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between">
-              <h3 className="text-navy-900 text-lg font-bold">إضافة عضو جديد</h3>
+              <h3 className="text-ink text-lg font-bold">إضافة عضو جديد</h3>
               <button onClick={() => setCreateModal(false)}>
                 <X size={20} className="text-gray-400" />
               </button>
@@ -282,7 +284,7 @@ export default function UsersClient({
                 { label: 'كلمة المرور', key: 'password', type: 'password' },
               ].map((f) => (
                 <div key={f.key}>
-                  <label className="text-navy-900 text-sm font-medium">{f.label}</label>
+                  <label className="text-ink text-sm font-medium">{f.label}</label>
                   <input
                     type={f.type}
                     value={newUser[f.key as keyof typeof newUser]}
@@ -292,7 +294,7 @@ export default function UsersClient({
                 </div>
               ))}
               <div>
-                <label className="text-navy-900 text-sm font-medium">الدور الوظيفي</label>
+                <label className="text-ink text-sm font-medium">الدور الوظيفي</label>
                 <select
                   value={newUser.role}
                   onChange={(e) => setNewUser({ ...newUser, role: e.target.value as NewRole })}
@@ -308,7 +310,7 @@ export default function UsersClient({
               <button
                 disabled={isPending || !newUser.email || !newUser.password}
                 onClick={handleCreate}
-                className="bg-brand hover:bg-brand-light text-navy-900 flex-1 rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50"
+                className="bg-brand hover:bg-brand-light text-ink flex-1 rounded-xl py-2.5 text-sm font-semibold disabled:opacity-50"
               >
                 إنشاء الحساب
               </button>
@@ -327,7 +329,7 @@ export default function UsersClient({
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
           <div className="w-full max-w-sm space-y-4 rounded-2xl bg-white p-6 text-center shadow-2xl">
-            <p className="text-navy-900 font-bold">
+            <p className="text-ink font-bold">
               حذف {deleteTarget.full_name ?? deleteTarget.email}؟
             </p>
             <p className="text-sm text-gray-500">لا يمكن التراجع عن هذا الإجراء.</p>
