@@ -12,15 +12,25 @@ import {
   Clock,
   Copy,
   Download,
-  MessageCircle,
   Search,
   Trash2,
   UsersRound,
   XCircle,
+  Columns3,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
+import { WhatsAppIcon } from '@/components/icons/WhatsAppIcon'
 import { Button, buttonVariants } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   Dialog,
   DialogContent,
@@ -47,15 +57,26 @@ import {
   formatWesternInt,
 } from '@/lib/format-western'
 import type { StaffRole } from '@/types/leads'
+import { effectiveQualificationStatus } from '@/lib/leads/auto-qualify'
+import type { ResolvedQualification } from '@/lib/leads/auto-qualify'
 import {
   QUALIFICATION_LABELS,
   QUALIFICATION_ORDER,
   SALES_STATUS_LABELS,
   SALES_WORKFLOW_ORDER,
+  type ActiveQualificationStatus,
   type LeadRow,
-  type QualificationStatus,
   type SalesWorkflowStatus,
 } from '@/types/leads'
+
+function qualOf(
+  lead: Pick<
+    LeadRow,
+    'qualification_status' | 'salary_range_raw' | 'has_existing_mortgage' | 'has_service_hold'
+  >
+): ResolvedQualification {
+  return effectiveQualificationStatus(lead.qualification_status, lead)
+}
 
 /* ── SortIcon (must be outside component to satisfy react-hooks/static-components) ── */
 function SortIcon({ col, sort, dir }: { col: string; sort: string; dir: string }) {
@@ -74,14 +95,309 @@ const textareaCls =
 const filterSelectCls =
   'h-9 rounded-lg border border-input bg-background px-2 text-sm outline-none focus:border-ring rtl:text-right'
 
+const LEADS_TABLE_COLUMNS_KEY = 'leads_table_visible_columns'
+
+type TableColumnId =
+  | 'client'
+  | 'family_name'
+  | 'phone'
+  | 'email'
+  | 'city'
+  | 'salary'
+  | 'bank'
+  | 'employer'
+  | 'requested_amount'
+  | 'has_mortgage'
+  | 'service_hold'
+  | 'housing_support'
+  | 'visit_source'
+  | 'campaign'
+  | 'financing_need'
+  | 'date'
+  | 'qualification'
+  | 'sales_status'
+  | 'actions'
+
+const LEADS_TABLE_COLUMNS: {
+  id: TableColumnId
+  label: string
+  defaultVisible: boolean
+  adminOnly?: boolean
+  required?: boolean
+  sortKey?: string
+}[] = [
+  { id: 'client', label: 'العميل', defaultVisible: true, required: true, sortKey: 'first_name' },
+  { id: 'family_name', label: 'اسم العائلة', defaultVisible: false },
+  { id: 'phone', label: 'الجوال', defaultVisible: true },
+  { id: 'email', label: 'البريد الإلكتروني', defaultVisible: false },
+  { id: 'city', label: 'المدينة', defaultVisible: true, sortKey: 'city' },
+  { id: 'salary', label: 'إجمالي الراتب', defaultVisible: false },
+  { id: 'bank', label: 'البنك', defaultVisible: false },
+  { id: 'employer', label: 'جهة العمل', defaultVisible: false },
+  { id: 'requested_amount', label: 'المبلغ المطلوب', defaultVisible: false },
+  { id: 'has_mortgage', label: 'تمويل عقاري قائم', defaultVisible: false },
+  { id: 'service_hold', label: 'إيقاف خدمات', defaultVisible: false },
+  { id: 'housing_support', label: 'الدعم السكني', defaultVisible: false },
+  { id: 'visit_source', label: 'مصدر الزيارة', defaultVisible: false },
+  { id: 'campaign', label: 'الحملة', defaultVisible: false },
+  { id: 'financing_need', label: 'احتياج التمويل', defaultVisible: false },
+  { id: 'date', label: 'تاريخ الإرسال', defaultVisible: true, sortKey: 'created_at' },
+  { id: 'qualification', label: 'الأهلية', defaultVisible: true, sortKey: 'qualification_status' },
+  { id: 'sales_status', label: 'مرحلة المتابعة', defaultVisible: false },
+  { id: 'actions', label: 'الإجراءات', defaultVisible: true, adminOnly: true },
+]
+
+function PhoneCell({ phone }: { phone: string | null | undefined }) {
+  const wa = phone ? waHref(phone) : null
+  if (!phone) return <span>—</span>
+  return (
+    <div className="flex items-center gap-1.5">
+      {wa ? (
+        <a
+          href={wa}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="فتح محادثة واتساب"
+          className="text-emerald-700 underline decoration-emerald-500/40 underline-offset-2 transition-colors hover:text-emerald-600"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {phone}
+        </a>
+      ) : (
+        <span>{phone}</span>
+      )}
+      <button
+        type="button"
+        onClick={() => copyToClipboard(phone)}
+        title="نسخ"
+        className="text-gray-300 transition-colors hover:text-gray-600"
+      >
+        <Copy size={11} />
+      </button>
+      {wa && (
+        <a
+          href={wa}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="فتح واتساب"
+          aria-label="فتح واتساب"
+          className="text-gray-400 transition-colors hover:text-gray-600"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <WhatsAppIcon size={12} />
+        </a>
+      )}
+    </div>
+  )
+}
+
+function LeadTableHeaderCell({
+  col,
+  sort,
+  dir,
+  sortHref,
+}: {
+  col: (typeof LEADS_TABLE_COLUMNS)[number]
+  sort: string
+  dir: string
+  sortHref: (col: string) => string
+}) {
+  const thCls = cn('px-5 py-3 whitespace-nowrap', col.id === 'actions' && 'text-center')
+  if (col.sortKey) {
+    return (
+      <th className={thCls}>
+        <Link
+          href={sortHref(col.sortKey)}
+          className="flex items-center gap-0.5 hover:text-gray-600"
+        >
+          {col.label} <SortIcon col={col.sortKey} sort={sort} dir={dir} />
+        </Link>
+      </th>
+    )
+  }
+  return <th className={thCls}>{col.label}</th>
+}
+
+function LeadTableBodyCell({
+  col,
+  lead,
+  q,
+  dateStr,
+  isActing,
+  onQuickQualify,
+  onDelete,
+}: {
+  col: (typeof LEADS_TABLE_COLUMNS)[number]
+  lead: LeadRow
+  q: ResolvedQualification
+  dateStr: string | null
+  isActing: boolean
+  onQuickQualify: (lead: LeadRow, status: 'qualified' | 'unqualified') => void
+  onDelete: (lead: LeadRow) => void
+}) {
+  const name = `${lead.first_name ?? ''} ${lead.family_name ?? ''}`.trim()
+  const phone = lead.phone_number ?? lead.phone_normalized
+
+  switch (col.id) {
+    case 'client':
+      return (
+        <td className="px-5 py-3.5">
+          <p className="text-ink group-hover:text-brand flex items-center gap-1.5 leading-tight font-semibold transition-colors">
+            {name || '—'}
+            {lead.next_followup_at && lead.next_followup_at < new Date().toISOString() && (
+              <span title="متابعة متأخرة" className="shrink-0 text-amber-500">
+                <Clock size={11} />
+              </span>
+            )}
+          </p>
+        </td>
+      )
+    case 'family_name':
+      return <td className="px-5 py-3.5 text-gray-700">{lead.family_name ?? '—'}</td>
+    case 'phone':
+      return (
+        <td
+          className="px-5 py-3.5 font-mono text-[12px] text-gray-600"
+          dir="ltr"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <PhoneCell phone={phone} />
+        </td>
+      )
+    case 'email':
+      return (
+        <td className="px-5 py-3.5 text-gray-600" dir="ltr">
+          {lead.email ?? '—'}
+        </td>
+      )
+    case 'city':
+      return <td className="px-5 py-3.5 text-gray-600">{lead.city ?? '—'}</td>
+    case 'salary':
+      return <td className="px-5 py-3.5 text-gray-600">{lead.salary_range_raw ?? '—'}</td>
+    case 'bank':
+      return <td className="px-5 py-3.5 text-gray-600">{lead.bank_name ?? '—'}</td>
+    case 'employer':
+      return <td className="px-5 py-3.5 text-gray-600">{lead.employer_raw ?? '—'}</td>
+    case 'requested_amount':
+      return <td className="px-5 py-3.5 text-gray-600">{lead.requested_amount_raw ?? '—'}</td>
+    case 'has_mortgage':
+      return <td className="px-5 py-3.5 text-gray-600">{yn(lead.has_existing_mortgage)}</td>
+    case 'service_hold':
+      return <td className="px-5 py-3.5 text-gray-600">{yn(lead.has_service_hold)}</td>
+    case 'housing_support':
+      return <td className="px-5 py-3.5 text-gray-600">{lead.housing_support_raw ?? '—'}</td>
+    case 'visit_source':
+      return <td className="px-5 py-3.5 text-gray-600">{lead.visit_source_raw ?? '—'}</td>
+    case 'campaign':
+      return <td className="px-5 py-3.5 text-gray-600">{lead.campaign_raw ?? '—'}</td>
+    case 'financing_need':
+      return <td className="px-5 py-3.5 text-gray-600">{lead.financing_need_raw ?? '—'}</td>
+    case 'date':
+      return (
+        <td className="px-5 py-3.5 font-mono text-[11px] whitespace-nowrap text-gray-400">
+          {dateStr ? formatWesternDateOnly(dateStr) : '—'}
+        </td>
+      )
+    case 'qualification':
+      return (
+        <td className="px-5 py-3.5 whitespace-nowrap">
+          <span className={badgeQual(q)}>{QUALIFICATION_LABELS[q]}</span>
+        </td>
+      )
+    case 'sales_status':
+      return (
+        <td className="px-5 py-3.5 whitespace-nowrap text-gray-700">
+          {SALES_STATUS_LABELS[lead.sales_workflow_status] ?? lead.sales_workflow_status}
+        </td>
+      )
+    case 'actions':
+      return (
+        <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center justify-center gap-1">
+            <button
+              type="button"
+              disabled={isActing || q === 'qualified'}
+              onClick={() => onQuickQualify(lead, 'qualified')}
+              title="قبول"
+              className={cn(
+                'rounded-lg p-1.5 transition-all',
+                q === 'qualified'
+                  ? 'cursor-default text-emerald-400'
+                  : 'text-gray-300 hover:bg-emerald-50 hover:text-emerald-600 active:scale-95',
+                isActing && 'pointer-events-none opacity-40'
+              )}
+            >
+              <CheckCircle2 size={18} />
+            </button>
+            <button
+              type="button"
+              disabled={isActing || q === 'unqualified'}
+              onClick={() => onQuickQualify(lead, 'unqualified')}
+              title="رفض"
+              className={cn(
+                'rounded-lg p-1.5 transition-all',
+                q === 'unqualified'
+                  ? 'cursor-default text-rose-400'
+                  : 'text-gray-300 hover:bg-rose-50 hover:text-rose-500 active:scale-95',
+                isActing && 'pointer-events-none opacity-40'
+              )}
+            >
+              <XCircle size={18} />
+            </button>
+            <button
+              type="button"
+              disabled={isActing}
+              onClick={() => onDelete(lead)}
+              title="حذف"
+              className={cn(
+                'rounded-lg p-1.5 text-gray-300 transition-all hover:bg-red-50 hover:text-red-500 active:scale-95',
+                isActing && 'pointer-events-none opacity-40'
+              )}
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+        </td>
+      )
+    default:
+      return null
+  }
+}
+
+function defaultColumnVisibility(staffRole: StaffRole): Record<TableColumnId, boolean> {
+  const out = {} as Record<TableColumnId, boolean>
+  for (const col of LEADS_TABLE_COLUMNS) {
+    if (col.adminOnly && staffRole !== 'admin') continue
+    out[col.id] = col.defaultVisible
+  }
+  return out
+}
+
+function loadColumnVisibility(staffRole: StaffRole): Record<TableColumnId, boolean> {
+  const defaults = defaultColumnVisibility(staffRole)
+  if (typeof window === 'undefined') return defaults
+  try {
+    const raw = localStorage.getItem(LEADS_TABLE_COLUMNS_KEY)
+    if (!raw) return defaults
+    const parsed = JSON.parse(raw) as Partial<Record<TableColumnId, boolean>>
+    const merged = { ...defaults }
+    for (const col of LEADS_TABLE_COLUMNS) {
+      if (col.adminOnly && staffRole !== 'admin') continue
+      if (typeof parsed[col.id] === 'boolean') merged[col.id] = parsed[col.id]!
+    }
+    if (!merged.client) merged.client = true
+    return merged
+  } catch {
+    return defaults
+  }
+}
+
 /* ── Badge helpers ── */
-function badgeQual(q: QualificationStatus) {
+function badgeQual(q: ResolvedQualification) {
   const cls =
     q === 'qualified'
       ? 'bg-emerald-100 text-emerald-800 ring-emerald-500/25'
-      : q === 'unqualified'
-        ? 'bg-rose-100 text-rose-800 ring-rose-400/40'
-        : 'bg-amber-100 text-amber-900 ring-amber-500/35'
+      : 'bg-rose-100 text-rose-800 ring-rose-400/40'
   return cn('rounded-full px-2.5 py-0.5 text-[11px] font-semibold ring-1 ring-inset', cls)
 }
 
@@ -176,7 +492,7 @@ function exportCsv(rows: LeadRow[]) {
     yn(l.has_service_hold),
     l.housing_support_raw ?? '',
     l.visit_source_raw ?? '',
-    QUALIFICATION_LABELS[l.qualification_status],
+    QUALIFICATION_LABELS[qualOf(l)],
     SALES_STATUS_LABELS[l.sales_workflow_status],
     l.funnel_submitted_at ?? l.created_at,
   ]
@@ -246,7 +562,7 @@ export default function LeadsWorkbench({
   /* ── Detail dialog ── */
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState<LeadRow | null>(null)
-  const [qual, setQual] = useState<QualificationStatus>('pending')
+  const [qual, setQual] = useState<ActiveQualificationStatus>('qualified')
   const [salesStat, setSalesStat] = useState<SalesWorkflowStatus>('new')
   const [assign, setAssign] = useState('')
   const [notes, setNotes] = useState('')
@@ -255,6 +571,40 @@ export default function LeadsWorkbench({
   /* ── Inline actions ── */
   const [actionPending, setActionPending] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<LeadRow | null>(null)
+
+  /* ── Table column visibility ── */
+  const [columnVisibility, setColumnVisibility] = useState<Record<TableColumnId, boolean>>(() =>
+    defaultColumnVisibility(staffRole)
+  )
+
+  useEffect(() => {
+    setColumnVisibility(loadColumnVisibility(staffRole))
+  }, [staffRole])
+
+  const isColVisible = (id: TableColumnId) => Boolean(columnVisibility[id])
+
+  const visibleTableColumns = LEADS_TABLE_COLUMNS.filter(
+    (c) => (!c.adminOnly || staffRole === 'admin') && isColVisible(c.id)
+  )
+  const visibleColumnCount = visibleTableColumns.length
+
+  function setColumnVisible(id: TableColumnId, visible: boolean) {
+    const col = LEADS_TABLE_COLUMNS.find((c) => c.id === id)
+    if (col?.required && !visible) return
+    setColumnVisibility((prev) => {
+      const next = { ...prev, [id]: visible }
+      const shown = LEADS_TABLE_COLUMNS.filter(
+        (c) => (!c.adminOnly || staffRole === 'admin') && next[c.id]
+      ).length
+      if (shown === 0) return prev
+      localStorage.setItem(LEADS_TABLE_COLUMNS_KEY, JSON.stringify(next))
+      return next
+    })
+  }
+
+  const tableColumnsForMenu = LEADS_TABLE_COLUMNS.filter(
+    (c) => !c.adminOnly || staffRole === 'admin'
+  )
 
   /* ── Debounced search ── */
   const [searchInput, setSearchInput] = useState(query)
@@ -318,7 +668,7 @@ export default function LeadsWorkbench({
   /* ── Open lead detail ── */
   function openLead(l: LeadRow) {
     setActive(l)
-    setQual(l.qualification_status)
+    setQual(qualOf(l))
     setSalesStat(l.sales_workflow_status)
     setAssign(l.assigned_to ?? '')
     setNotes(l.internal_notes ?? '')
@@ -405,12 +755,6 @@ export default function LeadsWorkbench({
             value: stats?.total ?? total,
             cls: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
             href: buildHref({ q: query, sales: salesFilter }),
-          },
-          {
-            label: 'قيد التقييم',
-            value: byQ.pending ?? '—',
-            cls: 'bg-amber-100 text-amber-700 hover:bg-amber-200',
-            href: buildHref({ q: query, qualification: 'pending', sales: salesFilter }),
           },
           {
             label: 'مؤهَّل',
@@ -522,16 +866,47 @@ export default function LeadsWorkbench({
             </button>
           )}
 
-          {/* Export */}
-          <button
-            onClick={() => exportCsv(rows)}
-            disabled={rows.length === 0}
-            title="تصدير CSV"
-            className="ms-auto flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-40"
-          >
-            <Download size={13} />
-            تصدير
-          </button>
+          <div className="ms-auto flex items-center gap-2">
+            {/* Column visibility */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-50">
+                <Columns3 size={13} />
+                الأعمدة
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="max-h-[min(70vh,22rem)] !w-[200px] overflow-y-auto py-1.5"
+              >
+                <DropdownMenuGroup className="w-full">
+                  <DropdownMenuLabel className="px-2 text-[11px]">إظهار الأعمدة</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {tableColumnsForMenu.map((col) => (
+                    <DropdownMenuCheckboxItem
+                      key={col.id}
+                      checked={isColVisible(col.id)}
+                      disabled={col.required}
+                      className="py-2 ps-2 pe-3 whitespace-nowrap"
+                      onCheckedChange={(checked) => setColumnVisible(col.id, checked === true)}
+                    >
+                      {col.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Export */}
+            <button
+              type="button"
+              onClick={() => exportCsv(rows)}
+              disabled={rows.length === 0}
+              title="تصدير CSV"
+              className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-40"
+            >
+              <Download size={13} />
+              تصدير
+            </button>
+          </div>
         </div>
 
         {/* Desktop table */}
@@ -539,46 +914,21 @@ export default function LeadsWorkbench({
           <table className="w-full border-collapse text-right text-[13px]">
             <thead className="border-b border-black/[0.05] bg-gray-50/80 text-[11px] font-semibold tracking-wide text-gray-400 uppercase">
               <tr>
-                <th className="px-5 py-3">
-                  <Link
-                    href={sortHref('first_name')}
-                    className="flex items-center gap-0.5 hover:text-gray-600"
-                  >
-                    العميل <SortIcon col="first_name" sort={sort} dir={dir} />
-                  </Link>
-                </th>
-                <th className="px-5 py-3">الجوال</th>
-                <th className="px-5 py-3">
-                  <Link
-                    href={sortHref('city')}
-                    className="flex items-center gap-0.5 hover:text-gray-600"
-                  >
-                    المدينة <SortIcon col="city" sort={sort} dir={dir} />
-                  </Link>
-                </th>
-                <th className="px-5 py-3">
-                  <Link
-                    href={sortHref('created_at')}
-                    className="flex items-center gap-0.5 hover:text-gray-600"
-                  >
-                    التاريخ <SortIcon col="created_at" sort={sort} dir={dir} />
-                  </Link>
-                </th>
-                <th className="px-5 py-3">
-                  <Link
-                    href={sortHref('qualification_status')}
-                    className="flex items-center gap-0.5 hover:text-gray-600"
-                  >
-                    الحالة <SortIcon col="qualification_status" sort={sort} dir={dir} />
-                  </Link>
-                </th>
-                {staffRole === 'admin' && <th className="px-5 py-3 text-center">الإجراءات</th>}
+                {visibleTableColumns.map((col) => (
+                  <LeadTableHeaderCell
+                    key={col.id}
+                    col={col}
+                    sort={sort}
+                    dir={dir}
+                    sortHref={sortHref}
+                  />
+                ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-black/[0.04]">
               {rows.map((lead) => {
                 const isActing = actionPending?.startsWith(lead.id)
-                const name = `${lead.first_name ?? ''} ${lead.family_name ?? ''}`.trim()
+                const q = qualOf(lead)
                 const date = lead.funnel_submitted_at ?? lead.created_at
                 return (
                   <tr
@@ -588,124 +938,32 @@ export default function LeadsWorkbench({
                       'group cursor-pointer transition-colors',
                       lead.next_followup_at && lead.next_followup_at < new Date().toISOString()
                         ? 'bg-amber-50/60 hover:bg-amber-50'
-                        : lead.qualification_status === 'qualified'
+                        : q === 'qualified'
                           ? 'bg-emerald-50/50 hover:bg-emerald-50'
-                          : lead.qualification_status === 'unqualified'
-                            ? 'bg-rose-50/40 hover:bg-rose-50/80'
-                            : 'bg-white hover:bg-gray-50'
+                          : 'bg-rose-50/40 hover:bg-rose-50/80'
                     )}
                   >
-                    <td className="px-5 py-3.5">
-                      <p className="text-ink group-hover:text-brand flex items-center gap-1.5 leading-tight font-semibold transition-colors">
-                        {name || '—'}
-                        {lead.next_followup_at &&
-                          lead.next_followup_at < new Date().toISOString() && (
-                            <span title="متابعة متأخرة" className="shrink-0 text-amber-500">
-                              <Clock size={11} />
-                            </span>
-                          )}
-                      </p>
-                      {lead.visit_source_raw && (
-                        <p className="mt-0.5 text-[11px] text-gray-400">{lead.visit_source_raw}</p>
-                      )}
-                    </td>
-                    <td
-                      className="px-5 py-3.5 font-mono text-[12px] text-gray-600"
-                      dir="ltr"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <span>{lead.phone_number ?? lead.phone_normalized ?? '—'}</span>
-                        {(lead.phone_number ?? lead.phone_normalized) && (
-                          <>
-                            <button
-                              onClick={() =>
-                                copyToClipboard(lead.phone_number ?? lead.phone_normalized ?? '')
-                              }
-                              title="نسخ"
-                              className="text-gray-300 transition-colors hover:text-gray-600"
-                            >
-                              <Copy size={11} />
-                            </button>
-                            {waHref(lead.phone_number ?? lead.phone_normalized) && (
-                              <a
-                                href={waHref(lead.phone_number ?? lead.phone_normalized)!}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title="واتساب"
-                                className="text-gray-300 transition-colors hover:text-emerald-500"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <MessageCircle size={12} />
-                              </a>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-5 py-3.5 text-gray-600">{lead.city ?? '—'}</td>
-                    <td className="px-5 py-3.5 font-mono text-[11px] whitespace-nowrap text-gray-400">
-                      {date ? formatWesternDateOnly(date) : '—'}
-                    </td>
-                    <td className="px-5 py-3.5 whitespace-nowrap">
-                      <span className={badgeQual(lead.qualification_status)}>
-                        {QUALIFICATION_LABELS[lead.qualification_status]}
-                      </span>
-                    </td>
-                    {staffRole === 'admin' && (
-                      <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-center gap-1">
-                          <button
-                            type="button"
-                            disabled={isActing || lead.qualification_status === 'qualified'}
-                            onClick={() => handleQuickQualify(lead, 'qualified')}
-                            title="قبول"
-                            className={cn(
-                              'rounded-lg p-1.5 transition-all',
-                              lead.qualification_status === 'qualified'
-                                ? 'cursor-default text-emerald-400'
-                                : 'text-gray-300 hover:bg-emerald-50 hover:text-emerald-600 active:scale-95',
-                              isActing && 'pointer-events-none opacity-40'
-                            )}
-                          >
-                            <CheckCircle2 size={18} />
-                          </button>
-                          <button
-                            type="button"
-                            disabled={isActing || lead.qualification_status === 'unqualified'}
-                            onClick={() => handleQuickQualify(lead, 'unqualified')}
-                            title="رفض"
-                            className={cn(
-                              'rounded-lg p-1.5 transition-all',
-                              lead.qualification_status === 'unqualified'
-                                ? 'cursor-default text-rose-400'
-                                : 'text-gray-300 hover:bg-rose-50 hover:text-rose-500 active:scale-95',
-                              isActing && 'pointer-events-none opacity-40'
-                            )}
-                          >
-                            <XCircle size={18} />
-                          </button>
-                          <button
-                            type="button"
-                            disabled={isActing}
-                            onClick={() => setDeleteConfirm(lead)}
-                            title="حذف"
-                            className={cn(
-                              'rounded-lg p-1.5 text-gray-300 transition-all hover:bg-red-50 hover:text-red-500 active:scale-95',
-                              isActing && 'pointer-events-none opacity-40'
-                            )}
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    )}
+                    {visibleTableColumns.map((col) => (
+                      <LeadTableBodyCell
+                        key={col.id}
+                        col={col}
+                        lead={lead}
+                        q={q}
+                        dateStr={date}
+                        isActing={!!isActing}
+                        onQuickQualify={handleQuickQualify}
+                        onDelete={setDeleteConfirm}
+                      />
+                    ))}
                   </tr>
                 )
               })}
               {!rows.length && (
                 <tr>
-                  <td colSpan={6} className="py-16 text-center text-sm text-gray-400">
+                  <td
+                    colSpan={Math.max(visibleColumnCount, 1)}
+                    className="py-16 text-center text-sm text-gray-400"
+                  >
                     لا توجد نتائج — جرّب تغيير الفلتر أو مسح البحث.
                   </td>
                 </tr>
@@ -721,6 +979,7 @@ export default function LeadsWorkbench({
           )}
           {rows.map((lead) => {
             const isActing = actionPending?.startsWith(lead.id)
+            const q = qualOf(lead)
             const name = `${lead.first_name ?? ''} ${lead.family_name ?? ''}`.trim()
             return (
               <div
@@ -728,11 +987,7 @@ export default function LeadsWorkbench({
                 onClick={() => openLead(lead)}
                 className={cn(
                   'flex cursor-pointer items-center gap-3 px-4 py-3.5 transition-colors',
-                  lead.qualification_status === 'qualified'
-                    ? 'bg-emerald-50/50 hover:bg-emerald-50'
-                    : lead.qualification_status === 'unqualified'
-                      ? 'bg-rose-50/40'
-                      : 'bg-white hover:bg-gray-50'
+                  q === 'qualified' ? 'bg-emerald-50/50 hover:bg-emerald-50' : 'bg-rose-50/40'
                 )}
               >
                 {/* Avatar initial */}
@@ -741,22 +996,37 @@ export default function LeadsWorkbench({
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-ink truncate font-semibold">{name || '—'}</p>
-                  <p className="mt-0.5 font-mono text-[12px] text-gray-400" dir="ltr">
-                    {lead.phone_number ?? lead.phone_normalized ?? '—'}
+                  <p className="mt-0.5 font-mono text-[12px]" dir="ltr">
+                    {(() => {
+                      const phone = lead.phone_number ?? lead.phone_normalized
+                      const wa = phone ? waHref(phone) : null
+                      if (!phone) return <span className="text-gray-400">—</span>
+                      if (!wa) return <span className="text-gray-400">{phone}</span>
+                      return (
+                        <a
+                          href={wa}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="فتح محادثة واتساب"
+                          className="text-emerald-700 underline decoration-emerald-500/40 underline-offset-2"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {phone}
+                        </a>
+                      )
+                    })()}
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-1.5">
-                  <span className={badgeQual(lead.qualification_status)}>
-                    {QUALIFICATION_LABELS[lead.qualification_status]}
-                  </span>
+                  <span className={badgeQual(q)}>{QUALIFICATION_LABELS[q]}</span>
                   {staffRole === 'admin' && (
                     <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                       <button
-                        disabled={isActing || lead.qualification_status === 'qualified'}
+                        disabled={isActing || q === 'qualified'}
                         onClick={() => handleQuickQualify(lead, 'qualified')}
                         className={cn(
                           'rounded p-1 transition-all',
-                          lead.qualification_status === 'qualified'
+                          q === 'qualified'
                             ? 'text-emerald-400'
                             : 'text-gray-300 hover:text-emerald-600',
                           isActing && 'opacity-40'
@@ -765,11 +1035,11 @@ export default function LeadsWorkbench({
                         <CheckCircle2 size={16} />
                       </button>
                       <button
-                        disabled={isActing || lead.qualification_status === 'unqualified'}
+                        disabled={isActing || q === 'unqualified'}
                         onClick={() => handleQuickQualify(lead, 'unqualified')}
                         className={cn(
                           'rounded p-1 transition-all',
-                          lead.qualification_status === 'unqualified'
+                          q === 'unqualified'
                             ? 'text-rose-400'
                             : 'text-gray-300 hover:text-rose-500',
                           isActing && 'opacity-40'
@@ -906,9 +1176,10 @@ export default function LeadsWorkbench({
                           target="_blank"
                           rel="noopener noreferrer"
                           title="فتح واتساب"
-                          className="text-gray-400 transition-colors hover:text-emerald-500"
+                          aria-label="فتح واتساب"
+                          className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#25D366] text-white hover:bg-[#20bd5a]"
                         >
-                          <MessageCircle size={12} />
+                          <WhatsAppIcon size={12} />
                         </a>
                       )}
                     </span>
@@ -919,8 +1190,8 @@ export default function LeadsWorkbench({
                     </span>
                   )}
                   {active && (
-                    <span className={badgeQual(active.qualification_status)}>
-                      {QUALIFICATION_LABELS[active.qualification_status]}
+                    <span className={badgeQual(qualOf(active))}>
+                      {QUALIFICATION_LABELS[qualOf(active)]}
                     </span>
                   )}
                 </span>
@@ -977,7 +1248,7 @@ export default function LeadsWorkbench({
                     <Select
                       value={qual}
                       disabled={staffRole !== 'admin'}
-                      onValueChange={(v) => setQual(v as QualificationStatus)}
+                      onValueChange={(v) => setQual(v as ActiveQualificationStatus)}
                     >
                       <SelectTrigger dir="rtl">
                         <SelectValue />
@@ -1086,7 +1357,7 @@ export default function LeadsWorkbench({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-100"
               >
-                <MessageCircle size={14} />
+                <WhatsAppIcon size={14} />
                 واتساب
               </a>
             )}

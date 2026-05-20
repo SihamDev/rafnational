@@ -7,9 +7,7 @@ export async function proxy(request: NextRequest) {
 
   if (!supabaseUrl.startsWith('http')) {
     if (pathname === '/') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/raf-national-landing.html'
-      return NextResponse.rewrite(url)
+      return NextResponse.redirect(new URL('/login', request.url))
     }
     if (pathname === '/funnel1' || pathname === '/funnel1/') {
       const url = request.nextUrl.clone()
@@ -23,9 +21,7 @@ export async function proxy(request: NextRequest) {
     return await updateSession(request)
   } catch {
     if (pathname === '/') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/raf-national-landing.html'
-      return NextResponse.rewrite(url)
+      return NextResponse.redirect(new URL('/login', request.url))
     }
     if (pathname === '/funnel1' || pathname === '/funnel1/') {
       const url = request.nextUrl.clone()

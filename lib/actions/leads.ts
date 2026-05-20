@@ -52,7 +52,8 @@ export async function adminUpdateLead(
     patch.next_followup_at = input.next_followup_at
   }
 
-  if (typeof input.assigned_to !== 'undefined') {    if (input.assigned_to) {
+  if (typeof input.assigned_to !== 'undefined') {
+    if (input.assigned_to) {
       const { data: pr, error: prErr } = await staff.supabase
         .from('profiles')
         .select('id,role')
@@ -83,10 +84,7 @@ export async function adminUpdateLead(
 }
 
 /** One-click qualify / unqualify — admin only */
-export async function quickQualifyLead(
-  leadId: string,
-  status: 'qualified' | 'unqualified' | 'pending',
-) {
+export async function quickQualifyLead(leadId: string, status: 'qualified' | 'unqualified') {
   const staff = await getStaffUser()
   if (!staff) return { error: 'غير مصرح' }
   if (staff.role !== 'admin') return { error: 'ليست صلاحية الإدارة' }
@@ -107,10 +105,7 @@ export async function deleteLead(leadId: string) {
   if (!staff) return { error: 'غير مصرح' }
   if (staff.role !== 'admin') return { error: 'ليست صلاحية الإدارة' }
 
-  const { error } = await staff.supabase
-    .from('leads')
-    .delete()
-    .eq('id', leadId)
+  const { error } = await staff.supabase.from('leads').delete().eq('id', leadId)
 
   if (error) return { error: error.message }
   revalidatePath('/admin/leads')

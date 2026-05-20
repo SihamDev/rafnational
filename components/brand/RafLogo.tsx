@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { RAF_BRAND_NAME, RAF_BRAND_TAGLINE, RAF_LOGO_ALT, RAF_LOGO_SRC } from '@/lib/brand'
 import { cn } from '@/lib/utils'
 
@@ -6,6 +7,8 @@ type RafLogoProps = {
   priority?: boolean
   width?: number
   height?: number
+  /** Override logo path (e.g. white login wordmark PNG) */
+  src?: string
   /** White silhouette on dark backgrounds (sidebar, etc.) */
   tone?: 'default' | 'onDark'
 }
@@ -16,12 +19,13 @@ export function RafLogo({
   priority = false,
   width = 200,
   height = 120,
+  src = RAF_LOGO_SRC,
   tone = 'default',
 }: RafLogoProps) {
   return (
     // eslint-disable-next-line @next/next/no-img-element -- brand PNG with intrinsic aspect ratio
     <img
-      src={RAF_LOGO_SRC}
+      src={src}
       alt={RAF_LOGO_ALT}
       width={width}
       height={height}
@@ -39,6 +43,7 @@ export function RafLogo({
 type RafBrandProps = {
   className?: string
   logoClassName?: string
+  logoSrc?: string
   logoTone?: RafLogoProps['tone']
   /** Optional white/card shell behind the logo (e.g. admin sidebar) */
   logoShellClassName?: string
@@ -49,18 +54,22 @@ type RafBrandProps = {
   /** Wordmark on dark (white title) or light (navy title) backgrounds */
   wordmarkTheme?: 'light' | 'dark'
   priority?: boolean
+  /** When set, the logo is clickable and navigates here (e.g. funnel landing) */
+  logoHref?: string
 }
 
 /** Logo with optional wordmark — sidebar, login, headers */
 export function RafBrand({
   className,
   logoClassName = 'max-h-10 md:max-h-11',
+  logoSrc,
   logoTone = 'default',
   logoShellClassName,
   taglineClassName,
   showWordmark = true,
   wordmarkTheme = 'light',
   priority = false,
+  logoHref,
 }: RafBrandProps) {
   const titleCls =
     wordmarkTheme === 'light'
@@ -70,7 +79,21 @@ export function RafBrand({
   const defaultTagline =
     'text-brand font-sans text-[9px] font-semibold tracking-[0.22em] uppercase opacity-80'
 
-  const logo = <RafLogo className={logoClassName} priority={priority} tone={logoTone} />
+  const logoImg = (
+    <RafLogo className={logoClassName} priority={priority} src={logoSrc} tone={logoTone} />
+  )
+
+  const logo = logoHref ? (
+    <Link
+      href={logoHref}
+      className="focus-visible:ring-brand/50 inline-flex shrink-0 transition-opacity hover:opacity-90 focus-visible:rounded-lg focus-visible:ring-2 focus-visible:outline-none"
+      aria-label="الانتقال إلى صفحة الهبوط"
+    >
+      {logoImg}
+    </Link>
+  ) : (
+    logoImg
+  )
 
   return (
     <div className={cn('flex items-center gap-3', className)}>

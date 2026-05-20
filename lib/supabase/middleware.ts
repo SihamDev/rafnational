@@ -44,18 +44,12 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin', request.url))
   }
 
-  // Home: guests see the static landing (URL stays `/`); staff go straight to admin
+  // Home: guests → login, staff → admin
   if (pathname === '/') {
     if (user) {
       return NextResponse.redirect(new URL('/admin', request.url))
     }
-    const url = request.nextUrl.clone()
-    url.pathname = '/raf-national-landing.html'
-    const rewriteRes = NextResponse.rewrite(url)
-    supabaseResponse.cookies.getAll().forEach(({ name, value }) => {
-      rewriteRes.cookies.set(name, value)
-    })
-    return rewriteRes
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
   // Funnel landing — static page at /funnel1 (URL stays /funnel1)

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { RafBrand, RafLogo } from '@/components/brand/RafLogo'
+import { RAF_FUNNEL_URL, RAF_LOGO_LOGIN_SRC } from '@/lib/brand'
 import { signIn, forgotPassword } from '@/lib/actions/auth'
 import { loginSchema, forgotPasswordSchema } from '@/lib/validations/auth'
 import type { LoginInput, ForgotPasswordInput } from '@/lib/validations/auth'
@@ -23,7 +24,7 @@ import type { LoginInput, ForgotPasswordInput } from '@/lib/validations/auth'
 type Panel = 'login' | 'forgot'
 
 const fieldCls =
-  'w-full rounded-2xl border border-white/[0.1] bg-white/[0.05] py-3.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] placeholder:text-navy-400 backdrop-blur-sm transition-[border-color,box-shadow] duration-200 focus:border-brand focus:outline-none focus:ring-[3px] focus:ring-brand/20'
+  'w-full rounded-2xl border border-white/[0.1] bg-white/[0.05] py-3.5 text-sm text-start text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] placeholder:text-navy-400 backdrop-blur-sm transition-[border-color,box-shadow] duration-200 focus:border-brand focus:outline-none focus:ring-[3px] focus:ring-brand/20'
 
 const cardShellCls =
   'rounded-[2rem] border border-white/[0.12] bg-gradient-to-br from-white/[0.09] via-navy-900/55 to-navy-950/80 p-[1px] shadow-[0_32px_100px_-24px_rgba(0,0,0,0.75)] backdrop-blur-2xl'
@@ -199,8 +200,9 @@ function LoginPageInner() {
         {/* Content */}
         <header className="relative z-[1] flex flex-col gap-12">
           <RafBrand
-            logoClassName="max-h-[72px] md:max-h-20"
-            logoShellClassName="rounded-2xl bg-white p-3 shadow-soft ring-1 ring-black/10"
+            logoSrc={RAF_LOGO_LOGIN_SRC}
+            logoHref={RAF_FUNNEL_URL}
+            logoClassName="max-h-[88px] w-auto md:max-h-24"
             wordmarkTheme="light"
             priority
             showWordmark={false}
@@ -274,7 +276,9 @@ function LoginPageInner() {
           {/* Mobile brand */}
           <div className="mb-10 flex items-center justify-center md:hidden">
             <RafBrand
-              logoClassName="max-h-12"
+              logoSrc={RAF_LOGO_LOGIN_SRC}
+              logoHref={RAF_FUNNEL_URL}
+              logoClassName="max-h-14 w-auto"
               wordmarkTheme="light"
               className="justify-center"
               showWordmark={false}
@@ -317,7 +321,6 @@ function LoginPageInner() {
                       <input
                         {...loginForm.register('email')}
                         type="email"
-                        dir="ltr"
                         placeholder="name@example.com"
                         className={`${fieldCls} ps-4 pe-11`}
                       />
@@ -348,7 +351,6 @@ function LoginPageInner() {
                       <input
                         {...loginForm.register('password')}
                         type={showPw ? 'text' : 'password'}
-                        dir="ltr"
                         placeholder="••••••••"
                         className={`${fieldCls} ps-10 pe-11`}
                       />
@@ -435,7 +437,6 @@ function LoginPageInner() {
                       <input
                         {...forgotForm.register('email')}
                         type="email"
-                        dir="ltr"
                         placeholder="name@example.com"
                         className={`${fieldCls} ps-4 pe-11`}
                       />

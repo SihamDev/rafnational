@@ -8,6 +8,7 @@ import {
 import { createServiceRoleClient } from '@/lib/supabase/service-role'
 import { mapInboundFunnelJson } from '@/lib/leads/map-funnel-payload'
 import { normalizeLeadPhoneJs } from '@/lib/leads/normalize-phone'
+import { autoQualifyFromFunnelBody } from '@/lib/leads/auto-qualify'
 import { funnelLeadSubmitSchema } from '@/lib/validations/leads'
 
 function funnelMaxPerMinute(): number {
@@ -77,26 +78,6 @@ function buildFunnelTimestamp(body: {
   }
 
   return new Date().toISOString()
-}
-
-/* ──────────────────────────────────────────────────────────────
-   Auto-qualification rules — matches ClickFunnels/n8n flow logic
-   ────────────────────────────────────────────────────────────── */
-function autoQualify(body: Record<string, unknown>): 'qualified' | 'unqualified' {
-  const salary = String(body.salary_range_raw ?? body.salary ?? '').trim()
-  const hasMortgage = String(body.has_existing_mortgage ?? body.hasMortgage ?? '').trim()
-  const hasServiceHold = String(body.has_service_hold ?? body.stopServices ?? '').trim()
-
-  // Rule 1: salary 5,000–10,000 → unqualified
-  if (salary === '5000-7000' || salary === '8000-10000') return 'unqualified'
-
-  // Rule 2: active service hold → unqualified
-  if (hasServiceHold === 'نعم') return 'unqualified'
-
-  // Rule 3: existing mortgage → unqualified
-  if (hasMortgage === 'نعم') return 'unqualified'
-
-  return 'qualified'
 }
 
 export async function OPTIONS(request: NextRequest) {
@@ -207,7 +188,7 @@ export async function POST(request: NextRequest) {
     const submittedAt = submittedAtFromClient ?? buildFunnelTimestamp(b)
 
     /* ── Auto-qualification based on salary & obligations ── */
-    const autoQual = autoQualify(body)
+    const autoQual = autoQualifyFromFunnelBody(body)
 
     const { data: row, error } = await supabase
       .from('leads')

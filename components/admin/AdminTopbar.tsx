@@ -1,6 +1,7 @@
 import { getStaffUser } from '@/lib/supabase/server'
 import { Zap } from 'lucide-react'
 import { RafLogo } from '@/components/brand/RafLogo'
+import { RAF_LOGO_LOGIN_SRC } from '@/lib/brand'
 import Link from 'next/link'
 import NotificationsBell from './NotificationsBell'
 
@@ -61,8 +62,13 @@ export default async function AdminTopbar({ title, breadcrumb, adminEmail }: Adm
           href={staff?.role === 'admin' ? '/admin/settings' : '/admin/leads'}
           className="group shadow-soft hover:border-gold/35 hover:shadow-soft-lg flex items-center gap-2.5 rounded-2xl border border-black/[0.06] bg-white px-3 py-2 transition-all"
         >
-          <div className="bg-honey-pale ring-gold/20 flex h-7 w-9 items-center justify-center rounded-xl px-0.5 ring-1">
-            <RafLogo className="max-h-5 w-full" width={36} height={20} />
+          <div className="ring-gold/20 flex h-8 min-w-[2.75rem] items-center justify-center rounded-xl bg-black/90 px-1 ring-1">
+            <RafLogo
+              src={RAF_LOGO_LOGIN_SRC}
+              className="max-h-6 w-auto object-contain"
+              width={44}
+              height={24}
+            />
           </div>
           <div className="hidden sm:block">
             <p className="text-ink text-[11px] leading-tight font-semibold">{email}</p>

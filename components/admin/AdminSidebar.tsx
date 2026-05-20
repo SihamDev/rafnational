@@ -17,7 +17,8 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { signOut } from '@/lib/actions/auth'
-import { RafLogo } from '@/components/brand/RafLogo'
+import { RafBrand } from '@/components/brand/RafLogo'
+import { RAF_FUNNEL_URL, RAF_LOGO_LOGIN_SRC } from '@/lib/brand'
 import type { StaffRole } from '@/types/leads'
 
 const CRM_LINK = {
@@ -102,19 +103,16 @@ export default function AdminSidebar({
           collapsed ? 'justify-center p-4' : 'px-4 py-5'
         )}
       >
-        <div
-          className={cn(
-            'flex items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-black/10',
-            collapsed ? 'p-2' : 'p-2.5'
+        <RafBrand
+          logoSrc={RAF_LOGO_LOGIN_SRC}
+          logoHref={RAF_FUNNEL_URL}
+          logoClassName={cn(
+            'h-auto w-auto object-contain',
+            collapsed ? 'max-h-10 max-w-[52px]' : 'max-h-[88px] w-auto md:max-h-24'
           )}
-        >
-          <RafLogo
-            className={cn(
-              'w-auto object-contain',
-              collapsed ? 'max-h-8 max-w-[120px]' : 'max-h-10 max-w-[160px]'
-            )}
-          />
-        </div>
+          wordmarkTheme="light"
+          showWordmark={false}
+        />
       </div>
 
       {/* Nav */}

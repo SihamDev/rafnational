@@ -37,6 +37,19 @@ const SHEET_MAIN  = optStr('--sheet-sheet1', '')
 const SHEET_QUAL  = optStr('--qualified',    '')
 const SHEET_UNQUAL = optStr('--unqualified', '')
 
+/** Same rules as funnel / CRM auto-qualify */
+function autoQualifyRow(row) {
+  const salary = String(row.salary_range_raw ?? '').trim()
+  if (salary === '5000-7000' || salary === '8000-10000') return 'unqualified'
+  const hold = row.has_service_hold
+  if (hold === true || hold === 'نعم' || String(hold).toLowerCase() === 'yes') return 'unqualified'
+  const mortgage = row.has_existing_mortgage
+  if (mortgage === true || mortgage === 'نعم' || String(mortgage).toLowerCase() === 'yes') {
+    return 'unqualified'
+  }
+  return 'qualified'
+}
+
 /** @type {unknown[]} */
 const ART_UNMATCHED = []
 /** @type {unknown[]} */
@@ -359,7 +372,7 @@ async function phase1(book) {
   for (let i = 0; i < rawObjs.length; i++) {
     const { row, err } = coerceRow(rawObjs[i], 'sheet1', i + 2)
     if (err) { parseErrors.push(err); continue }
-    row.qualification_status  = 'pending'
+    row.qualification_status  = autoQualifyRow(row)
     row.sales_workflow_status = 'new'
     toInsert.push(row)
   }

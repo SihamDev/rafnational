@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { assertAdminOnly } from '@/lib/auth/assert-admin-only'
 import AdminTopbar from '@/components/admin/AdminTopbar'
-import { TrendingUp, Users, CheckCircle, Clock, MapPin, Megaphone } from 'lucide-react'
+import { TrendingUp, Users, CheckCircle, MapPin, Megaphone } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatWesternInt } from '@/lib/format-western'
 
@@ -26,7 +26,6 @@ export default async function ReportsPage() {
     { count: total },
     { count: qualifiedCount },
     { count: unqualifiedCount },
-    { count: pendingCount },
     { data: sourceRows },
     { data: cityRows },
     { data: salaryRows },
@@ -41,10 +40,6 @@ export default async function ReportsPage() {
       .from('leads')
       .select('*', { count: 'exact', head: true })
       .eq('qualification_status', 'unqualified'),
-    supabase
-      .from('leads')
-      .select('*', { count: 'exact', head: true })
-      .eq('qualification_status', 'pending'),
     supabase.from('leads').select('visit_source_raw'),
     supabase.from('leads').select('city'),
     supabase.from('leads').select('salary_range_raw'),
@@ -54,7 +49,6 @@ export default async function ReportsPage() {
   const totalN = total ?? 0
   const qualN = qualifiedCount ?? 0
   const unqualN = unqualifiedCount ?? 0
-  const pendN = pendingCount ?? 0
   const qualRate = totalN ? Math.round((qualN / totalN) * 100) : 0
 
   // Source breakdown
@@ -101,12 +95,11 @@ export default async function ReportsPage() {
       <AdminTopbar title="التقارير والأداء" breadcrumb="التقارير" />
       <main className="flex-1 space-y-5 p-5 md:p-6" dir="rtl">
         {/* KPI row */}
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
             { label: 'إجمالي العملاء', value: totalN, icon: Users, color: 'text-brand' },
             { label: 'مؤهَّلون', value: qualN, icon: CheckCircle, color: 'text-emerald-500' },
             { label: 'غير مؤهَّلين', value: unqualN, icon: TrendingUp, color: 'text-red-500' },
-            { label: 'قيد التقييم', value: pendN, icon: Clock, color: 'text-amber-500' },
             {
               label: 'معدل التأهيل',
               value: `${qualRate}%`,

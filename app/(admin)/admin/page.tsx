@@ -44,12 +44,10 @@ const FUNNEL_STAGES = [
 
 /* ── Qual status styles ─────────────────────────────────────────────── */
 const QUAL_CLS: Record<string, { badge: string; dot: string }> = {
-  pending: { badge: 'bg-amber-100 text-amber-700', dot: 'bg-amber-400' },
   qualified: { badge: 'bg-grass/10 text-grass-dark', dot: 'bg-grass' },
   unqualified: { badge: 'bg-red-100 text-red-600', dot: 'bg-red-400' },
 }
 const QUAL_LABELS: Record<string, string> = {
-  pending: 'قيد التقييم',
   qualified: 'مؤهَّل',
   unqualified: 'غير مؤهل',
 }
@@ -95,7 +93,7 @@ export default async function AdminDashboard() {
 
   const totalN = stats.total ?? 0
   const qualN = stats.qualified ?? 0
-  const pendingN = stats.pending ?? 0
+  const unqualN = stats.unqualified ?? 0
   const todayN = stats.today_count ?? 0
 
   const wfMap = stats.by_sales ?? {}
@@ -169,11 +167,11 @@ export default async function AdminDashboard() {
             href="/admin/leads?sales=new"
           />
           <StatCard
-            label="قيد التقييم"
-            value={formatWesternInt(pendingN)}
+            label="غير مؤهَّلين"
+            value={formatWesternInt(unqualN)}
             icon={Clock}
-            tone="pending"
-            href="/admin/leads?qualification=pending"
+            tone="rejected"
+            href="/admin/leads?qualification=unqualified"
           />
           <StatCard
             label="معدل التأهيل"
@@ -292,8 +290,12 @@ export default async function AdminDashboard() {
             ) : (
               <div className="divide-y divide-gray-50/80">
                 {recentLeads.map((lead) => {
-                  const q = lead.qualification_status ?? 'pending'
-                  const cls = QUAL_CLS[q] ?? QUAL_CLS.pending
+                  const q =
+                    lead.qualification_status === 'qualified' ||
+                    lead.qualification_status === 'unqualified'
+                      ? lead.qualification_status
+                      : 'qualified'
+                  const cls = QUAL_CLS[q] ?? QUAL_CLS.unqualified
                   const src = normalizeSource(lead.visit_source_raw)
                   const name = [lead.first_name, lead.family_name].filter(Boolean).join(' ') || '—'
                   const date = formatWesternShortDateTime(lead.created_at)

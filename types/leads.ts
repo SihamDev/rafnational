@@ -46,10 +46,14 @@ export interface LeadRow {
 }
 
 export const QUALIFICATION_LABELS: Record<QualificationStatus, string> = {
-  pending: 'قيد التقييم',
+  pending: 'غير مؤهل',
   qualified: 'مؤهل',
   unqualified: 'غير مؤهل',
 }
+
+/** UI / filters — only final states (no manual pending) */
+export const QUALIFICATION_FILTER_OPTIONS = ['qualified', 'unqualified'] as const
+export type ActiveQualificationStatus = (typeof QUALIFICATION_FILTER_OPTIONS)[number]
 
 export const SALES_STATUS_LABELS: Record<SalesWorkflowStatus, string> = {
   new: 'جديد',
@@ -61,7 +65,7 @@ export const SALES_STATUS_LABELS: Record<SalesWorkflowStatus, string> = {
   converted: 'تم التحويل',
 }
 
-export const QUALIFICATION_ORDER: QualificationStatus[] = ['pending', 'qualified', 'unqualified']
+export const QUALIFICATION_ORDER: QualificationStatus[] = ['qualified', 'unqualified']
 
 export const SALES_WORKFLOW_ORDER: SalesWorkflowStatus[] = [
   'new',
